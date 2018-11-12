@@ -1,0 +1,89 @@
+
+    <meta charset="utf-8">
+    <link href="css/base.css" type="text/css" rel="stylesheet">
+    <div id="main">
+    <div class="r-top">创建视频账号</div>
+    <div class="container">
+    <div class="messafe">
+      <dl><dt>用户名：</dt><dd><input class="addcontent" id="userName"></dd></dl>
+      <dl><dt>密码：</dt><dd><input class="addcontent" id="password" placeholder="6-12位字母数字或下划线"></dd></dl>
+      <dl><dt>手机：</dt><dd><input class="addcontent" id="phone"></dd></dl>
+      <dl><dt>昵称：</dt><dd><input class="addcontent" id="nickName"></dd></dl>
+      <dl><dt>性别：</dt><dd><select id="sex" class="select-box"><option value="1">男</option><option value="0">女</option></select></dd></dl>
+      <dl><dt>简介：</dt><dd><textarea id="intro" class="jianjie"></textarea></dd></dl>
+      <button class="xiugai">创建</button>
+    </div>  
+     </div>
+   </div>
+    <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript">
+
+    $(function (){
+      $('.xiugai').click(function() {
+        var userName =  $('#userName').val();
+        var password =  $('#password').val();
+        var phone =  $('#phone').val();
+        var nickName =  $('#nickName').val();
+        var sex =  $('#sex option:selected').val();
+        var intro =  $('#intro').val();
+        if (userName=='') {
+          alert('请输入用户名');
+        }
+        else if (password=='') {
+          alert('请输入密码');
+        }
+        else if (phone=='') {
+          alert('请输入手机号');
+        }
+        else if (nickName=='') {
+          alert('请输入昵称');
+        }
+        else if (intro=='') {
+          alert('请输入简介');
+        }
+        else{
+          jQuery.ajax({
+            url: '/skl/videoStore/registerVideoStore',
+            type: "post",
+            dataType: "json",
+            data:{userName:userName,password:password,nickName:nickName,phone:phone,sex:sex,intro:intro},
+            success: function (data) {
+              if (data.errcode==0) {
+                alert(data.msg);
+                window.location.href="member.html";
+              }
+              else{
+                 alert(data.msg);
+              }
+            }              
+          });
+        }
+        
+      });
+       
+     /* $('#add-news').click(function() {
+        var alipayAccount = $('#alipayAccount').html();
+        $.cookie("alipayAccount",alipayAccount);
+        var wxpayAccount = $('#wxpayAccount').html();
+        $.cookie("wxpayAccount",wxpayAccount);
+        var servicePhone = $('#servicePhone').html();
+        $.cookie("servicePhone",servicePhone);
+        var helpPageOrg = $('#helpPageOrg').html();
+        $.cookie("helpPageOrg",helpPageOrg);
+        var helpPageStudent = $('#helpPageStudent').html();
+        $.cookie("helpPageStudent",helpPageStudent);
+        var helpPageTeacher = $('#helpPageTeacher').html();
+        $.cookie("helpPageTeacher",helpPageTeacher);
+        var legalNotice = $('#legalNotice').html();
+        $.cookie("legalNotice",legalNotice);
+        var aboutUs = $('#aboutUs').html();
+        $.cookie("aboutUs",aboutUs);
+        window.location.href="modifyParams.html"
+      });*/
+ 
+
+    })
+   
+  
+  </script>

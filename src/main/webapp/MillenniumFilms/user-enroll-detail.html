@@ -1,0 +1,180 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<!--[if lt IE 9]>
+	<script type="text/javascript" src="lib/html5.js"></script>
+	<script type="text/javascript" src="lib/respond.min.js"></script>
+	<script type="text/javascript" src="lib/PIE_IE678.js"></script>
+	<![endif]-->
+	<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+	<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+	<!--[if IE 6]>
+	<script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+	<script>DD_belatedPNG.fix('*');</script>
+	<![endif]-->
+	<!--/meta 作为公共模版分离出去-->
+
+	<title>用户信息</title>
+</head>
+<body>
+
+<article class="page-container">
+	<form class="form form-horizontal" id="form-article-add">
+
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript">
+    $(function(){
+        var userId = $.cookie("userId");
+        var roleType = $.cookie("roleType");
+        var username = $.cookie("username");
+        if(userId==""||userId==null){
+            parent.location.href="login.html"
+        }
+    })
+</script>
+</body>
+</html>
+<script type="text/javascript">
+    $(function(){
+        var ID=getQueryString("id");
+        var id=$.cookie("userId");
+        var accessToken=$.cookie("accessToken");
+        //获取字典表的问题表达式
+        $.ajax({
+            url:getRootPath_dc() + "/systemDictionary/queryEnrollDictionaryItemList",
+            type:"post",
+            headers:{tokenUserId:id,accessToken:accessToken},
+            data:{},
+            success:function(data){
+                console.log(data);
+                var expression = $.parseJSON(data.data.expression);
+                //获取报名表数据
+                $.ajax({
+                    url: getRootPath_dc() + '/user/queryUserEnrollForm',
+                    type: "post",
+                    dataType: "json",
+                    headers:{tokenUserId:id,accessToken:accessToken},
+                    data:{id:ID},
+                    success:function(data){
+                        if (data.errcode == 0) {
+
+                            $("#form-article-add").children().remove();
+                            var anwser = data.data.anwser;
+                            var json = $.parseJSON( anwser );
+                            var html = "<div></div>";
+                            var length = JSONLength(json);
+                            console.log(length);
+                            for (var i = 0;i < length;i++){
+
+                                //29题判断是否同步相册
+                                if(i == 28){
+                                    var key = "Q"+parseInt(i+1);
+                                    var albumFlag = eval('json.'+key);
+                                    var value;
+                                    if(albumFlag == "1"){
+                                        value = "允许";
+                                    }
+                                    else{
+                                        value = "不允许";
+                                    }
+                                    html +=  "<div class=\"row cl\">" +
+                                        "<div style=\"font-weight:bold;margin-left: 50px\"><label>" +
+                                        parseInt(i+1) +"、"+ eval('expression.'+key) +
+                                        "</label></div>" +
+                                        "<div style=\"margin-left: 50px;width: 700px\"><label>" +
+                                        value+
+                                        "</label></div>" +
+                                        "</div>";
+                                }
+                                else if(i == 29){
+                                    //身份证
+									var key = "Q"+parseInt(i+1);
+                                    html +=  "<div class=\"row cl\">" +
+                                        "<div style=\"font-weight:bold;margin-left: 50px\"><label>" +
+                                        parseInt(length+1) +"、"+ "身份证" +
+                                        "</label></div>"+
+                                        "<div style=\"margin-left: 50px;width: 700px\">";
+                                    html+="<img src='"+eval('json.'+key)+"' width='500' height='300' style='margin:3px 5px;'>";
+                                    html += "</div></div>";
+								}
+                                else if(i == 30){
+									//相册
+                                    var key = "Q"+parseInt(i+1);
+                                    var albumList = eval('json.'+key);
+
+                                    html +=  "<div class=\"row cl\">" +
+                                        "<div style=\"font-weight:bold;margin-left: 50px\"><label>" +
+                                        parseInt(length+1) +"、"+ "生活照" +
+                                        "</label></div>"+
+                                        "<div style=\"margin-left: 50px;width: 700px\">";
+
+                                    for (var j = 0;j<albumList.length;j++){
+                                        html+="<img src='"+albumList[j]+"' width='300' height='300' style='margin:3px 5px;'>";
+									}
+//
+                                    html += "</div></div>";
+                                }
+                                else {
+                                    var key = "Q"+parseInt(i+1);
+                                    html +=  "<div class=\"row cl\">" +
+                                        "<div style=\"font-weight:bold;margin-left: 50px\"><label>" +
+                                        parseInt(i+1) +"、"+ eval('expression.'+key) +
+                                        "</label></div>" +
+                                        "<div style=\"margin-left: 50px;width: 700px\"><label>" +
+                                        eval('json.'+key)+
+                                        "</label></div>" +
+                                        "</div>";
+                                }
+
+                            }
+
+                            $("#form-article-add").append(html);
+
+                        }else{
+                            return false;
+                        }
+                    }
+                })
+
+            }
+        });
+
+    });
+
+    function JSONLength(obj) {
+        var size = 0, key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) size++;
+        }
+        return size;
+    }
+
+    function isContains(str, substr) {
+        return str.indexOf(substr) >= 0;
+    }
+
+</script>

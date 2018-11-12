@@ -1,0 +1,219 @@
+﻿<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/viewer/css/viewer.min.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+    <style>
+        .imgArea {
+            width: 120px;
+            height: 120px;
+            display: inline-block;
+            margin: 5px;
+            padding: 1px;
+            border: 1px solid #96c2f1;
+            background: #eff7ff;
+            overflow: hidden;
+        }
+    </style>
+    <title>添加相册</title>
+</head>
+<body>
+<article class="page-container">
+    <form id="albumForm" name="" enctype="multipart/form-data">
+        <input type="hidden" id="userId" name="fkPurposeId">
+        <input type="hidden" name="fileType" value="image">
+        <input type="hidden" name="filePurpose" value="imageAlbum">
+        <div class="form form-horizontal" id="form-album-add">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">用户相册：</label>
+                <div class="formControls col-xs-8 col-sm-9" style="display: flex;flex-wrap: wrap;" id="imgList">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span class="btn-upload form-group" style="float:left">
+                        <a href="javascript:" class="btn btn-grey upload-btn radius"><i class="Hui-iconfont"></i> 上传图片</a>
+                        <input multiple="multiple" name="uploadFile" class="input-file" onchange="selectImg(this)" type="file">
+                    </span>
+                </div>
+            </div>
+        </div>
+    </form>
+</article>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript" src="lib/jquery.form.min.js"></script>
+<!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.js"></script>
+<script type="text/javascript" src="lib/viewer/js/viewer-jquery.min.js"></script>
+
+</body>
+</html>
+<script>
+    var accessToken = $.cookie("accessToken");
+    var userId = $.cookie("userId");
+    var id = getQueryString("id");
+    $(function () {
+        var roleType = $.cookie("roleType");
+        var username = $.cookie("username");
+        if (userId == "" || userId == null) {
+            window.location.href = "login.html"
+        }
+        $("#userId").val(id);
+        loadUserAlbum(id);
+    });
+    function loadUserAlbum(id) {
+        $.ajax({
+            url: getRootPath_dc() + '/user/getUserAlbum',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: userId, accessToken: accessToken},
+            data: {userId: id},
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                if (data.errcode == 0) {
+                    list(data.data);
+                } else {
+                    return false;
+                }
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        });
+    }
+
+    function list(data) {
+        var imgList = $("#imgList");
+        imgList.children().remove();
+        var html = "";
+        if (data.length <= 0) {
+            html += "<span style='text-align: center;color: grey'>无图片</span>";
+        }
+        for (var i = data.length - 1; i >= 0; i--) {
+            html += '<div class="imgArea" style="position: relative;">' +
+                '<img src="' + data[i].location + '" class="img-responsive showImg">' +
+                '<span style="position: absolute; right: 0; bottom: 0;opacity:0.7">' +
+                '<a href="javascript:" title="删除图片" class="btn btn-danger del-btn" data-id="' + data[i].id + '" onclick="delImg(this)"><i class="Hui-iconfont"></i></a>' +
+                '</span>' +
+                '</div>';
+        }
+        imgList.append(html);
+        imgList.viewer(viewerOption());
+        imgList.viewer('update');
+    }
+    function delImg(ele) {
+        var delBtn = $(ele);
+        var id = delBtn.data("id");
+        var imgArea = delBtn.closest(".imgArea");
+        layer.confirm("确定删除此图片吗？", function (index) {
+            $.ajax({
+                url: getRootPath_dc() + '/file/deleteFile',
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: userId, accessToken: accessToken},
+                data: {fileId: id},
+                beforeSend: function () {
+                    $("#load").css("display", "block");
+                },
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        imgArea.remove();
+                        if ($("#imgList .imgArea").length <= 0) {
+                            $("#imgList").append("<span style='text-align: center;color: grey'>无图片</span>");
+                        }
+                        $("#imgList").viewer('update');
+                    } else {
+                        layer.alert(data.msg);
+                    }
+                },
+                complete: function () {
+                    $("#load").css("display", "none");
+                }
+            });
+            layer.close(index);
+        });
+    }
+    function selectImg() {
+        var fileValues = $('input[name=uploadFile]')[0].files;
+        var imgList = $("#imgList .imgArea");
+        var canUploadCount = 5 - imgList.length;
+        if (fileValues.length > canUploadCount) {
+            layer.alert("最多还可以上传" + canUploadCount + "张图片");
+            return;
+        }
+        $("#albumForm").ajaxSubmit({
+            type: 'post',
+            url: getRootPath_dc() + '/file/uploadFile',
+            headers: {tokenUserId: id, accessToken: accessToken},
+            contentType: 'multipart/form-data',
+            success: function (data) {
+                if (data.errcode == 0) {
+                    layer.alert('上传成功!',{closeBtn:0},function (index) {
+                        loadUserAlbum(id);
+                        layer.close(index);
+                    });
+                } else {
+                    layer.alert('上传失败!');
+                }
+            }
+        })
+    }
+    $("#update").click(function () {
+        var id = $.cookie("userId");
+        $("#albumForm").ajaxSubmit({
+            type: 'post',
+            url: getRootPath_dc() + '/file/uploadFile',
+            headers: {tokenUserId: id, accessToken: accessToken},
+            contentType: 'multipart/form-data',
+            success: function (data) {
+                if (data.errcode == 0) {
+                    $("#imgList").viewer('update');
+                    layer.alert('上传成功!');
+                } else {
+                    layer.alert('上传失败!');
+                }
+            }
+        })
+    });
+
+</script>

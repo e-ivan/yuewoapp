@@ -1,0 +1,1 @@
+var commonURL = "http://localhost:8080/skl";

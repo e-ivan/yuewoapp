@@ -1,0 +1,86 @@
+
+    <meta charset="utf-8">
+    <link href="css/base.css" type="text/css" rel="stylesheet">
+    <div id="main">
+    <div class="r-top">商品分类<span id="add-news">添加商品分类</span></div>
+    <div class="container">
+          <table class="village-list">
+          </table>  
+     </div>
+   </div>
+    <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript">
+    $(function (){
+      jQuery.ajax({
+        url: '/skl/good/queryGoodClasses',
+        type: "post",
+        dataType: "json",
+        success: function (data) {
+          list(data);
+          del();
+        }              
+      }); 
+    function dateFormatUtil(longTypeDate){  
+            var dateTypeDate = "";  
+            var date = new Date(longTypeDate);  
+            dateTypeDate += date.getFullYear();   //年  
+            dateTypeDate += "-" + (date.getMonth()+1); //月   
+            dateTypeDate += "-" + date.getDate();  //日  
+            dateTypeDate += '&nbsp;'
+            dateTypeDate += date.getHours();
+            dateTypeDate += "时"+date.getMinutes();
+            dateTypeDate += "分"+date.getSeconds();
+            dateTypeDate += "秒"
+            return dateTypeDate;  
+    }  
+    function list(data){
+       var tableDom = $('.village-list');
+       var html = "<tr>"+"<th>"+"分类名"+"</th>"+"<th>"+"分类图标"+"</th>"+"<th>"+"创建时间"+"</th>"+"<th>"+"操作"+"</th>"+"</tr>";                   
+        for (var i = 0, len = data.data.iData.length; i < len; i++) {
+          html += "<tr>" + 
+          "<input type='hidden'  value="+data.data.iData[i].id+" class='classifyId'>"+
+          "<td>" + data.data.iData[i].name+ "</td>" +  
+          "<td>" + "<img class='circleimg' src="+commonURL+data.data.iData[i].iconUrl+">"+ "</td>" + 
+          "<td>" +  dateFormatUtil(data.data.iData[i].createTime) + "</td>" +  
+          "<td>" +'<a href="javascript:void(0)" class="delete">删除</a>'  +"</td>" +  
+          "</tr>";  
+        }
+       tableDom.html(html);
+    }
+    function del(){
+      $('.delete').click(function() {
+         var storeGoodClassId = $(this).parent().parent().find('.classifyId').val();
+         var tr = $(this).parent().parent()
+         if(confirm("确认删除吗，删除之后不能恢复")){
+         jQuery.ajax({
+            url: '/skl/good/deleteGoodClass',
+            type: "post",
+            dataType: "json",
+            data:{storeGoodClassId:storeGoodClassId},
+            success: function (data) {
+              if (data.errcode==0) {
+                 alert(data.msg);
+                $(tr).remove();
+              }
+              else{
+                alert(data.msg);
+              }
+              
+            }              
+          }); 
+       }
+      });
+    }
+
+  $('#add-news').click(function() {
+    window.location.href='addItro.html';
+  });
+
+
+
+})
+   
+  
+  </script>

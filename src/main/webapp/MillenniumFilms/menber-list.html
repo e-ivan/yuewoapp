@@ -1,0 +1,163 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<script type="text/javascript" src="lib/PIE_IE678.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<title>会员等级</title>
+<style type="text/css">
+	.none{display: none;}
+</style>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 会员等级 <span class="c-gray en">&gt;</span> 会员等级列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l" id="data-nav">
+	<a class="btn btn-primary radius" data-title="会员列表" data-id="1" ><i class="Hui-iconfont">&#xe681;</i> 会员等级</a>
+	<a class="btn btn-red radius" data-title="添加会员等级" href="menber-add.html" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加会员等级</a>
+	</span> <span class="r">共有数据：<strong id="num11">0</strong> 条</span> </div>
+	<div class="mt-20 mma">
+		<table class="table table-border table-bordered table-bg table-hover table-sort">
+			<tbody id="mail-list"></tbody>
+		</table>
+		<div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a><div class="pagelist"></div><a class="nextpage paginate_button" >下一页</a></div>
+	</div>
+</div>
+<div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif"></div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script> 
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <script type="text/javascript" src="lib/jquery.cookie.js"></script> <script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript">
+
+var limit= 10;
+   pubAjax(0);
+   // 点击添加商品属性
+   $(function(){
+     var userId = $.cookie("userId");
+     var roleType = $.cookie("roleType");
+     var username = $.cookie("username");
+     if(userId==""||userId==null){
+       parent.location.href="login.html";
+       return false;
+     }
+   });
+   function pubAjax(page){
+       var id=$.cookie("userId");
+       var accessToken=$.cookie("accessToken");
+       $.ajax({
+          url: getRootPath_dc() + '/vip/queryUserVipSetting',
+          type: "post",
+          dataType: "json",
+          headers:{tokenUserId:id,accessToken:accessToken},
+          data:{page:page,limit:$(".limit").val()},
+             beforeSend: function () {
+                  $("#load").css("display","block");
+             },
+             success: function (data) {
+              console.log(data);
+              if (data.errcode == 0) {
+                 $("#mail-list").children().remove();
+                 list(data);
+                 var myobj=eval(data.data);
+                 pageList(myobj);
+                 clickEvents(myobj,pubAjax);
+              }else{
+                 return false;
+              }
+
+            },
+           complete: function () {
+               $("#load").css("display","none");
+           },
+       });
+   }
+   function list(data){
+		 $("#num11").html(data.data.totalCount);
+          var html = "<tr class='text-c'><th width='50'>序号</th><th style='text-align: left' width='80'>会员名称</th><th width='80'>消费金额</th><th>会员说明</th><th width='120'>优惠券名称</th><th width='75'>优惠券金额</th><th width='75'>优惠券抵扣</th><th width='150'>操作</th></tr>";
+          var dataa = eval(data.data.iData);                 
+           for(var i=0;i<dataa.length;i++){
+                 html += "<tr class='text-c table-hover ext' tid='"+dataa[i].fkCouponId+"' id='"+dataa[i].id+"'>"+
+                 "<td>"+ parseInt(i+1) +"</td>"+
+                 "<td class='text-l'><input value='"+dataa[i].vipName+"' readonly='' class='inp-vipName' style='width:100%;border:0'></td>"+
+                 "<td><input value='"+dataa[i].integral+"' readonly=''  class='inp-integral' style='width:100%;border:0'></td>"+
+                 "<td><input value='"+dataa[i].intro+"' readonly=''  class='inp-intro' style='width:100%;border:0'></td>"+
+                 "<td>"+dataa[i].coupon.name+"</td>"+
+                 "<td>"+dataa[i].coupon.money+"</td>"+
+                 "<td>"+dataa[i].coupon.prescription+"</td>"+
+                 "<td class='f-14 td-manage'>"+
+                 "<a style='text-decoration:none' class='ml-5 reqad' title='修改会员' href='javascript:;' onclick='bianji(\""+dataa[i].id+"\")'><i class='Hui-iconfont'> &#xe692;</i></a>"+
+                 "<a style='text-decoration:none' class='ml-5' title='删除'  onclick='del(\""+dataa[i].id+"\")'><i class='Hui-iconfont'> &#xe609;</i></a>"+
+                 "<a style='text-decoration:none' class='ml-5 none' title='保存' tid='"+dataa[i].fkCouponId+"' did='"+dataa[i].id+"'  onclick='truely(\""+dataa[i].id+"\")'><i class='Hui-iconfont'> &#xe632;</i></a>"+
+               "</tr>";
+           }
+          $("#mail-list").append(html);
+       }
+    function bianji(id){
+    	alert("您可以编辑了");
+    	$("tr#"+id).children().find("input").attr("readonly",false);
+    	$("tr#"+id).children().find("input").css("border","1px solid #ddd");
+    	$("tr#"+id).children().find("input").focus();
+    	$("tr#"+id).children().find(".none").show();
+    }
+    function truely(id){
+	    var userId=$.cookie("userId");
+        var accessToken=$.cookie("accessToken");
+        var fkCouponId=$("tr#"+id).attr("tid");
+        var did=$("tr#"+id).attr("id");
+        var vipName=$("tr#"+id).children().find(".inp-vipName").val();
+        var integral=$("tr#"+id).children().find(".inp-integral").val();
+        var intro=$("tr#"+id).children().find(".inp-intro").val();
+        console.log(userId+"/"+accessToken+"/"+fkCouponId+"/"+did+"/"+vipName+"/"+integral+"/"+intro+"/")
+    	$.ajax({
+    		url: getRootPath_dc() + '/vip/updateUserVipSetting',
+            type: "post",
+            dataType: "json",
+            headers:{tokenUserId:userId,accessToken:accessToken},
+            data:{vipName:vipName,integral:integral,intro:intro,fkCouponId:fkCouponId,id:did},
+            success:function(res){
+            	if (res.errcode==0) {
+            		alert(res.msg)
+		        	$("tr#"+id).children().find("input").attr("readonly",true)
+					$("tr#"+id).children().find("input").css("border","none");
+					$("tr#"+id).children().find(".none").hide();
+            	}
+            	
+            }
+    	})
+
+    }
+   function del(cid){
+       var id=$.cookie("userId");
+       var accessToken=$.cookie("accessToken");
+       $.ajax({
+           url:getRootPath_dc() + "/vip/deleteUserVipSetting",
+           type:"post",
+           dataType:"json",
+           headers:{tokenUserId:id,accessToken:accessToken},
+           data:{settingId:cid},
+           success:function(data){
+               if (confirm("您确定要删除吗")) {
+                   $("tr#"+cid).remove();
+               }
+           }
+       })
+   }
+
+</script> 
+</body>
+</html>

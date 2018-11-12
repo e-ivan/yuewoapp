@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>邀请好友送电影票</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+</head>
+<link rel="stylesheet" type="text/css" href="css/share.css"/>
+<body>
+<div class="content">
+    <div class="content">
+        <div class="img">
+            <img class="bmh" src="img/bmh.png"/>
+            <img class="wz" src="img/wz.png"/>
+            <img class="yj" src="img/yj.png"/>
+        </div>
+        <div class="box">
+            <div class="body">
+                <div class="longtap">
+                    <div class="active"><img id="headImg" style="width:75px;height:75px;border-radius:50%;" src="img/DSC05334.JPG"/></div>
+                    <p>我的邀请码(长按复制)</p>
+                </div>
+                <div class="model">
+                    <div class="kuang"></div>
+                </div>
+                <div class="message">
+                    <ul id="turnUl">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/navDown.js"></script>
+<script type="text/javascript">
+    $(function() {
+        var request = getRequest();
+        $.ajax({
+            type: "POST",
+            url: getRootPath_dc() + "/common/getRecommendMsg",
+            data: {uid:request['uid']},
+            success: function(result){
+                var data = result.data;
+                var user = data.user;
+                if (user) {
+                    $(".kuang").text(user.recommendCode);
+                    $("#headImg").attr("src",user.headImg);
+                }
+                var successOrder = data.successOrder;
+                if (successOrder) {
+                    var html = "";
+                    for (var i = 0;i < successOrder.length;i++){
+                        html += "<li>"+successOrder[i]+"</li>"
+                    }
+                    $("#turnUl").html(html);
+                }
+            }
+        });
+        navDown();
+    });
+    function getRequest() {
+        var url = location.search; //获取url中"?"符后的字串
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+    //获取项目路径
+    function getRootPath_dc() {
+        var pathName = window.location.pathname.substring(1);
+        var webName = pathName == '' ? '' : pathName.substring(0, pathName.indexOf('/'));
+        if (webName == "") {
+            return window.location.protocol + '//' + window.location.host;
+        }
+        else {
+            return window.location.protocol + '//' + window.location.host + '/' + webName;
+        }
+    }
+</script>
+</body>
+
+</html>

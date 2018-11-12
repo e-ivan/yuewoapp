@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <script type="text/javascript" src="jquery-2.2.3.min.js"></script>
+    </head>
+    <title>cancelFilmOrder</title>
+    <body id="bodybody">
+
+    </body>
+</html>
+
+   <script type="text/javascript">
+
+
+$(function (){
+    jQuery.ajax({
+        url: '/qnyy/filmorder/cancelFilmOrder',
+        type: "post",
+        dataType: "json",
+        data:{orderId:"a1497856868370904887",fkUserId:"123456"},
+        success: function (data) {
+            console.log(data);
+        }
+    });
+});
+
+
+   </script>

@@ -1,0 +1,143 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<script type="text/javascript" src="lib/PIE_IE678.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<!--/meta 作为公共模版分离出去-->
+
+<title>简历详情</title>
+</head>
+<body>
+<div class="layui-layer-title" style="cursor: move;" move="ok">简历详情</div>
+<span class="layui-layer-setwin"><a class="layui-layer-ico layui-layer-close layui-layer-close1" href="javascript:;" onclick="window.history.go(-1)"></a></span>
+<article class="page-container">
+	<form class="form form-horizontal" id="form-article-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">姓名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="d_fl" readonly=''>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">电话：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value=""  id="d_name" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">职位：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value=""  id="d_type" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">投资金额：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value=""  id="d_money" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">项目简介：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<textarea class="input-text" id="d_move"  readonly="" style="height: 300px;overflow-y: auto;"></textarea>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">金额限定：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value=""  id="d_time" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">注意事项：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value=""  id="d_location" readonly="">
+			</div>
+		</div>
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script> 
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script> 
+<script type="text/javascript" src="lib/jquery.cookie.js"></script> 
+<script type="text/javascript">
+$(function(){
+	var userId = $.cookie("userId");
+	var roleType = $.cookie("roleType");
+	var username = $.cookie("username");
+	if(userId==""||userId==null){
+		parent.location.href="login.html"
+	}
+})
+</script>
+</body>
+</html>
+<script type="text/javascript">
+	$(function(){
+		var projectAppointmentId=getQueryString("id")
+		var id=$.cookie("userId");
+	    var accessToken=$.cookie("accessToken");
+		$.ajax({
+		   url: getRootPath_dc() + '/project/queryProjectAppointmentById',
+	       type: "post",
+	       dataType: "json",
+	       headers:{tokenUserId:id,accessToken:accessToken},
+	       data:{projectAppointmentId:projectAppointmentId},
+	       success:function(data){
+	       		console.log(data)
+	       			$("#d_name").val(data.data.linkPhone);
+	       			$("#d_fl").val(data.data.linkName);
+	       			$("#d_type").val(data.data.linkPost);
+	       			$("#d_money").val(data.data.intentionInvestmentMoney);
+	       			$("#d_move").val(data.data.investmentCase);
+	       			$("#d_time").val(data.data.bankroll);
+	       			$("#d_location").val(data.data.note);
+	       }
+		})
+	})
+	function getQueryString(id) { 
+	    var reg = new RegExp("(^|&)" + id + "=([^&]*)(&|$)", "i"); 
+	    var r = window.location.search.substr(1).match(reg); 
+	    if (r != null) return unescape(r[2]); return null; 
+	} 
+	// jsonÊ±¼ä×ª»¯
+	function dateFormatUtil(longTypeDate){  
+	     var dateTypeDate = "";  
+	     var date = new Date(longTypeDate);  
+	     dateTypeDate += date.getFullYear();   //年  
+	     dateTypeDate += "-" + (date.getMonth()+1); //月
+	     dateTypeDate += "-" + date.getDate();  //日 
+	     dateTypeDate += '&nbsp;'
+	     dateTypeDate += date.getHours();
+	     dateTypeDate += ":"+date.getMinutes();
+	     dateTypeDate += ":"+date.getSeconds();
+	     return dateTypeDate;  
+	}    
+</script>

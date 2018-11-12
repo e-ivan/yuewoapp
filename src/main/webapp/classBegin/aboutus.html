@@ -1,0 +1,72 @@
+
+    <meta charset="utf-8">
+    <link href="css/base.css" type="text/css" rel="stylesheet">
+    <div id="main">
+    <div class="r-top">关于我们<span id="add-news">修改关于我们</span></div>
+    <div class="container">
+    <div class="messafe">
+      <dl><dt>客服电话：</dt><dd id="servicePhone"></dd></dl>
+      <dl><dt>关于我们：</dt><dd id="aboutUs"></dd></dl>
+    </div>  
+     </div>
+   </div>
+   <div id="bg"></div>
+   <div id="modify-psw">
+     <div class="add-content"><dl><dt>客服电话：</dt><dd><input class="add-content" id="aliPay"></dd></dl><dl><dt>关于我们：</dt><dd><textarea  id="wxPay"></textarea></dd></dl><div><button id="add">修改</button><button id="noAdd">取消</button></div></div>
+   </div>
+    <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript">
+
+    $(function (){
+      jQuery.ajax({
+        url: '/skl/system/querySysParams',
+        type: "post",
+        dataType: "json",
+        success: function (data) {
+          $('#servicePhone').html(data.data.servicePhone);
+          $('#aboutUs').html(data.data.aboutUs);
+        }              
+      }); 
+      $('#add-news').click(function(data) {
+        $('#bg,#modify-psw').css({display: 'block'});
+        $('#aliPay').val($('#servicePhone').html());
+        $('#wxPay').val($('#aboutUs').html());
+      });
+      $('#add').click(function(event) {
+        var servicePhone = $('#aliPay').val();
+        var aboutUs = $('#wxPay').val();
+        if (servicePhone=='') {
+          alert('请输入客服电话');
+        }
+        else if (aboutUs=='') {
+          alert('请输入关于我们');
+        }
+        else{
+          jQuery.ajax({
+            url: '/skl/system/modifySysParams',
+            type: "post",
+            dataType: "json",
+            data:{servicePhone:servicePhone,aboutUs:aboutUs},
+            success: function (data) {
+              if (data.errcode==0) {
+                alert(data.msg);
+                $('#bg,#modify-psw').css({display: 'none'});
+              }
+              else{
+                alert(data.msg);
+              }
+              
+            }              
+          }); 
+        }
+      });
+      $('#noAdd').click(function(event) {
+        $('#bg,#modify-psw').css({display: 'none'});
+      });
+   
+
+    })
+   
+  
+  </script>

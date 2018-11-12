@@ -1,0 +1,146 @@
+
+    <meta charset="utf-8">
+    <link href="css/base.css" type="text/css" rel="stylesheet">
+    <div id="main">
+    <div class="r-top">系统消息<span id="add-news">添加系统消息</span></div>
+    <div class="container">
+          <table class="village-list">
+          </table>  
+          <div class="page"><a class="prepage" >上一页</a><div class="pagelist"></div><a class="nextpage" >下一页</a></div> 
+     </div>
+   </div>
+   <div id="bg"></div>
+   <div id="modify-psw">
+     <div class="add-content"><textarea id="add-content"></textarea><div><button id="add">添加</button><button id="noAdd">取消</button></div></div>
+   </div>
+    <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript">
+    $(function (){
+     var limit = 10;
+     var userId = $.cookie("userId");
+     function pubAjax(page){
+      jQuery.ajax({
+        url: '/skl/messageCenter/querySysMessageList',
+        type: "post",
+        dataType: "json",
+        data:{page:page,limit:limit,userId:userId},
+        success: function (data) {
+          list(data);
+          pageList(data);
+          clickEvents(data);
+        }              
+      }); 
+     }
+    pubAjax(0);
+    function dateFormatUtil(longTypeDate){  
+            var dateTypeDate = "";  
+            var date = new Date(longTypeDate);  
+            dateTypeDate += date.getFullYear();   //年  
+            dateTypeDate += "-" + (date.getMonth()+1); //月   
+            dateTypeDate += "-" + date.getDate();  //日  
+            dateTypeDate += '&nbsp;'
+            dateTypeDate += date.getHours();
+            dateTypeDate += "时"+date.getMinutes();
+            dateTypeDate += "分"+date.getSeconds();
+            dateTypeDate += "秒"
+            return dateTypeDate;  
+    }  
+    function list(data){
+       var tableDom = $('.village-list');
+       var html = "<tr>"+"<th>"+"内容"+"</th>"+"<th>"+"时间"+"</th>"+"</tr>";                   
+        for (var i = 0, len = data.data.iData.length; i < len; i++) {
+          html += "<tr>" + 
+        "<td>" + data.data.iData[i].content+ "</td>" +  
+        "<td>" +  dateFormatUtil(data.data.iData[i].createTime) + "</td>" +  
+        "</tr>";  
+        }
+       tableDom.html(html);
+    }
+
+  function pageList(data){ 
+     var totalCount = data.data.totalCount;
+     var pagelist=$('.pagelist');
+     var limit = data.data.limit;                  
+     var page = data.data.page;
+     var pageNum = Math.ceil(totalCount/limit) ;
+     var pages = '';
+     for (var i = 1; i < pageNum+1; i++) {
+        pages +=  "<a>" + i + "</a>"; 
+     }      
+    pagelist.html(pages);
+    var emptyPage = pagelist.html();
+     if(emptyPage==''|| emptyPage==null){
+         $('.prepage,.nextpage').css({display: 'none'});
+    }
+    else{
+      $('.prepage,.nextpage').css({display: 'inline-block'});
+    }
+    pagelist.children().eq(page).addClass('cur').siblings().removeClass('cur');       
+  }
+  function clickEvents(data){
+     var totalCount = data.data.totalCount;
+     var limit = data.data.limit;         
+     var page = data.data.page;
+     var pageNum = Math.ceil(totalCount/limit) ;
+     $(".nextpage,.prepage,.pagelist a").unbind("click");                   
+     $('.nextpage').click(function() {
+          if (page<= pageNum-2) {
+            page++;
+            pubAjax(page); 
+          } 
+          else{
+             return false;
+          } 
+
+      });
+     $('.prepage').click(function() {
+      if (page>= 1) {
+          page--;
+          pubAjax(page);  
+        }
+        else{
+          return false;
+        }
+     });
+    $('.pagelist a').click(function() {
+      page =$(this).html()-1;
+      pubAjax(page);
+    }); 
+  }
+  
+  $('#add-news').click(function(event) {
+    $('#bg,#modify-psw').css({display: 'block'});
+  });
+  $('#add').click(function(event) {
+    var content = $('#add-content').val();
+    if (content=='') {
+      alert('请输入消息');
+    }
+    else{
+      jQuery.ajax({
+        url: '/skl/messageCenter/sendSysMessage',
+        type: "post",
+        dataType: "json",
+        data:{content:content},
+        success: function (data) {
+          if (data.errcode==0) {
+            alert(data.msg);
+            $('#bg,#modify-psw').css({display: 'none'});
+          }
+          else{
+            alert(data.msg);
+          }
+          
+        }              
+      }); 
+    }
+  });
+  $('#noAdd').click(function(event) {
+    $('#bg,#modify-psw').css({display: 'none'});
+  });
+
+})
+   
+  
+  </script>

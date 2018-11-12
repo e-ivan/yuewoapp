@@ -1,0 +1,206 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<script type="text/javascript" src="lib/PIE_IE678.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<!--/meta 作为公共模版分离出去-->
+
+<title>用户信息</title>
+</head>
+<body>
+
+<article class="page-container">
+	<form class="form form-horizontal" id="form-article-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">用户名：</label>
+			<div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+				<label class="" id="username" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+		<!--
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">角色：</label>
+			<div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+				<label class="" id="roleType" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">头像：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<img src="" alt="" id="userPhotoHead" style="width: 90px;height: 90px">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">手机：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<label class="" id="phone"  style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+		-->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">昵称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<label class="" id="nickName" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+		<!--
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">性别：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<label class="" id="sex" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">简介：</label>
+			<div class="formControls col-xs-8 col-sm-9" style="word-wrap: break-word;word-break: normal;">
+				<label class="" id="intro" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">年龄：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<label class="" id="age" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">兴趣：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<label class="" id="interest" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">职业：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<label class="" id="job" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">粉丝数量：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<label class="" id="fanNum" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">星座：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<label class="" id="constellation" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">是否内部会员：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<label class="" id="internalFlag" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">生日：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<label class="" id="birth" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+		-->
+
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script> 
+<script type="text/javascript">
+$(function(){
+	var userId = $.cookie("userId");
+	var roleType = $.cookie("roleType");
+	var username = $.cookie("username");
+	if(userId==""||userId==null){
+		parent.location.href="login.html"
+	}
+})
+</script>
+</body>
+</html>
+<script type="text/javascript">
+	$(function(){
+
+
+		var id=$.cookie("userId");
+	    var accessToken=$.cookie("accessToken");
+		$.ajax({
+		   url: getRootPath_dc() + '/user/queryMySimpleInfo',
+	       type: "post",
+	       dataType: "json",
+	       headers:{tokenUserId:id,accessToken:accessToken},
+	       data:{userId:id},
+	       success:function(data){
+	       		console.log(data);
+       			$("#username").text(data.data.username);
+               	$("#nickName").text(data.data.nickName);
+               	/*
+       			if(data.data.roleType == "superManager"){
+                    $("#roleType").text("超级管理员");
+				}
+				else {
+                    $("#roleType").text("普通用户");
+				}
+
+               $("#userPhotoHead").attr("src",data.data.userPhotoHead);
+               $("#phone").text(data.data.phone);
+               if (data.data.sex == 1){
+                   $("#sex").text("男");
+			   }
+               else {
+                   $("#sex").text("女");
+			   }
+               $("#intro").text(data.data.intro);
+               $("#age").text(data.data.age);
+               $("#interest").text(data.data.interest);
+               $("#job").text(data.data.job);
+               $("#fanNum").text(data.data.fanNum);
+               $("#constellation").text(data.data.constellation);
+               if (data.data.internalFlag == 0)
+			   {
+                   $("#internalFlag").text("不是");
+			   }
+			   else {
+                   $("#internalFlag").text("是");
+			   }
+
+               $("#birth").text(data.data.birth);
+               */
+
+	       }
+		})
+	});
+	function getQueryString(id) {
+	    var reg = new RegExp("(^|&)" + id + "=([^&]*)(&|$)", "i"); 
+	    var r = window.location.search.substr(1).match(reg); 
+	    if (r != null) return unescape(r[2]); return null; 
+	} 
+
+</script>

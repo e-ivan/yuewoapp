@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <script type="text/javascript" src="jquery-2.2.3.min.js"></script>
+    </head>
+    <title>queryCIty</title>
+    <body id="bodybody">
+
+    </body>
+</html>
+
+   <script type="text/javascript">
+
+
+$(function (){
+    jQuery.ajax({
+        url: '/qnyy/film/queryCinemaFilm',
+        type: "post",
+        dataType: "json",
+        data:{cinemaId:"6793"},
+        success: function (data) {
+            console.log(data);
+        }
+
+    });
+});
+
+
+   </script>

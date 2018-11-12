@@ -1,0 +1,162 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <title>城市管理</title>
+</head>
+<body>
+<div class="page-container" style="padding: 1px">
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l" id="data-nav">
+  <a class="btn btn-primary radius disabled" data-title="城市列表" data-id="1"><i class="Hui-iconfont">&#xe601;</i> <span id="provinceName"></span></a>
+  </span> <span class="r">共有数据：<strong id="num11">0</strong> 条</span></div>
+    <div class="mt-20 mma">
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <tbody id="mail-list"></tbody>
+        </table>
+        <div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a>
+            <div class="pagelist"></div>
+            <a class="nextpage paginate_button">下一页</a></div>
+    </div>
+    <div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif">
+    </div>
+    <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+    <script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+    <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+    <script type="text/javascript" src="lib/bootstrap-modal/2.2.4/bootstrap-modal.js"></script>
+    <script type="text/javascript" src="lib/bootstrap-modal/2.2.4/bootstrap-modalmanager.js"></script>
+    <script type="text/javascript" src="lib/jquery.form.min.js"></script>
+    <script type="text/javascript" src="lib/jquery.bootstrap.min.js"></script>
+    <script type="text/javascript" src="lib/jquery.cookie.js"></script>
+    <script type="text/javascript" src="lib/common.js"></script>
+    <script type="text/javascript">
+        var limit = 10;
+        var userId = $.cookie("userId");
+        var roleType = $.cookie("roleType");
+        var username = $.cookie("username");
+        var provinceCode = getQueryString("provinceCode");
+        var provinceName = decodeURI(getQueryString("name"));
+        $("#provinceName").text(provinceName);
+        pubAjax(0);
+        function pubAjax(page) {
+            $.ajax({
+                url: getRootPath_dc() + '/common/queryAllCity',
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: userId, accessToken: accessToken},
+                data: {provinceCode:provinceCode,page: page, limit: $(".limit").val()},
+                beforeSend: function () {
+                    $("#load").css("display", "block");
+                },
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        $("#mail-list").children().remove();
+                        list(data);
+                        var myobj = eval(data.data);
+                        pageList(myobj);
+                        clickEvents(myobj, pubAjax);
+                    } else {
+                        layer.alert(data.msg);
+                    }
+                },
+                complete: function () {
+                    $("#load").css("display", "none");
+                }
+            });
+        }
+        function list(data) {
+            $("#num11").html(data.data.totalCount);
+            var html = "<tr class='text-c'><th width='50'>序号</th><th width='200'>城市</th><th width='100'>编码</th><th width='50'>位置</th></tr>";
+            var dataa = eval(data.data.iData);
+            console.log(data.data);
+            html += addTableNoDateHtml(dataa.length);
+            for (var i = 0; i < dataa.length; i++) {
+                html += "<tr class='text-c .table-hover' id='" + dataa[i].adCode + "' onclick='clickLine(this,\"info\")' ondblclick='movieList(this)'>" +
+                    "<td>" + parseInt(i + 1) + "</td>" +
+                    "<td>" + dataa[i].city + "</td>" +
+                    "<td>" + dataa[i].cityCode + "</td>";
+                html += "</td><td class='f-14 td-manage'>" +
+                    "<a style='text-decoration:none;' class='ml-5' title='查看位置' href='javascript:parent.layer_show(\"地图\",\"map-container.html?lng=" + dataa[i].longitude + "&lat=" + dataa[i].latitude + "&zoom=7\")'>" +
+                    "<i class='Hui-iconfont operation-icon'> &#xe671;</i>&nbsp;</a>" +
+                    "</td></tr>";
+            }
+            $("#mail-list").append(html);
+        }
+
+        function movieList(event) {
+            var parentTr = $(event);
+            var parentId = parentTr.attr('id');
+            var title = parentTr.find(".inp-title").val();
+            $("[name='parentId']").val(parentId);
+            cinemaIdH = parentId;
+            provinceAjax(parentId);
+        }
+
+        //===============================================
+        function provinceList(data) {
+            $("#num1").html(data.data.totalCount);
+            var html = "<tr class='text-c'><th width='50'>序号</th><th style='text-align: left'>省份</th><th width='100'>编码</th><th width='50'>位置</th></tr>";
+            var dataa = eval(data.data.iData);
+            console.log(data.data);
+            html += addTableNoDateHtml(dataa.length);
+            for (var i = 0; i < dataa.length; i++) {
+                html += "<tr class='text-c .table-hover' id='" + dataa[i].adCode + "' onclick='clickLine(this,\"info\")' ondblclick='movieList(this)'>" +
+                    "<td>" + parseInt(i + 1) + "</td>" +
+                    "<td>" + dataa[i].province + "</td>" +
+                    "<td>" + dataa[i].provinceCode + "</td>";
+                html += "</td><td class='f-14 td-manage'>" +
+                    "<a style='text-decoration:none;' class='ml-5' title='查看位置' href='javascript:layer_show(\"地图\",\"map-container.html?lng=" + dataa[i].longitude + "&lat=" + dataa[i].latitude + "&zoom=7\")'>" +
+                    "<i class='Hui-iconfont operation-icon'> &#xe671;</i>&nbsp;</a>" +
+                    "</td></tr>";
+            }
+            $("#mail-list").append(html);
+        }
+
+        function provinceAjax(page) {
+            $.ajax({
+                url: getRootPath_dc() + '/common/queryAllProvince',
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: userId, accessToken: accessToken},
+                data: {page: page, limit: limit},
+                beforeSend: function () {
+                    $("#load").css("display", "block");
+                },
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        $("#mail-list").children().remove();
+                        provinceList(data);
+                        var myobj = eval(data.data);
+                        pageList(myobj);
+                        clickEvents(myobj, provinceAjax);
+                    } else {
+                        layer.alert(data.msg);
+                    }
+                },
+                complete: function () {
+                    $("#load").css("display", "none");
+                }
+            });
+        }
+    </script>
+</div>
+
+</body>
+</html>

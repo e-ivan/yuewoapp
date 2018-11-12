@@ -1,0 +1,551 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <title>数据字典</title>
+    <style type="text/css">
+        .none {
+            display: none;
+        }
+
+        .cancel {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 数据字典 <span
+        class="c-gray en">&gt;</span> 数据字典列表 <a class="btn btn-success radius r"
+                                                style="line-height:1.6em;margin-top:3px"
+                                                href="javascript:location.replace(location.href);" title="刷新"><i
+        class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container col-xs-4">
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l" id="data-nav">
+  <a class="btn btn-default radius disabled" data-title="数据字典列表" data-id="1"><i class="Hui-iconfont">&#xe601; </i> 数据字典列表</a>
+  <a class="btn btn-success radius" data-title="添加数据字典" onclick="add()"><i class="Hui-iconfont">&#xe600;</i> 添加数据字典</a>
+  </span> <span class="r">共有数据：<strong id="num11">54</strong> 条</span></div>
+    <div class="mt-20 mma">
+        <input id="currentPage" type="hidden" value="0">
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <tbody id="mail-list"></tbody>
+        </table>
+        <div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a>
+            <div class="pagelist"></div>
+            <a class="nextpage paginate_button">下一页</a></div>
+    </div>
+    <div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif">
+    </div>
+    <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+    <script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+    <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+    <script type="text/javascript" src="lib/bootstrap-modal/2.2.4/bootstrap-modal.js"></script>
+    <script type="text/javascript" src="lib/bootstrap-modal/2.2.4/bootstrap-modalmanager.js"></script>
+    <script type="text/javascript" src="lib/jquery.form.min.js"></script>
+    <script type="text/javascript" src="lib/jquery.bootstrap.min.js"></script>
+    <script type="text/javascript" src="lib/jquery.cookie.js"></script>
+    <script type="text/javascript" src="lib/common.js"></script>
+    <script type="text/javascript">
+
+        var limit = 10;
+        pubAjax(0);
+        // 点击添加商品属性
+        $(function () {
+            var userId = $.cookie("userId");
+            var roleType = $.cookie("roleType");
+            var username = $.cookie("username");
+            if (userId == "" || userId == null) {
+                parent.location.href = "login.html";
+                return false;
+            }
+            //为表单按钮添加事件
+            $(".btn-submit").click(function () {
+                var id = $.cookie("userId");
+                var accessToken = $.cookie("accessToken");
+                $("#itemForm").ajaxSubmit({
+                    type: 'post',
+                    url: getRootPath_dc() + '/systemDictionary/addSystemDictionaryItem',
+                    headers: {tokenUserId: id, accessToken: accessToken},
+                    success: function (data) {
+                        console.log(data);
+                        if (data.errcode == 0) {
+                            itemAjax(data.msg);
+                            layer.alert(data.msg);
+                            $("#itemEdit").modal("hide");
+                        } else {
+                            layer.alert(data.msg);
+                        }
+                    }
+                })
+            });
+            $(".btn-submit1").click(function () {
+                var id = $.cookie("userId");
+                var accessToken = $.cookie("accessToken");
+                $("#form").ajaxSubmit({
+                    type: 'post',
+                    url: getRootPath_dc() + '/systemDictionary/addSystemDictionary',
+                    headers: {tokenUserId: id, accessToken: accessToken},
+                    success: function (data) {
+                        if (data.errcode == 0) {
+                            $.messager.popup("其实，我就是为了告诉你刚才的内容 “添加成功！” 而已……");
+                            $("#edit").modal("hide");
+                            pubAjax(0);
+                        } else {
+                            layer.alert(data.msg);
+                        }
+                    }
+                })
+            });
+
+        });
+        function refreshCurrentPage() {
+            var clickLine = $("#mail-list").find("tr[class*='info']");
+            var id = clickLine.attr("id");
+            var currentPage = $("#currentPage").val();
+            pubAjax(currentPage, id);
+        }
+        function pubAjax(page, selectId) {
+            var id = $.cookie("userId");
+            var accessToken = $.cookie("accessToken");
+            $.ajax({
+                url: getRootPath_dc() + '/systemDictionary/systemDictionaryList',
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: id, accessToken: accessToken},
+                data: {page: page, limit: $(".limit").val()},
+                beforeSend: function () {
+                    $("#load").css("display", "block");
+                },
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        var bodyList = $("#mail-list");
+                        bodyList.children().remove();
+                        list(data);
+                        bodyList.find("tr[id='" + selectId + "']").addClass("info");
+                        var myobj = eval(data.data);
+                        pageList(myobj);
+                        clickEvents(myobj, pubAjax);
+                    } else {
+                        return false;
+                    }
+                },
+                complete: function () {
+                    $("#load").css("display", "none");
+                }
+            });
+        }
+        function list(data) {
+            $("#num11").html(data.data.totalCount);
+            $("#currentPage").val(data.data.page);
+            var html = "<tr class='text-c'><th width='50'>序号</th><th style='text-align: left' width='150' >数据字典名称</th><th style='text-align: left' width='80'>数据字典SN</th><th width='80'>值</th><th style='text-align: left'>状态</th><th width='80'>操作</th></tr>";
+            var dataa = eval(data.data.iData);
+            html += addTableNoDateHtml(dataa.length);
+            for (var i = 0; i < dataa.length; i++) {
+                html += "<tr class='text-c table-hover ext'  id='" + dataa[i].id + "' onclick='clickLine(this,\"info\")' data-sn='"+dataa[i].sn+"' ondblclick='sdListItem(this)'>" +
+                    "<td>" + parseInt(i + 1) + "</td>" +
+                    "<td class='text-l'><input value='" + dataa[i].title + "' readonly='' class='inp-title' style='width:100%;border:0'></td>" +
+                    "<td><input value='" + dataa[i].sn + "' readonly=''  class='inp-sn' style='width:100%;border:0'></td>" +
+                    "<td><input value='" + dataa[i].value + "' readonly=''  class='inp-value' style='width:100%;border:0'></td>";
+                if (dataa[i].status) {
+                    html += "<td class='td-status'><a class='label radius label-success' title='点击停用' onClick='sdStatus(\"" + dataa[i].id + "\",0)'>已启用</a></td>";
+                } else {
+                    html += "<td class='td-status'><a class='label radius' title='点击启用' onClick='sdStatus(\"" + dataa[i].id + "\",1)'>停用中</a></td>";
+
+                }
+                html += "<td class='td-manage'>" +
+                    "<a style='text-decoration:none' class='ml-5 reqad' title='修改' href='javascript:;' onclick='bianji(\"" + dataa[i].id + "\")'><i class='Hui-iconfont operation-icon'> &#xe692;</i></a>" +
+                    "<a style='text-decoration:none' class='ml-5 cancel' title='取消' href='javascript:;' onclick='cancel(\"" + dataa[i].id + "\")'><i class='Hui-iconfont operation-icon'> &#xe66b;</i></a>" +
+                    "<a style='text-decoration:none' class='ml-5 del' title='删除'  onclick='del(\"" + dataa[i].id + "\")'><i class='Hui-iconfont operation-icon'> &#xe609;</i></a>" +
+                    "<a style='text-decoration:none' class='ml-5 none' title='保存' tid='" + "' did='" + dataa[i].id + "'  onclick='truely(\"" + dataa[i].id + "\")'><i class='Hui-iconfont operation-icon'> &#xe632;</i></a></td></tr>";
+            }
+            $("#mail-list").append(html);
+        }
+        function bianji(id) {
+            layer.tips('可以编辑了', 'tr#' + id, {
+                tips: [4, '#78BA32']
+            });
+            inputEdit(id, false)
+        }
+        function inputEdit(id, show) {
+            if (show) {
+                $("tr#" + id).children().find("input").attr("readonly", true);
+                $("tr#" + id).children().find("input").css("border", "none");
+                $("tr#" + id).children().find(".none").hide();
+                $("tr#" + id).children().find(".cancel").hide();
+                $("tr#" + id).children().find(".del").show();
+                $("tr#" + id).children().find(".reqad").show();
+            } else {
+                $("tr#" + id).children().find("input").attr("readonly", false);
+                $("tr#" + id).children().find("input").css("border", "1px solid #ddd");
+                $("tr#" + id).children().find("input").focus();
+                $("tr#" + id).children().find(".none").show();
+                $("tr#" + id).children().find(".cancel").show();
+                $("tr#" + id).children().find(".del").hide();
+                $("tr#" + id).children().find(".reqad").hide();
+            }
+        }
+        function cancel(id) {
+            inputEdit(id, true);
+        }
+        function truely(id) {
+            var userId = $.cookie("userId");
+            var accessToken = $.cookie("accessToken");
+            var did = $("tr#" + id).attr("id");
+            var title = $("tr#" + id).children().find(".inp-title").val();
+            var sn = $("tr#" + id).children().find(".inp-sn").val();
+            var value = $("tr#" + id).children().find(".inp-value").val();
+            $.ajax({
+                url: getRootPath_dc() + '/systemDictionary/updateSystemDictionary',
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: userId, accessToken: accessToken},
+                data: {value: value, title: title, sn: sn, id: did},
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        layer.alert(data.msg);
+                        inputEdit(id, true);
+                    } else {
+                        layer.alert(data.msg);
+                    }
+                }
+            })
+        }
+        function add() {
+            $("#title1").val("");
+            $("#sn").val("");
+            $("#value1").val("");
+            $("#edit").modal("show");
+        }
+        function del(did) {
+            var id = $.cookie("userId");
+            var accessToken = $.cookie("accessToken");
+            layer.confirm('你真的不是手抖吗？', {icon: 3, title: '我只是问问'}, function () {
+                $.ajax({
+                    url: getRootPath_dc() + "/systemDictionary/deleteSystemDictionary",
+                    type: "post",
+                    dataType: "json",
+                    headers: {tokenUserId: id, accessToken: accessToken},
+                    data: {id: did},
+                    success: function (data) {
+                        if (data.errcode == 0) {
+                            layer.alert(data.msg);
+                            pubAjax(0);
+                            var $btn = $(".btn-addItem");
+                            $btn.html('请点击数据字典');
+                            $btn.addClass("disabled");
+                            $("#mail-list1").html("");
+                        } else {
+                            layer.alert(data.msg);
+                        }
+                    }
+                })
+            });
+        }
+        function sdStatus(id, state) {
+            var userId = $.cookie("userId");
+            var accessToken = $.cookie("accessToken");
+            $.ajax({
+                url: getRootPath_dc() + '/systemDictionary/updateSystemDictionaryStatus',
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: userId, accessToken: accessToken},
+                data: {id: id, status: state},
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        layer.alert(data.msg, function (index) {
+                            refreshCurrentPage();
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.alert(data.msg);
+                    }
+                }
+            })
+        }
+        function sdiStatus(id, state) {
+            var userId = $.cookie("userId");
+            var accessToken = $.cookie("accessToken");
+            $.ajax({
+                url: getRootPath_dc() + '/systemDictionary/updateSystemDictionaryItemStatus',
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: userId, accessToken: accessToken},
+                data: {id: id, status: state},
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        layer.alert(data.msg, function (index) {
+                            var parentId = $("[name='parentId']").val();
+                            itemAjax(parentId, id);
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.alert(data.msg);
+                    }
+                }
+            })
+        }
+        function sdListItem(event) {
+            var parentTr = $(event);
+            var parentId = parentTr.attr('id');
+            var title = parentTr.find(".inp-title").val();
+//            $("tr").removeClass("success");
+//            parentTr.addClass("success");
+            $(".item-title").text("添加" + title + "明细");
+            var $btn = $(".btn-addItem");
+            $btn.html('<i class="Hui-iconfont">&#xe600;</i> 添加[' + title + ']明细');
+            $btn.removeClass("disabled");
+            $("[name='parentId']").val(parentId);
+
+            itemAjax(parentId);
+        }
+
+        //===============================================
+        function itemList(data) {
+            $("#num111").html(data.data.totalCount);
+            var html = "<tr class='text-c'><th width='50'>序号</th><th width='80'>明细名称</th><th width='80'>值</th><th width='80'>字段</th><th style='text-align: left'>表达式</th><th width='80'>排序</th><th width='80'>状态</th><th width='100'>操作</th></tr>";
+            var dataa = eval(data.data.iData);
+            html += addTableNoDateHtml(dataa.length);
+            for (var i = 0; i < dataa.length; i++) {
+                html += "<tr class='text-c table-hover ext' id='" + dataa[i].parentId.toString() + dataa[i].id + "' iid='" + dataa[i].id + "' onclick='clickLine(this,\"info\")'>" +
+                    "<td>" + parseInt(i + 1) + "</td>" +
+                    "<td class='text-l'><input value='" + dataa[i].title + "' readonly='' class='inp-title' style='width:100%;border:0'></td>" +
+                    "<td><input value='" + dataa[i].value + "' readonly=''  class='inp-value' style='width:100%;border:0'></td>" +
+                    "<td><input value='" + dataa[i].field + "' readonly=''  class='inp-field' style='width:100%;border:0'></td>" +
+                    "<td><input value='" + dataa[i].expression + "' readonly=''  class='inp-expression' style='width:100%;border:0'></td>" +
+                    "<td><input value='" + dataa[i].sequence + "' readonly=''  class='inp-sequence' style='width:100%;border:0'></td>";
+                if (dataa[i].status) {
+                    html += "<td class='td-status'><a class='label radius label-success' title='点击停用' onClick='sdiStatus(\"" + dataa[i].id + "\",0)'>已启用</a></td>" ;
+                } else {
+                    html += "<td class='td-status'><a class='label radius' title='点击启用' onClick='sdiStatus(\"" + dataa[i].id + "\",1)'>停用中</a></td>";
+                }
+                html += "<td class='td-manage'>" +
+                    "<a style='text-decoration:none' class='ml-5 reqad' title='修改' href='javascript:;' onclick='bianji(\"" + dataa[i].parentId.toString() + dataa[i].id + "\")'><i class='Hui-iconfont operation-icon'> &#xe692;</i></a>" +
+                    "<a style='text-decoration:none' class='ml-5 cancel' title='取消' href='javascript:;' onclick='cancel(\"" + dataa[i].parentId.toString() + dataa[i].id + "\")'><i class='Hui-iconfont operation-icon'> &#xe66b;</i></a>" +
+                    "<a style='text-decoration:none' class='ml-5 del' title='删除'  onclick='delItem(\"" + dataa[i].id + "\")'><i class='Hui-iconfont operation-icon'> &#xe609;</i></a>" +
+                    "<a style='text-decoration:none' class='ml-5 none' title='保存' tid='" + "' did='" + dataa[i].id + "'  onclick='updateItem(\"" + dataa[i].parentId.toString() + dataa[i].id + "\")'><i class='Hui-iconfont operation-icon'> &#xe632;</i></a></td></tr>";
+            }
+            $("#mail-list1").append(html);
+        }
+        function itemAjax(parentId, selectId) {
+            var id = $.cookie("userId");
+            var accessToken = $.cookie("accessToken");
+            var orderBy;
+            if ($("#mail-list tr[id='"+parentId+"']").data("sn") == 'homeBar') {
+                orderBy = 'value';
+            }
+            $.ajax({
+                url: getRootPath_dc() + '/systemDictionary/systemDictionaryItemList',
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: id, accessToken: accessToken},
+                data: {parentId: parentId,orderBy:orderBy},
+                beforeSend: function () {
+                    $("#load").css("display", "block");
+                },
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        var bodyList = $("#mail-list1");
+                        bodyList.children().remove();
+                        itemList(data);
+                        bodyList.find("tr[iid='" + selectId + "']").addClass("info");
+                    } else {
+                        return false;
+                    }
+
+                },
+                complete: function () {
+                    $("#load").css("display", "none");
+                }
+            });
+
+        }
+        function addItem(parentId) {
+            $("#title").val("");
+            $("#value").val("");
+            $("#field").val("");
+            $("#sequence").val($("#mail-list1 tr").length);
+            $("#itemEdit").modal("show");
+        }
+        function delItem(did) {
+            var id = $.cookie("userId");
+            var accessToken = $.cookie("accessToken");
+            var parentId = $("[name='parentId']").val();
+            layer.confirm('你真的不是手抖吗？', {icon: 3, title: '我只是问问'}, function () {
+                $.ajax({
+                    url: getRootPath_dc() + "/systemDictionary/deleteSystemDictionaryItem",
+                    type: "post",
+                    dataType: "json",
+                    headers: {tokenUserId: id, accessToken: accessToken},
+                    data: {id: did},
+                    success: function (data) {
+                        if (data.errcode == 0) {
+                            layer.alert(data.msg);
+                            itemAjax(parentId);
+                        } else {
+                            layer.alert(data.msg);
+                        }
+                    }
+                });
+            });
+        }
+        function updateItem(id) {
+            var userId = $.cookie("userId");
+            var accessToken = $.cookie("accessToken");
+            var did = $("tr#" + id).attr("iid");
+            var title = $("tr#" + id).children().find(".inp-title").val();
+            var value = $("tr#" + id).children().find(".inp-value").val();
+            var expression = $("tr#" + id).children().find(".inp-expression").val();
+            var sequence = $("tr#" + id).children().find(".inp-sequence").val();
+            var field = $("tr#" + id).children().find(".inp-field").val();
+            $.ajax({
+                url: getRootPath_dc() + '/systemDictionary/updateSystemDictionaryItem',
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: userId, accessToken: accessToken},
+                data: {field: field, sequence: sequence, title: title, value: value, expression: expression, id: did},
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        layer.alert(data.msg);
+                        inputEdit(id, true);
+                    } else {
+                        layer.alert(data.msg);
+                    }
+
+                }
+            })
+
+        }
+    </script>
+</div>
+<div id="sdItem" class="page-container col-xs-8">
+    <script type="text/javascript">
+
+    </script>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l" id="data-nav1">
+  <a class="btn btn-primary radius disabled" data-title="数据字典明细" data-id="1"><i class="Hui-iconfont">&#xe601;</i> 数据字典明细</a>
+  <a class="btn btn-success disabled radius btn-addItem" onclick="addItem()">请双击数据字典</a>
+  </span> <span class="r">共有数据：<strong id="num111">0</strong> 条</span></div>
+    <div class="mt-20 mma">
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <tbody id="mail-list1"></tbody>
+        </table>
+
+    </div>
+</div>
+<div id="itemEdit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content radius">
+            <div class="modal-header">
+                <h3 class="modal-title item-title">添加数据字典明细</h3>
+                <a class="close" data-dismiss="modal" aria-hidden="true" href="">×</a>
+            </div>
+            <div class="modal-body">
+                <form id="itemForm">
+                    <input type="hidden" name="parentId" value="">
+                    <article class="page-container">
+                        <div class="form form-horizontal" id="form-article-add">
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-3">明细名称：</label>
+                                <div class="formControls col-xs-8 col-sm-8">
+                                    <input type="text" class="input-text" name="title" placeholder="请输入明细名称" id="title">
+                                </div>
+                            </div>
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-3">明细值：</label>
+                                <div class="formControls col-xs-8 col-sm-8">
+                                    <input type="text" class="input-text" name="value" placeholder="请输入明细数值（选填）"
+                                           id="value">
+                                </div>
+                            </div>
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-3">字段值：</label>
+                                <div class="formControls col-xs-8 col-sm-8">
+                                    <input type="text" class="input-text" name="field" placeholder="请输入对象字段（选填）"
+                                           id="field">
+                                </div>
+                            </div>
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-3">明细表达式：</label>
+                                <div class="formControls col-xs-8 col-sm-8">
+                                    <input type="text" class="input-text" name="expression" placeholder="请输入明细表达式（选填）"
+                                           id="expression">
+                                </div>
+                            </div>
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-3">排序：</label>
+                                <div class="formControls col-xs-8 col-sm-8">
+                                    <input type="number" class="input-text" name="sequence" placeholder="请输入明细排序"
+                                           id="sequence">
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-submit">添加</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content radius">
+            <div class="modal-header">
+                <h3 class="modal-title">添加数据字典分类</h3>
+                <a class="close" data-dismiss="modal" aria-hidden="true" href="">×</a>
+            </div>
+            <div class="modal-body">
+                <form id="form">
+                    <article class="page-container">
+                        <div class="form form-horizontal" id="form-article-add1">
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-3">分类名称：</label>
+                                <div class="formControls col-xs-8 col-sm-8">
+                                    <input type="text" class="input-text" name="title" placeholder="请输入分类名称"
+                                           id="title1">
+                                </div>
+                            </div>
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-3">分类SN：</label>
+                                <div class="formControls col-xs-8 col-sm-8">
+                                    <input type="text" class="input-text" name="sn" placeholder="请输入分类SN" id="sn">
+                                </div>
+                            </div>
+                            <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-3">分类值：</label>
+                                <div class="formControls col-xs-8 col-sm-8">
+                                    <input type="text" class="input-text" name="value" placeholder="请输入分类值" id="value1">
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-submit1">添加</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<script type="text/javascript" src="lib/PIE_IE678.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<!--/meta 作为公共模版分离出去-->
+
+<title>用户信息</title>
+</head>
+<body>
+
+<article class="page-container">
+	<form class="form form-horizontal" id="form-article-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">座位信息：</label>
+			<div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+				<label class="" id="seatInfo" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">座位号：</label>
+			<div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+				<label class="" id="seatNo" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">取票机：</label>
+			<div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+				<label class="" id="machineType" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">影院名：</label>
+			<div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+				<label class="" id="cinemaName" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">厅名：</label>
+			<div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+				<label class="" id="hallName" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">影院地址：</label>
+			<div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+				<label class="" id="cinemaAddress" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">影院电话：</label>
+			<div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+				<label class="" id="cinemaTel" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">所在城市：</label>
+			<div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+				<label class="" id="cityName" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">区域名称：</label>
+			<div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+				<label class="" id="districtName" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">影片名称：</label>
+			<div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+				<label class="" id="movieName" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">影片上映时间：</label>
+			<div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+				<label class="" id="publishTime" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">影片类型：</label>
+			<div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+				<label class="" id="movieType" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">语言：</label>
+			<div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+				<label class="" id="language" style="width: 500px;text-align: left;"></label>
+			</div>
+		</div>
+
+
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script> 
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script> 
+<script type="text/javascript" src="lib/jquery.cookie.js"></script> 
+<script type="text/javascript">
+$(function(){
+	var userId = $.cookie("userId");
+	var roleType = $.cookie("roleType");
+	var username = $.cookie("username");
+	if(userId==""||userId==null){
+		parent.location.href="login.html"
+	}
+})
+</script>
+</body>
+</html>
+<script type="text/javascript">
+	$(function(){
+
+		var orderId=getQueryString("orderId");
+		var id=$.cookie("userId");
+	    var accessToken=$.cookie("accessToken");
+		$.ajax({
+		   url: getRootPath_dc() + '/cinema/queryFilmOrderDetail',
+	       type: "post",
+	       dataType: "json",
+	       headers:{tokenUserId:id,accessToken:accessToken},
+	       data:{orderId:orderId},
+	       success:function(data){
+	       		console.log(data);
+	       		var data = data.data;
+       			$("#seatInfo").text(data.seatInfo);
+
+               $("#seatNo").text(data.seatNo);
+               $("#machineType").text(data.machineType);
+               $("#cinemaName").text(data.plan.cinema.cinemaName);
+               $("#hallName").text(data.plan.cinema.hallName);
+               $("#cinemaAddress").text(data.plan.cinema.cinemaAddress);
+               $("#cinemaTel").text(data.plan.cinema.cinemaTel);
+               $("#cityName").text(data.plan.cinema.cityName);
+               $("#districtName").text(data.plan.cinema.districtName);
+               $("#movieName").text(data.plan.movie.movieName);
+               $("#publishTime").text(data.plan.movie.publishTime);
+               $("#movieType").text(data.plan.movie.movieType);
+               $("#language").text(data.plan.language);
+
+
+	       }
+		})
+	})
+	function getQueryString(id) { 
+	    var reg = new RegExp("(^|&)" + id + "=([^&]*)(&|$)", "i"); 
+	    var r = window.location.search.substr(1).match(reg); 
+	    if (r != null) return unescape(r[2]); return null; 
+	} 
+
+
+</script>

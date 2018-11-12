@@ -1,0 +1,258 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>电影订单列表</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 电影订单列表 <a
+        class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+        href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="text-c">
+		 <span class="select-box inline">
+		 <select name="src" id="src" class="select">
+			 <option value="">支付来源</option>
+			 <option value="t">天智</option>
+			 <option value="a">抠电影</option>
+		 </select>
+		 </span>
+        <span class="select-box inline">
+		 <select name="payType" id="payType" class="select">
+			 <option value="">支付方式</option>
+			 <option value="0">支付宝</option>
+			 <option value="1">微信</option>
+			 <option value="3">余额</option>
+			 <option value="2">优惠券</option>
+		 </select>
+		 </span>
+        <span class="select-box inline">
+		 <select name="status" id="status" class="select">
+			 <option value="paySuccess">成功订单</option>
+			 <option value="cancel">取消订单</option>
+			 <option value="">失败订单</option>
+			 <option value="create">创建订单</option>
+		 </select>
+		 </span>
+        <input type="text" class="input-text" style="width:250px" placeholder="输入订单号,或用户id,或商户订单号" id="keyword"
+               name="keyword">
+        <button type="button" class="btn btn-success" id="search" name="" onclick="pubAjax(0)"><i class="Hui-iconfont">
+            &#xe665;</i> 搜订单
+        </button>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        影票重新上报：<input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'endDate\')||\'%y-%M-%d\'}'})"
+                      id="startDate"
+                      class="input-text Wdate" placeholder="选择起始日" style="width:150px;" value="">
+        -
+        <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'startDate\')}',maxDate:'%y-%M-%d'})" id="endDate"
+               class="input-text Wdate" placeholder="选择结束日" style="width:150px;" value="">
+        <button type="button" class="btn btn-primary" id="restReport" name="" onclick="restReport()"><i
+                class="Hui-iconfont">
+            &#xe642;</i> 重新上报
+        </button>
+        <span>&nbsp;&nbsp;</span>
+        <a href="https://gjdyzjb.cn/" target="view_window"> 国家票务管理系统</a>
+        <a title="查看帮助" href="javascript:layer_show('票房上报帮助','movie-report-help.html?username=98174670&password=1234abcd','800')"><i class="Hui-iconfont operation-icon"> &#xe633;</i></a>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"><span class="l"> <a href="javascript:;"
+                                                                class="btn btn-default radius disabled"><i
+            class="Hui-iconfont">&#xe601;</i> 电影订单列表</a></span> <span class="r">共有数据：<strong
+            id="num11">0</strong> 条</span></div>
+    <table class="table table-border table-bordered table-bg table-hover">
+        <tbody id="list-la"></tbody>
+    </table>
+    <div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a>
+        <div class="pagelist"></div>
+        <a class="nextpage paginate_button">下一页</a></div>
+</div>
+<div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif">
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript">
+    // 点击添加商品属性
+    $(function () {
+        var userId = $.cookie("userId");
+        var roleType = $.cookie("roleType");
+        var username = $.cookie("username");
+        if (userId == "" || userId == null) {
+            parent.location.href = "login.html";
+            return false;
+        }
+    });
+    pubAjax(0);
+
+    function pubAjax(page) {
+        var id = $.cookie("userId");
+        var accessToken = $.cookie("accessToken");
+        var keyword = $("#keyword").val();
+        var payType = $("#payType").val();
+        var status = $("#status").val();
+        var src = $("#src").val();
+
+        $.ajax({
+            url: getRootPath_dc() + '/cinema/queryAllFilmOrderList',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {page: page, limit: $(".limit").val(), keyword: keyword, status: status, payType: payType, src: src}, //
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                if (data.errcode == 0) {
+                    $("#list-la").children().remove();
+                    list(data);
+                    var myobj = eval(data.data);
+                    pageList(myobj);
+                    clickEvents(myobj, pubAjax);
+                } else {
+                    return false;
+                }
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        });
+    }
+
+    function list(data) {
+        $("#num11").html(data.data.totalCount);
+        var html = "<tr class='text-c'><th width='20'>序号</th><th>订单ID</th><th>订单来源</th><th>用户id</th><th>状态</th><th>用户优惠券ID</th><th>订单总金额</th><th>实际支付金额</th><th>单价</th><th>优惠金额</th><th>影票数量</th><th>接收短信号码</th><th>支付方式</th><th>微信商户订单号</th><th>总手续费</th><th>总其它费用</th><th>总服务费</th><th>放映时间</th><th>支付时间</th><th>创建时间</th></tr>";
+        var dataa = eval(data.data.iData);
+        html += addTableNoDateHtml(dataa.length);
+        for (var i = 0; i < dataa.length; i++) {
+            html += "<tr class='text-c .table-hover' id='" + dataa[i].fkOrderId + "' onclick='clickLine(this,\"info\")'>" +
+                "<td>" + parseInt(i + 1) + "</td>";
+            html += "<td>" +
+                "<a onClick='layer_show(\"电影订单详情\",\"film-order-detail.html?orderId=" + dataa[i].fkOrderId + "\")'>" + dataa[i].fkOrderId + "</a>";
+            html += "</td>";
+            if (isContains(dataa[i].fkOrderId, "a")) {
+                html += "<td class='text-c'><span class='label radius label-primary'>抠电影</span></td>";
+            }
+            else if (isContains(dataa[i].fkOrderId, "t")) {
+                html += "<td class='text-c'><span class='label radius label-success'>天智</span></td>";
+            }
+            else {
+                html += "<td class='text-c'>" + "未知" + "</td>";
+            }
+            html += "<td class='text-c'><a href='javascript:layer_show(\"用户信息\",\"user-info-detail.html?userId=" + dataa[i].fkUserId + "\")'>" + dataa[i].fkUserId + "</a></td>";
+            html += "<td class='td-status'>";
+            switch (dataa[i].status) {
+                case 1 :
+                    html += "<span class='label radius' style='background-color: #0d5ab1'>已创建</span>";
+                    break;
+                case 2 :
+                    html += "<span class='label radius' style='background-color: #5f6263'>已取消</span>";
+                    break;
+                case 3 :
+                    html += "<span class='label radius' style='background-color: #4BB94B'>支付成功</span>";
+                    break;
+                case 4 :
+                    html += "<span class='label radius' style='background-color: #6c71c4'>购票成功</span>";
+                    break;
+                case 5 :
+                    html += "<span class='label radius' style='background-color: #9cb945'>已评价</span>";
+                    break;
+                case 6 :
+                    html += "<span class='label radius' style='background-color: #8b743d'>购票失败</span>";
+                    break;
+                case 7 :
+                    html += "<span class='label radius' style='background-color: #ec4844'>待评价</span>";
+                    break;
+            }
+            html += "</td>";
+
+            html += "<td class='text-c'>" + (dataa[i].fkUserCouponId ? substringText(dataa[i].fkUserCouponId, 5) : "无") + "</td>";
+            html += "<td class='text-c'>" + dataa[i].money + "</td>" +
+                "<td class='text-c'>" + dataa[i].payMoney + "</td>" +
+                "<td class='text-c'>" + dataa[i].unitPrice + "</td>" +
+                "<td class='text-c'>" + dataa[i].reducePrice + "</td>" +
+                "<td class='text-c'>" + dataa[i].count + "</td>" +
+                "<td class='text-c'>" + dataa[i].mobile + "</td>";
+            html += "<td class='td-status'>" + parsePayType(dataa[i].payType) + "</td>";
+            html += "<td class='text-c'>" + (dataa[i].outTradeNo ? substringText(dataa[i].outTradeNo, 5) : "") + "</td>";
+            html += "<td class='text-c'>" + dataa[i].handleFee + "</td>" +
+                "<td class='text-c'>" + dataa[i].otherFee + "</td>" +
+                "<td class='text-c'>" + dataa[i].serviceFee + "</td>";
+            html += "<td class='text-c'>" + (dataa[i].startTime ? dateFormatUtil(dataa[i].startTime) : "") + "</td>";
+            html += "<td class='text-c'>" + (dataa[i].payTime ? dateFormatUtil(dataa[i].payTime) : "") + "</td>";
+            html += "<td class='text-c'>" + (dataa[i].createTime ? dateFormatUtil(dataa[i].createTime) : "") + "</td>";
+
+            html += "</tr>";
+        }
+        $("#list-la").append(html);
+    }
+
+    function isContains(str, substr) {
+        return str.indexOf(substr) >= 0;
+    }
+
+    function restReport() {
+        var id = $.cookie("userId");
+        var accessToken = $.cookie("accessToken");
+        var startDate = $("#startDate").val();
+        var endDate = $("#endDate").val();
+        if (isNull(startDate)) {
+            layer.alert("请选择起始日期");
+            return;
+        }
+        if (isNull(endDate)) {
+            layer.alert("请选择结束日期");
+            return;
+        }
+        var msg = '确定重新上报<span style="color: red">'+startDate + '至' + endDate +
+            '</span>期间的影票数据？<span style="color:#2b579a">重新上报数据会存在延迟</span>！';
+        layer.confirm(msg, function (index) {
+            $.ajax({
+                url: getRootPath_dc() + '/cinema/resetReport',
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: id, accessToken: accessToken},
+                data: {password: 'ivan', startDate: startDate, endDate: endDate}, //
+                beforeSend: function () {
+                    $("#load").css("display", "block");
+                },
+                success: function (data) {
+                    layer.alert(data.msg);
+                },
+                complete: function () {
+                    $("#load").css("display", "none");
+                }
+            });
+            layer.close(index);
+        })
+    }
+
+</script>
+</body>
+</html>

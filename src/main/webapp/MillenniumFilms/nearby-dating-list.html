@@ -1,0 +1,224 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>附近有约列表</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 附近有约列表 <a
+        class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+        href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="text-c">
+		 <span class="select-box inline">
+		 <select name="state" id="state" class="select">
+			 <option value="1">进行中</option>
+			 <option value="0">已结束</option>
+		 </select>
+		 </span>
+        <input name="" id="refresh" onclick="refreshCurrentPage();" type="hidden" value="刷新"/>
+        <input name="当前页" id="currentPage" type="hidden"/>
+        <input type="text" class="input-text" style="width:250px" placeholder="输入用户id,昵称,约会内容" id="keyword"
+               name="keyword">
+        <button type="button" class="btn btn-success" id="search" name="" onclick="pubAjax(0)"><i class="Hui-iconfont">
+            &#xe665;</i> 开始搜
+        </button>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"><span class="l"> <a href="javascript:;" class="btn btn-default radius disabled"><i
+            class="Hui-iconfont">&#xe601;</i> 附近有约列表</a></span> <span class="r">共有数据：<strong
+            id="num11">0</strong> 条</span></div>
+    <table class="table table-border table-bordered table-bg table-hover">
+        <tbody id="list-la"></tbody>
+    </table>
+    <div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a>
+        <div class="pagelist"></div>
+        <a class="nextpage paginate_button">下一页</a></div>
+</div>
+<div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif">
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript">
+    // 点击添加商品属性
+    var id = $.cookie("userId");
+    var roleType = $.cookie("roleType");
+    var username = $.cookie("username");
+    var accessToken = $.cookie("accessToken");
+    function refreshCurrentPage() {
+        var clickLine = $("#list-la").find("tr[class*='info']");
+        var id = clickLine.attr("id");
+        var currentPage = $("#currentPage").val();
+        pubAjax(currentPage, id);
+    }
+    pubAjax(0);
+    function pubAjax(page, selectId) {
+        var keyword = $("#keyword").val();
+        var state = $("#state").val();
+
+        $.ajax({
+            url: getRootPath_dc() + '/dating/queryAllNearbyDating',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {page: page, limit: $(".limit").val(), keyword: keyword, state: state},
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                console.log(data);
+                if (data.errcode == 0) {
+                    var bodyList = $("#list-la");
+                    bodyList.children().remove();
+                    list(data);
+                    bodyList.find("tr[id='" + selectId + "']").addClass("info");
+                    var myobj = eval(data.data);
+                    pageList(myobj);
+                    clickEvents(myobj, pubAjax);
+                } else {
+                    return false;
+                }
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        });
+    }
+    function list(data) {
+        $("#currentPage").val(data.data.page);
+        $("#num11").html(data.data.totalCount);
+        var html = "<tr class='text-c'><th width='20'>序号</th><th>用户ID</th><th>用户昵称</th><th>性别</th><th>年龄</th><th>约会内容</th><th>约会地点</th><th>指定性别</th><th>支付方</th><th>约会时间</th><th>报名人数</th><th>创建时间</th><th>状态</th><th>操作</th></tr>";
+        var dataa = eval(data.data.iData);
+        html += addTableNoDateHtml(dataa.length);
+        for (var i = 0; i < dataa.length; i++) {
+            var user = dataa[i].user;
+            if (!user) {
+                user = {};
+                user.age = 0;
+                user.sex = -1;
+                user.nickname = '';
+            }
+            html += "<tr class='text-c .table-hover' id='" + dataa[i].id + "' onclick='clickLine(this,\"info\")'>" +
+                "<td>" + parseInt(i + 1) + "</td>" +
+                "<td class='text-c'>" + "<a href='javascript:layer_show(\"用户信息\",\"user-info-detail.html?userId=" + dataa[i].userId + "\")'>" + dataa[i].userId + "</a>" + "</td>" +
+                "<td class='text-c'>" + user.nickname + "</td>";
+            html += "<td class='text-c'>";
+            switch (user.sex) {
+                case 1:
+                    html += "男";
+                    break;
+                case 0:
+                    html += "女";
+                    break;
+                default :
+                    html += "未知";
+            }
+            html += "</td>" +
+                "<td class='text-c'>" + user.age + "</td>" +
+                "<td class='text-c'>" + substringText(dataa[i].content) + "</td>";
+            html += "<td><a style='display: block' href='javascript:layer_show(\"地图\",\"map-container.html?lng=" + dataa[i].lng + "&lat=" + dataa[i].lat + "\")'>" + (isNull(dataa[i].site) ? "具体协商" : dataa[i].site) + "</a></td>";
+            html += "<td class='td-status'>";
+            switch (dataa[i].sex) {
+                case 1:
+                    html += "<span class='label radius label-primary'>限男</span>";
+                    break;
+                case 0:
+                    html += "<span class='label radius label-warning'>限女</span>";
+                    break;
+                default :
+                    html += "<span class='label radius label-default'>不限</span>";
+            }
+            html += "</td><td class='td-status'>";
+            switch (dataa[i].paySite) {
+                case 0:
+                    html += "<span class='label radius label-warning'>参与方</span>";
+                    break;
+                case 1:
+                    html += "<span class='label radius label-primary'>发起方</span>";
+                    break;
+                case 2:
+                    html += "<span class='label radius label-secondary'>AA制</span>";
+                    break;
+            }
+            html += "</td><td class='text-c'>" + dateFormatUtil(dataa[i].datingDate, true) + "</td>" +
+                "<td class='text-c'>";
+            if (dataa[i].applyCount > 0) {
+                html += "<a style='display:block' class='label radius label-secondary' href='javascript:layer_show(\"报名明细\",\"nearby-dating-apply-list.html?nId=" + dataa[i].id + "\")'>" + dataa[i].applyCount + "</a>";
+            } else {
+                html += dataa[i].applyCount;
+            }
+            html += "</td><td class='text-c'>" + dateFormatUtil(dataa[i].created) + "</td>";
+            html += "<td class='td-status'>";
+            if (dataa[i].state) {
+                if (dataa[i].datingDate >= new Date()) {
+                    html += "<span class='label radius label-success'>进行中</span>";
+                } else {
+                    html += "<span class='label radius label-default'>已结束</span>";
+                }
+            } else {
+                html += "<span class='label radius label-warning'>已删除</span>";
+            }
+            html += "</td><td class='f-14 td-manage'>";
+            if (dataa[i].state && dataa[i].datingDate >= new Date()) {
+                html += "<a style='text-decoration:none' class='ml-5' title='删除'  onclick='cancel(\"" + dataa[i].id + "\",\"" + dataa[i].userId + "\")'><i class='Hui-iconfont operation-icon'> &#xe609;</i></a>";
+            }
+            html += "</td>";
+        }
+        $("#list-la").append(html);
+    }
+    function cancel(nId, userId) {
+        layer.confirm('是否结束该附近约？', function (index) {
+            $.ajax({
+                type: 'post',
+                url: getRootPath_dc() + '/dating/delNearbyDating',
+                headers: {tokenUserId: id, accessToken: accessToken},
+                data: {nId: nId, createUser: userId},
+                beforeSend: function () {
+                    $("#load").css("display", "block");
+                },
+                success: function (data) {
+                    layer.alert(data.msg, function (index) {
+                        if (data.errcode == 0) {
+                            refreshCurrentPage();
+                        }
+                        layer.close(index)
+                    });
+                },
+                complete: function () {
+                    $("#load").css("display", "none");
+                }
+            });
+            layer.close(index);
+        });
+    }
+
+</script>
+</body>
+</html>

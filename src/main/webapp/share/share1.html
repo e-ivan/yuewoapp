@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-dpr="3" style="font-size: 55.2px;">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+
+
+    <title>分享</title>
+    <!-- jquery -->
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+    <!-- 自适应 计算html font-size -->
+    <!-- 引入公共样式 -->
+    <link rel="stylesheet" type="text/css" href="css/base.css">
+    <!-- 本页需要引用的css -->
+    <style type="text/css">
+
+        /* app下载 */
+        .app-bar {
+            overflow: hidden;
+            width: 100%;
+            height: 1.1rem;
+            background: rgba(247, 247, 247, 0.8);
+            font-family: "Microsoft Yahei";
+            z-index: 1045;
+        }
+
+        .app-bar-position {
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .app-bar .app-logo {
+            float: left;
+            width: .8rem;
+            margin: .15rem 0 0 .5rem;
+        }
+
+        .app-btn {
+            float: right;
+            background-color: #ff7e00;
+            border-radius: .08rem;
+            width: 1.8rem;
+            height: .68rem;
+            line-height: .68rem;
+            font-size: 0.34rem;
+            text-align: center;
+            margin: .21rem .2rem 0 0;
+            color: #FFF;
+        }
+
+        .app-bar .app-title {
+            float: left;
+            margin-left: .42rem;
+            padding: .15rem 0;
+        }
+
+        .app-bar .app-title .p1 {
+            font-size: .32rem;
+        }
+
+        .app-bar .app-title .p2 {
+            font-size: .24rem;
+        }
+    </style>
+
+    <!-- 页面需要引进的js文件 -->
+    <!-- <script type="text/javascript" src="js/panDuan.js"></script> -->
+
+</head>
+<body>
+
+<div class="detail">
+    <div class="b-pic">
+        <!-- 头部轮播 -->
+        <div class="main_visual">
+            <div class="flicking_con"></div>
+            <div class="main_image">
+                <ul id="lunb">
+                    <li><img src="images/p1.png"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="intro">
+        <h1 id="name1"></h1>
+        <div class="price">￥<em id="price">0</em><span>￥99.00</span></div>
+        <p><span>总销量：<em id="xiaoliang">0</em>笔</span>库存：0件</p>
+    </div>
+</div>
+
+<!-- 产品详情切换 -->
+<div class="p-detail">
+    <h2 id="header-wrap">
+        <a class="checked">图文详情</a><a>产品参数</a><a>商品评价</a>
+    </h2>
+    <div class="d-list">
+        <div class="lotpic">
+            <!-- <h1>2016年夏季新款 镂空蕾丝连衣裙 黑白2色</h1> -->
+            <p></p>
+        </div>
+        <div class="canshu">
+        </div>
+
+        <div class="elvalute"></div>
+
+    </div>
+</div>
+
+<!-- 底部三个按钮 -->
+<div class="buy">
+    <a href="javascript:;" class="" id='shop'><span
+            style="background: url(images/d.png) no-repeat 50% 0.07rem;">进入店铺</span></a>
+    <a href="javascript:;" class="sho"><span id="sho"
+                                             style="background: url(images/d1.png) no-repeat 50% 0.07rem;border-left: 1px solid #eee;border-right: 1px solid #eee;">加入购物车</span></a>
+    <a href="javascript:;" class="sho2 putinto"><span id="sho2"
+                                                      style="background: url(images/mon.png) no-repeat 50% 0.07rem;">立即购买</span></a>
+    <div class="clear"></div>
+</div>
+
+<input type="hidden" value="" id="shopId">
+<!-- 添加购物车成功显示的弹窗 -->
+<div id="shaop"
+     style="position: fixed;width: 180px;height: 60px;border-radius: 3px;background: rgba(0,0,0,.6);top: 50%;left: 50%;margin-left: -90px;margin-top: -30px;display: none;">
+    <p style="color: #fff;text-align: center;line-height: 60px;font-size: 16px;">添加购物车成功</p>
+</div>
+<!--商品属性弹窗-->
+<div id="bg"></div>
+<div class="property">
+    <div class="content">
+        <div class="close"><img src="images/close.png"></div>
+        <div id="tccl">
+
+        </div>
+    </div>
+    <span id='deId' style='display:none'></span>
+    <!-- <span id='mm' style='display: none;'></span> -->
+    <input type="hidden" id="mm" value="">
+    <input type="hidden" value="" id="fkUserId">
+    <div id='desp'></div>
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+
+</div>
+</body>
+</html>

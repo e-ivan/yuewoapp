@@ -1,0 +1,209 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <title>兑换码</title>
+</head>
+<body>
+<nav class="breadcrumb"><a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+                           href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">
+    &#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="text-c">
+	<span class="select-box inline">
+		 <select name="state" id="state" class="select">
+			 <option value="">兑换状态</option>
+			 <option value='1'>已兑换</option>
+			 <option value='0'>未兑换</option>
+		 </select>
+	 </span>
+        <input type="text" class="input-text" style="width:250px" placeholder="输入搜索信息" id="keyword" name="keyword">
+        <button name="" id="mSearch" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索
+        </button>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l" id="data-nav">
+	<a class="btn btn-primary radius" data-title="兑换码记录列表" data-id="1"><i class="Hui-iconfont">&#xe681;</i> 兑换码记录列表</a>
+	</span> <span class="r">共有数据：<strong id="num11">0</strong> 条</span></div>
+    <div class="mt-20 mma">
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <tbody id="mail-list"></tbody>
+        </table>
+        <div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a>
+            <div class="pagelist"></div>
+            <a class="nextpage paginate_button">下一页</a></div>
+    </div>
+    <div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif">
+    </div>
+    <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+    <script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+    <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+    <script type="text/javascript" src="lib/jquery.cookie.js"></script>
+    <script type="text/javascript" src="lib/common.js"></script>
+    <script type="text/javascript">
+
+        var limit = 10;
+        pubAjax(0);
+        // 点击添加商品属性
+        $(function () {
+            var userId = $.cookie("userId");
+            var roleType = $.cookie("roleType");
+            var username = $.cookie("username");
+            if (userId == "" || userId == null) {
+                parent.location.href = "login.html"
+                return false;
+            }
+        })
+        $("#mSearch").click(function () {
+            pubAjax(0);
+        })
+        function pubAjax(page) {
+            var id = $.cookie("userId");
+            var accessToken = $.cookie("accessToken");
+            var state = $("#state").val();
+            var keyword = $("#keyword").val();
+
+            $.ajax({
+                url: getRootPath_dc() + '/redeemCoupon/queryRedeemCodeList',
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: id, accessToken: accessToken},
+                data: {
+                    type: 'market',
+                    state: state,
+                    keyword: keyword,
+                    page: page,
+                    limit: limit
+                },
+                beforeSend: function () {
+                    $("#load").css("display", "block");
+                },
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        $("#mail-list").children().remove();
+                        $("#num11").html(data.data.totalCount);
+                        list(data);
+                        var myobj = eval(data);
+                        pageList(myobj);
+                        clickEvents(myobj);
+                    } else {
+                        return false;
+                    }
+
+                },
+                complete: function () {
+                    $("#load").css("display", "none");
+                }
+            });
+        }
+        function list(data) {
+            var html = "<tr class='text-c'><th width='50'>序号</th><th>兑换码</th><th>手机号码</th><th width='100'>兑换名称</th><th>兑换用户ID</th><th>兑换时间</th><th>状态</th><th>创建时间</th></tr>";
+            var dataa = eval(data.data.iData);
+            if (dataa.length <= 0) {
+                html += "<tr class='text-c .table-hover'><td colspan='20' style='text-align: center;color: grey'>暂无数据</td></tr>";
+            }
+            for (var i = 0; i < dataa.length; i++) {
+                html += "<tr class='text-c .table-hover' id='" + dataa[i].id + "'>" +
+                    "<td>" + parseInt(i + 1) + "</td>" +
+                    "<td>" + dataa[i].redeemCode + "</td>" +
+                    "<td>" + dataa[i].mobile + "</td>" +
+                    "<td>" + dataa[i].splitTypeName + "</td>" +
+                    "<td>" + (dataa[i].userId ? dataa[i].userId : "") + "</td>";
+                html += "<td>";
+                if (dataa[i].useTime) {
+                    html += dateFormatUtil(dataa[i].useTime);
+                }
+                html += "</td><td>";
+                if (dataa[i].use) {
+                    html += "<span class='label radius label-primary'>已兑换</span>";
+                } else {
+                    html += "<span class='label radius label-default'>未兑换</span>";
+                }
+                html += "</td><td>" + dateFormatUtil(dataa[i].created) + "</td>";
+            }
+            $("#mail-list").append(html);
+        }
+        function pageList(myobj) {
+            var totalCount = myobj.data.totalCount;
+            var pagelist = $('.pagelist');
+            var limit = myobj.data.limit;
+            var page = myobj.data.page;
+            var pageNum = Math.ceil(totalCount / limit);
+            var pages = '';
+            for (var i = 1; i < pageNum + 1; i++) {
+                pages += "<a>" + i + "</a>";
+            }
+            pagelist.html(pages);
+            var emptyPage = pagelist.html();
+            if (emptyPage == '' || emptyPage == null) {
+                $('.prepage,.nextpage').css({display: 'none'});
+            }
+            else {
+                $('.prepage,.nextpage').css({display: 'inline-block'});
+            }
+            pagelist.children().eq(page).addClass('cur').siblings().removeClass('cur');
+        }
+
+        function clickEvents(myobj) {
+            var totalCount = myobj.data.totalCount;
+            var limit = myobj.data.limit;
+            var page = myobj.data.page;
+            var pageNum = Math.ceil(totalCount / limit);
+            $(".nextpage,.prepage,.pagelist a").unbind("click");
+            $('.nextpage').click(function () {
+                if (page <= pageNum - 2) {
+                    page++;
+                    pubAjax(page);
+                }
+                else {
+                    return false;
+                }
+            });
+            $('.prepage').click(function () {
+                if (page >= 1) {
+                    page--;
+                    pubAjax(page);
+                }
+                else {
+                    return false;
+                }
+            });
+            $('.pagelist a').click(function () {
+                page = $(this).html() - 1;
+                pubAjax(page);
+            });
+        }
+
+        // json时间转化
+        function dateFormatUtil(longTypeDate) {
+            var dateTypeDate = "";
+            var date = new Date(longTypeDate);
+            dateTypeDate += date.getFullYear();   //年
+            dateTypeDate += "-" + (date.getMonth() + 1); //月
+            dateTypeDate += "-" + date.getDate();  //日
+            dateTypeDate += '&nbsp;';
+            dateTypeDate += date.getHours();
+            dateTypeDate += ":" + date.getMinutes();
+            dateTypeDate += ":" + date.getSeconds();
+            return dateTypeDate;
+        }
+    </script>
+</body>
+</html>

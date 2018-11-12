@@ -1,0 +1,120 @@
+
+    <meta charset="utf-8">
+    <link href="css/base.css" type="text/css" rel="stylesheet">
+    <div id="main">
+      <div class="r-top">交易佣金</div>
+    <div class="container">
+          <table class="village-list">
+          </table>  
+          <div class="page"><a class="prepage" >上一页</a><div class="pagelist"></div><a class="nextpage" >下一页</a></div> 
+     </div>
+   </div>
+    <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript">
+    $(function (){
+     var limit = 10;
+     function pubAjax(page){
+      jQuery.ajax({
+        url: '/skl/system/queryCommissions',
+        type: "post",
+        dataType: "json",
+        data:{page:page,limit:limit},
+        success: function (data) {
+          list(data);
+          pageList(data);
+          clickEvents(data);
+          auditing();
+        }              
+      }); 
+     }
+    pubAjax(0,"student");
+    function list(data){
+       var tableDom = $('.village-list');
+       var html = "<tr>"+"<th>"+"提成类型"+"</th>"+"<th>"+"平台佣金(%)"+"</th>"+"<th>"+"推荐人佣金(%)"+"</th>"+"<th>"+"分销佣金(%)"+"</th>" +"<th>"+"操作"+"</th>" +"</tr>";                   
+        for (var i = 0, len = data.data.iData.length; i < len; i++) {
+          html += "<tr>" + 
+        "<input type='hidden' value="+data.data.iData[i].id+" class='classifyId'>"+
+        "<td>" + data.data.iData[i].note+ "</td>" +  
+        "<td class='operator'>" +  data.data.iData[i].operator+ "</td>" +  
+        "<td class='recommend'>" + data.data.iData[i].recommend + "</td>" +  
+        "<td class='orderGuideId'>" + data.data.iData[i].orderGuide + "</td>" +  
+        "<td>" + '<a class="modify">修改</a>' + "</td>" +  
+        "</tr>";  
+        }
+       tableDom.html(html);
+    }
+     function auditing(){
+       $('.modify').click(function() {
+        var commissionId = $(this).parent().parent().find('.classifyId').val();
+        $.cookie("commissionId",commissionId);
+        var operator = $(this).parent().parent().find('.operator').html();
+        $.cookie("operator",operator);
+        var recommend = $(this).parent().parent().find('.recommend').html();
+        $.cookie("recommend",recommend);
+        var orderGuideId = $(this).parent().parent().find('.orderGuideId').html();
+        $.cookie("orderGuideId",orderGuideId);
+        window.location.href="modify-commission.html"
+       }); 
+     }
+  function pageList(data){ 
+     var totalCount = data.data.totalCount;
+     var pagelist=$('.pagelist');
+     var limit = data.data.limit;                  
+     var page = data.data.page;
+     var pageNum = Math.ceil(totalCount/limit) ;
+     var pages = '';
+     for (var i = 1; i < pageNum+1; i++) {
+        pages +=  "<a>" + i + "</a>"; 
+     }      
+    pagelist.html(pages);
+    var emptyPage = pagelist.html();
+     if(emptyPage==''|| emptyPage==null){
+         $('.prepage,.nextpage').css({display: 'none'});
+    }
+    else{
+      $('.prepage,.nextpage').css({display: 'inline-block'});
+    }
+    pagelist.children().eq(page).addClass('cur').siblings().removeClass('cur');       
+  }
+  function clickEvents(data){
+    var roleType = $('.current').attr("roleType");
+    $('.r-top a').click(function() {
+        $(this).addClass('current').siblings().removeClass('current');
+        var roleType = $('.current').attr("roleType");
+        page = 0;
+        pubAjax(page);
+      });
+     var totalCount = data.data.totalCount;
+     var limit = data.data.limit;         
+     var page = data.data.page;
+     var pageNum = Math.ceil(totalCount/limit) ;
+     $(".nextpage,.prepage,.pagelist a").unbind("click");                   
+     $('.nextpage').click(function() {
+          if (page<= pageNum-2) {
+            page++;
+            pubAjax(page); 
+          } 
+          else{
+             return false;
+          } 
+
+      });
+     $('.prepage').click(function() {
+      if (page>= 1) {
+          page--;
+          pubAjax(page);  
+        }
+        else{
+          return false;
+        }
+     });
+    $('.pagelist a').click(function() {
+      page =$(this).html()-1;
+      pubAjax(page);
+    }); 
+  }
+})
+   
+  
+  </script>

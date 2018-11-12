@@ -1,0 +1,161 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<LINK rel="Bookmark" href="/favicon.ico" >
+<LINK rel="Shortcut Icon" href="/favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<script type="text/javascript" src="lib/PIE_IE678.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<!--/meta 作为公共模版分离出去-->
+
+<title>添加招聘</title>
+</head>
+<body>
+<div class="layui-layer-title tab" style="cursor: pointer;">添加招聘</div>
+
+<span class="layui-layer-setwin"><a class="layui-layer-ico layui-layer-close layui-layer-close1" href="javascript:;" onclick="window.location.href='article-list.html'"></a></span>
+<article class="page-container">
+    <div class="form form-horizontal" id="form-article-add">
+        <div class="row cl">
+                  <label class="form-label col-xs-4 col-sm-2">角色名称：</label>
+                  <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="请输入角色名称" id="d_fl" >
+                  </div>
+            </div>
+            <div class="row cl">
+                  <label class="form-label col-xs-4 col-sm-2">角色性别：</label>
+                  <div class="formControls col-xs-8 col-sm-9">
+                        <select name="" class="input-text" id="d_name">
+                            <option value="1">男</option>
+                            <option value="0">女</option>
+                        </select>
+                  </div>
+            </div>
+            <div class="row cl">
+                  <label class="form-label col-xs-4 col-sm-2">角色年龄：</label>
+                  <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="请输入角色年龄"  id="d_type" >
+                  </div>
+            </div>
+            <div class="row cl">
+                  <label class="form-label col-xs-4 col-sm-2">角色标签：</label>
+                  <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="请输入角色标签"  id="d_time" >
+                  </div>
+            </div>
+            <div class="row cl">
+                  <label class="form-label col-xs-4 col-sm-2">角色简介：</label>
+                  <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="请输入角色简介"  id="d_location" >
+                  </div>
+            </div>
+            <div class="row cl">
+                  <label class="form-label col-xs-4 col-sm-2">简历类型：</label>
+                  <div class="formControls col-xs-8 col-sm-9">
+                      <select name="" class="input-text" id="d_long">
+                          <option value="actor">演员</option>
+                          <option value="director">导演</option>
+                          <option value="seceenwriter">编剧</option>
+                      </select>
+                  </div>
+            </div>
+            <div class="row cl">
+                  <label class="form-label col-xs-4 col-sm-2">招募限位：</label>
+                  <div class="formControls col-xs-8 col-sm-9">
+                        <input type="number" class="input-text" value=""  placeholder="请输入招募限位"  id="d_start" style="width: 100%">
+                  </div>
+            </div>
+            <div class="row cl">
+             <label class="form-label col-xs-4 col-sm-2"><a href="javascript:;" id="sub" style="display: block;padding: .65rem;background: red;text-align: center;color: #fff;width: 80px;float: right;margin-right: -135px;">添加</a></label>
+            </div>
+    </div>
+</article>
+<input type="hidden" value="" id="posId">
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script> 
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>  
+<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.js"></script> 
+
+</body>
+</html>
+<script>
+$(function(){
+      $("#add_type").click(function(){
+            var div="<p><input type='text' class='input-text' value='' placeholder='请输入影片题材'  class='d_end' style='width: 200px;'><span style='display: inline-block;cursor: pointer;color: red;margin-left: 10px;font-size: 16px;' class='d_del'><i class='Hui-iconfont'> &#xe6a1;</i></span></p>";
+            $("#d-dtype").append(div);
+            $(".d_del").click(function(){
+                $(this).parent().remove();
+            })
+      })
+    var userId = $.cookie("userId");
+    var roleType = $.cookie("roleType");
+    var username = $.cookie("username");
+    if(userId==""||userId==null){
+        window.location.href="login.html"
+    }
+})
+$("#sub").click(function(){
+    var id=$.cookie("userId");
+    var fkCrewId=getQueryString("id");
+    var accessToken=$.cookie("accessToken");
+    var roleName=$("#d_fl").val();
+    var roleSex=$("#d_name").val();
+    var roleAge=$("#d_type").val();
+    var roleLabel=$("#d_time").val();
+    var roleIntro=$("#d_location").val();
+    var applyType=$("#d_long").val();
+    var count=$("#d_start").val();
+      if (roleName==""||roleAge==""||roleLabel==""||roleIntro==""||count=="") {
+            alert("请正确添加剧组")
+      }else{
+        $.ajax({
+                  url: getRootPath_dc() + '/crew/saveRecruitInfo',
+                  type: "post",
+                  dataType: "json",
+                  headers:{tokenUserId:id,accessToken:accessToken},
+                  data:{fkCrewId:fkCrewId,roleName:roleName,roleSex:roleSex,roleAge:roleAge,roleLabel:roleLabel,roleIntro:roleIntro,applyType:applyType,count:count},
+                  success:function(data){
+                    console.log(data)
+                    alert(data.msg)
+                  }
+        })
+      }
+})
+
+function getQueryString(id) { 
+    var reg = new RegExp("(^|&)" + id + "=([^&]*)(&|$)", "i"); 
+    var r = window.location.search.substr(1).match(reg); 
+    if (r != null) return unescape(r[2]); return null; 
+} 
+
+</script>

@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <script type="text/javascript" src="jquery-2.2.3.min.js"></script>
+    </head>
+    <title>updateFilmOrder</title>
+    <body id="bodybody">
+
+    </body>
+</html>
+
+   <script type="text/javascript">
+
+
+$(function (){
+    jQuery.ajax({
+        url: '/qnyy/filmorder/updateFilmOrder',
+        type: "post",
+        dataType: "json",
+        data:{fkOrderId:"a1497921282431939682",mobile:"13333333334"},
+        success: function (data) {
+            console.log(data);
+        }
+    });
+});
+
+
+   </script>

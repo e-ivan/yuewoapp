@@ -1,0 +1,157 @@
+@charset "utf-8";
+/* 你自己的样式 */
+.add{
+	display: inline-block;
+	margin-top:-12px;
+}
+.rem{
+	display: inline-block;
+	height: 31px;
+	line-height: 30px;
+	cursor: pointer;
+	margin-left: 7px;
+	color: red
+}
+#shuxingqq .input-text{
+	width: 60%;
+}
+#shuxingqq .small{
+	width: 25%;
+}
+#sub:active,#sub1:active{
+	background: #0a6999
+	color:#fff;
+}
+.taba,.tabb{
+	cursor: pointer;
+	padding: 10px;
+}
+.tabb{
+	margin-left: 25px;
+}
+.tabcur{
+	color: #5a98de;
+}
+.btn-primary1 {
+    color: #fff;
+    background-color: red;
+    border-color: red;
+}
+.posa{
+	position: fixed;
+	right: 0;
+	top: 50%
+}
+.posa_a{
+	display: block;
+	font-size: 50px;
+}
+.posa_a:hover{
+	text-decoration: none;
+	color: #333
+}
+.posa_a span{
+	display: block;
+	font-size: 13px;
+	/*display: none;*/
+}
+.posa_a:hover span{
+	display: block;
+	text-decoration: none;
+}
+#addstore{
+	position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -345px;
+    margin-left: -35%;
+    width: 70%;
+    background: #f1f1f1;
+    height: 78%;
+}
+#addlist{
+	position: fixed;
+    top: 0;
+    left: 0;
+    width: 97%;
+    height: 100%;
+    background: #f7f7f7;
+}
+#lunbo img,#xiangq img,#canshu img{margin-right: 10px;}
+#d_shux input{border:#fff;width: 100px;margin-right: 10px;}
+.btn-green {
+    color: #fff;
+    background-color: #4BB94B;
+    border-color: #4BB94B;
+}
+.btn-green:hover{
+	color: #fff;
+	background-color: #3A843A;
+	border-color: #3A843A;
+}
+.btn-grey {
+    color: #fff;
+    background-color: #F37B1D;
+    border-color: #F37B1D;
+}
+.btn-grey:hover{
+	color: #fff;
+	background-color: #C1631A;
+	border-color: #C1631A;
+}
+.btn-red{
+	background-color: #C00;
+	border-color: #C00;
+	color: #fff;
+}
+.btn-red:hover{
+	background-color: #981717;
+	border-color: #981717;
+	color: #fff;
+}
+.btn-black{
+	background-color: #CE1FDA;
+	border-color: #CE1FDA;
+	color: #fff;
+}
+.btn-black:hover{
+	background-color: #AB1AB5;
+	border-color: #AB1AB5;
+	color: #fff;
+}
+.btn-primary3{
+	background-color: #5EB95E;
+	border-color: #5EB95E;
+	color: #fff;
+}
+.btn-primary3:hover{
+	background-color: #3A793A;
+	border-color: #3A793A;
+	color: #fff;
+}
+.sstatus{display: none;}
+.kuaidi{
+	width: 48%;
+    background: #eee;
+    height: 200px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -150px;
+    margin-left: -24%;
+}
+#orderm{
+	width: 360px;
+    height: 500px;
+    position: fixed;
+    top: 50%;
+    margin-top: -250px;
+    left: 50%;
+    margin-left: -180px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background: #f3f3f3;
+    display: none;
+}
+.inf li{padding: 15px;font-size: 15px;text-decoration: underline;}
+.inf li img{width: 120px;height: 120px;}

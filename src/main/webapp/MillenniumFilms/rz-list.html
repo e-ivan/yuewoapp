@@ -1,0 +1,324 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<LINK rel="Bookmark" href="/favicon.ico" >
+<LINK rel="Shortcut Icon" href="/favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<script type="text/javascript" src="lib/PIE_IE678.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>用户认证列表</title>
+<style type="text/css">
+	#showImg{position: fixed;width: 500px;height: 500px;top: 50%;left: 50%;margin-left: -250px;margin-top: -250px;background: rgba(0,0,0,.4);display: none;}
+	#showImg a{position: absolute;right: 5px;top: 0;color: red;}
+	#showImg img{width: inherit;height: inherit;}
+</style>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户认证列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<!-- <div class="text-c"> 日期范围：
+		<input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}'})" id="datemin" class="input-text Wdate" style="width:120px;" value="">
+		-
+		<input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d'})" id="datemax" class="input-text Wdate" style="width:120px;" value="">
+		<input type="text" class="input-text" style="width:250px" placeholder="输入管理员名称" id="" name="">
+		<button type="submit" class="btn btn-success" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 搜用户</button>
+	</div> -->
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"> <a href="javascript:;"  class="btn btn-primary radius"><i class="Hui-iconfont">&#xe601;</i> 用户认证列表</a></span> <span class="r">共有数据：<strong id="num11">0</strong> 条</span> </div>
+	<table class="table table-border table-bordered table-bg">
+		<tbody id="list-la"></tbody>
+	</table>
+	<div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a><div class="pagelist"></div><a class="nextpage paginate_button" >下一页</a></div>
+</div>
+<div id="showImg">
+	<img src="" />
+	<a href="javascript:;">关闭</a>
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>  
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script> 
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script> 
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript">
+/*管理员-增加*/
+
+/*管理员-删除*/
+function admin_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		//此处请求后台程序，下方是成功后的前台处理……
+		
+		$(obj).parents("tr").remove();
+		layer.msg('已删除!',{icon:1,time:1000});
+	});
+}
+/*管理员-编辑*/
+function admin_edit(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+/*管理员-停用*/
+function admin_stop(id){
+	if (confirm('确认要停用吗？')) {
+		$.post(getRootPath_dc() + "/user/changeUserStatus",{userId:id,status:30},function(data){
+			console.log(data)
+			if (data.errcode==0) {
+				alert('已停用!')
+				window.location.reload();
+				//$("tr#"+id).children("td.td-status").html('<span class="label radius">停用中</span>')
+			}else{
+				alert(data.msg);
+			}
+		})
+	}
+	
+}
+
+/*管理员-启用*/
+function admin_start(id){
+	if (confirm('确认要启用吗？')) {
+		$.post(getRootPath_dc() + "/user/changeUserStatus",{userId:id,status:20},function(data){
+			if (data.errcode==0) {
+				alert('已启用!');
+				window.location.reload();
+				//$("tr#"+id).children("td.td-status").html('<span class="label radius label-success">已启用</span>')
+			}else{
+				alert(data.msg);
+			}
+		})
+	}
+	
+}
+</script>
+<script type="text/javascript">
+	// 点击添加商品属性
+	$(function(){
+	  var userId = $.cookie("userId");
+	  var roleType = $.cookie("roleType");
+	  var username = $.cookie("username");
+	  if(userId==""||userId==null){
+	    parent.location.href="login.html"
+	    return false;
+	  }
+	})
+	pubAjax(0)
+	function pubAjax(page){
+	    var id=$.cookie("userId");
+	    var accessToken=$.cookie("accessToken");
+	    $.ajax({
+	       url: '/qnyy/user/queryUserRealName',
+	       type: "post",
+	       dataType: "json",
+	       headers:{tokenUserId:id,accessToken:accessToken},
+	       data:{page:page,limit:10},
+	          success: function (data) {
+	           console.log(data);
+	           if (data.errcode == 0) {
+	              $("#list-la").children().remove();
+	              $("#num11").html(data.data.totalCount)
+	              var html = "<tr class='text-c'><th width='15'>序号</th><th style='text-align: left' width='80'>用户名称</th><th width='140'>身份证号码</th><th width='90'>用户昵称</th><th width='90'>电话</th><th width='90'>工作</th><th width='35'>年龄</th><th width='70'>头像</th><th>相册</th><th>认证图片</th><th width='60'>状态</th><th width='60'>操作</th></tr>";  
+	              var dataa = eval(data.data.iData);  
+	              //alert(dataa.length);
+	               for(var i=0; i<dataa.length; i++){
+	                     html += "<tr class='text-c .table-hover' id='"+dataa[i].id+"'>"+
+	                     "<td>"+ parseInt(i+1) +"</td>"+
+	                     "<td class='text-l'>"+dataa[i].realName+"</td>"+
+	                     "<td>"+dataa[i].provinceCard+"</td>";
+	                     if(dataa[i].userInfoBase == null){
+	                     	console.log(i)
+	                     	html+="<td>无</td>"+
+	                     "<td>无</td>"+
+	                     "<td>无</td>"+
+	                     "<td>无</td>"+
+	                     "<td>无</td>"+
+	                     "<td>无</td>"+
+	                     "<td>无</td>";
+	                     }else{
+	                     	html+="<td>"+dataa[i].userInfoBase.nickName+"</td>"+
+		                     "<td>"+dataa[i].userInfoBase.phone+"</td>"+
+		                     "<td>"+dataa[i].userInfoBase.job+"</td>"+
+		                     "<td>"+dataa[i].userInfoBase.age+"</td>"+
+		                     "<td><img src='"+dataa[i].userInfoBase.userPhotoHead+"' width='60' height='60'></td><td class='asf78'>";
+		                     var pic=dataa[i].userInfoBase.albumList;
+		                     if(pic==null){
+		                     	html+="无"
+		                     }else{
+		                     	for(var z=0;z<pic.length; z++){
+			                     	html+="<img src='"+pic[z].location+"' width='60' height='60' style='margin:3px 5px;'>";
+			                     }
+		                     }
+		                     html+="</td><td class='asf78'>";
+	                     }
+	                     if(dataa[i].realNameList == null){
+	                     	html+="无";
+	                     }else{
+	                     	var alim=dataa[i].realNameList;
+	                     	for(var j=0;j<alim.length; j++){
+		                     	html+="<img src='"+alim[j].location+"' width='60' height='60' style='margin:3px 5px;'>";
+		                     }
+	                     }
+	                     html += "</td>";
+	                     if(dataa[i].state == 0){
+	                     	html += "<td>审核中</td>"+
+	                     	"<td><a href='javascript:;' onclick='agree(\""+dataa[i].id+"\")'>同意</a> <a href='javascript:;' onclick='unagree(\""+dataa[i].id+"\")'>拒绝</a></td></tr>";
+	                     }if(dataa[i].state == 1){
+	                     	html += "<td>审核通过</td><td></td></tr>"
+	                     }else if(dataa[i].state == 2){
+	                     	html += "<td>未通过审核</td><td></td></tr>"
+	                     }
+	                     
+	               }
+	              $("#list-la").append(html);
+	              $(".asf78 img").click(function(){
+						var src=$(this).attr("src")
+						var htp="http://112.74.188.232:8080"
+						$("#showImg img").attr("src",htp + src)
+						$("#showImg").show();
+						$("#showImg a").click(function(){
+							$("#showImg").hide();
+						})
+					})
+	              //list(data)
+	              var myobj=eval(data); 
+	              pageList(myobj);
+	              clickEvents(myobj);
+	           }
+	         }     
+	    });  
+	} 
+	
+	function pageList(myobj){ 
+	   var totalCount = myobj.data.totalCount;
+	   var pagelist=$('.pagelist');
+	   var limit = myobj.data.limit;                  
+	   var page = myobj.data.page;
+	   var pageNum = Math.ceil(totalCount/limit) ;
+	   var pages = '';
+	   for (var i = 1; i < pageNum+1; i++) {
+	      pages +=  "<a>" + i + "</a>";
+	   }      
+	   pagelist.html(pages);
+	   var emptyPage = pagelist.html();
+	   if(emptyPage==''|| emptyPage==null){
+	       $('.prepage,.nextpage').css({display: 'none'});
+	   }
+	   else{
+	    $('.prepage,.nextpage').css({display: 'inline-block'});
+	   }
+	   pagelist.children().eq(page).addClass('cur').siblings().removeClass('cur');
+	}
+
+	function clickEvents(myobj){
+	    var totalCount = myobj.data.totalCount;
+	    var limit = myobj.data.limit;         
+	    var page = myobj.data.page;
+	    var pageNum = Math.ceil(totalCount/limit) ;
+	    $(".nextpage,.prepage,.pagelist a").unbind("click");                   
+	    $('.nextpage').click(function() {
+	         if (page<= pageNum-2) {
+	           page++;
+	           pubAjax(page); 
+	         } 
+	         else{
+	            return false;
+	         } 
+	     });
+	    $('.prepage').click(function() {
+	     if (page>= 1) {
+	         page--;
+	         pubAjax(page);  
+	       }
+	       else{
+	         return false;
+	       }
+	    });
+	   $('.pagelist a').click(function() {
+	     page =$(this).html()-1;
+	     pubAjax(page);
+	   }); 
+	}
+	function del(cid){
+	    var id=$.cookie("userId");
+	    var accessToken=$.cookie("accessToken");
+	    $.ajax({
+	        url:getRootPath_dc() + "/crew/deleteCrewById",
+	        type:"post",
+	        dataType:"json",
+	        headers:{tokenUserId:id,accessToken:accessToken},
+	        data:{crewId:cid},
+	        success:function(data){
+	            if (confirm("您确定要删除吗")) {
+	                $("tr#"+cid).remove();
+	            }
+	        }
+	    })
+	}
+	// json时间转化
+	function dateFormatUtil(longTypeDate){  
+	     var dateTypeDate = "";  
+	     var date = new Date(longTypeDate);  
+	     dateTypeDate += date.getFullYear();   //年  
+	     dateTypeDate += "-" + (date.getMonth()+1); //月   
+	     dateTypeDate += "-" + date.getDate();  //日  
+	     dateTypeDate += '&nbsp;'
+	     dateTypeDate += date.getHours();
+	     dateTypeDate += ":"+date.getMinutes();
+	     dateTypeDate += ":"+date.getSeconds();
+	     return dateTypeDate;  
+	}  
+	function unagree(cid){
+		if(confirm("您确定要操作吗")){
+			var id=$.cookie("userId");
+		    var accessToken=$.cookie("accessToken");
+		    $.ajax({
+		        url:getRootPath_dc() + "/user/updateRealName",
+		        type:"post",
+		        dataType:"json",
+		        headers:{tokenUserId:id,accessToken:accessToken},
+		        data:{id:cid,state:'2'},
+		        success:function(data){
+		            console.log(data)
+				    alert(data.msg)
+				    window.location.reload();
+		        }
+		    })
+		}
+	}
+	function agree(cid){
+		if(confirm("您确定要操作吗")){
+			var id=$.cookie("userId");
+		    var accessToken=$.cookie("accessToken");
+		    $.ajax({
+		        url:getRootPath_dc() + "/user/updateRealName",
+		        type:"post",
+		        dataType:"json",
+		        headers:{tokenUserId:id,accessToken:accessToken},
+		        data:{id:cid,state:'1'},
+		        success:function(data){
+		            console.log(data)
+				    alert(data.msg);
+				    window.location.reload();
+		        }
+		    })
+		}
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <script type="text/javascript" src="jquery-2.2.3.min.js"></script>
+    </head>
+    <title>plan</title>
+    <body id="bodybody">
+
+    </body>
+</html>
+
+   <script type="text/javascript">
+
+
+$(function (){
+    jQuery.ajax({
+        url: '/qnyy/film/queryFilmPlan',
+        type: "post",
+        dataType: "json",
+        data:{cinemaId:"6793",movieId:"38469",plan:""},
+        success: function (data) {
+            console.log(data);
+        }
+
+    });
+});
+
+
+   </script>

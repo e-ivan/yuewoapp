@@ -1,0 +1,249 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/viewer/css/viewer.min.css"/>
+    <style>
+        .img {
+            height: 80px;
+            margin: 5px;
+        }
+    </style>
+    <title>宣传页面列表</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 宣传页面 <span
+        class="c-gray en">&gt;</span> 宣传页面列表 <a class="btn btn-success radius r"
+                                                style="line-height:1.6em;margin-top:3px"
+                                                href="javascript:location.replace(location.href);" title="刷新"><i
+        class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="text-c">
+        <input name="" id="refresh" onclick="refreshCurrentPage();" type="hidden" value="刷新"/>
+        <input type="hidden" class="input-text" id="state" name="state" value="1">
+        <input name="当前页" id="currentPage" type="hidden"/>
+        <!--<button type="button" class="btn btn-success" id="search" name="" onclick="pubAjax(0)">-->
+        <!--<i class="Hui-iconfont"> &#xe665;</i> 搜记录-->
+        <!--</button>-->
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="dropDown" id="data-nav">
+          <a class="btn btn-primary radius" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-title="显示页面" data-id="1">
+              <i class="Hui-iconfont">&#xe667;</i><span id="btnTitle"> 显示宣传页面</span></a>
+            <ul class="dropDown-menu menu radius box-shadow">
+                    <li><a data-type="1" class="showDropDown"> 显示宣传页面</a></li>
+                    <li><a data-type="0" class="showDropDown"> 不显示宣传页面</a></li>
+                </ul>
+        </span>
+           <a class="btn btn-green radius" style="margin-left: 5px;" data-title="添加宣传页面" href="javascript:layer_show('添加宣传页面','ad-page-edit.html')">
+              <i class="Hui-iconfont">&#xe600;</i> 添加宣传页面</a>
+        <span class="r">共有数据：<strong id="num11">0</strong> 条</span>
+    </div>
+    <div class="mt-20 mma">
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <tbody id="mail-list"></tbody>
+        </table>
+        <div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a>
+            <div class="pagelist"></div>
+            <a class="nextpage paginate_button">下一页</a></div>
+    </div>
+</div>
+<div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif">
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript" src="lib/viewer/js/viewer-jquery.min.js"></script>
+<script type="text/javascript">
+
+    // 点击添加商品属性
+    var userId = $.cookie("userId");
+    var roleType = $.cookie("roleType");
+    var username = $.cookie("username");
+    var accessToken = $.cookie("accessToken");
+    $(".showDropDown").click(function () {
+        $("#btnTitle").text($(this).text());
+        $("#state").val($(this).data("type"));
+        pubAjax(0);
+    });
+    $("#search").click(function () {
+        pubAjax(0);
+    });
+    var limit = 10;
+    pubAjax(0);
+    function refreshCurrentPage() {
+        var clickLine = $("#mail-list").find("tr[class*='info']");
+        var id = clickLine.attr("id");
+        var currentPage = $("#currentPage").val();
+        pubAjax(currentPage, id);
+    }
+    function pubAjax(page, selectId) {
+        var state = $("#state").val();
+        $.ajax({
+            url: getRootPath_dc() + '/system/queryAllAdPage',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: userId, accessToken: accessToken},
+            data: {state: state, page: page, limit: $(".limit").val()},
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                if (data.errcode == 0) {
+                    var bodyList = $("#mail-list");
+                    bodyList.children().remove();
+                    list(data);
+                    bodyList.find("tr[id='" + selectId + "']").addClass("info");
+                    var myobj = eval(data.data);
+                    pageList(myobj);
+                    clickEvents(myobj, pubAjax);
+                } else {
+                    return false;
+                }
+
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        });
+    }
+    function list(data) {
+        $("#num11").html(data.data.totalCount);
+        $("#currentPage").val(data.data.page);
+        var html = "<tr class='text-c'><th width='50'>序号</th><th>标题</th><th >内容</th><th>跳转位置</th><th>跳转值</th><th>显示位置</th><th>开始显示时间</th><th>结束显示时间</th><th width='500'>轮播图片</th><th>状态</th><th >操作</th></tr>";
+        var dataa = eval(data.data.iData);
+        if (dataa.length <= 0) {
+            html += "<tr class='text-c .table-hover'><td colspan='12' style='text-align: center;color: grey'>暂无数据</td></tr>";
+        }
+        for (var i = 0; i < dataa.length; i++) {
+            html += "<tr class='text-c table-hover ext'  id='" + dataa[i].id + "' onclick='clickLine(this,\"info\")'>" +
+                "<td>" + parseInt(i + 1) + "</td>" +
+                "<td>" + dataa[i].title + "</td>" +
+                "<td class='text-c'>" + substringText(dataa[i].content) + "</td>" +
+                "<td>" + locationName(dataa[i].location) + "</td>" +
+                "<td>" + substringText(dataa[i].value)+ "</td>";
+            html += "<td>";
+            if (dataa[i].homeBanner) {
+                html += "<span class='label radius label-success'>首页轮播</span>";
+            }
+            if (dataa[i].homePop) {
+                html += "<br><span class='label radius label-warning'>首页弹窗</span>";
+            }
+            if (dataa[i].auctionBanner) {
+                html += "<br><span class='label radius label-primary'>竞拍轮播</span>";
+            }
+
+            html += "</td>";
+            html += "<td>" + dateFormatUtil(dataa[i].showStartTime, true) + "</td>" +
+                "<td>";
+            if (dataa[i].showEndTime) {
+                html += dateFormatUtil(dataa[i].showEndTime, true);
+            } else {
+                html += "";
+            }
+            html += "</td><td>";
+            html += "<div class='imgArea'>";
+            var image = dataa[i].image;
+            for (var v in image) {
+                if (image[v]) {
+                    html += "<div style='float: left'><img src='" + image[v] + "' alt='" + v + "' class='img-responsive img'>";
+                    html += "<p class='' style='text-align: center;'>" + imageTitle(v) + "</p></div>";
+                }
+            }
+            html += "</div></td>";
+            html += "<td>";
+            if (dataa[i].state) {
+                if (dataa[i].showStartTime >= new Date()) {
+                    html += "<span class='label radius label-default'>未开始</span>";
+                } else if (dataa[i].showEndTime != null && dataa[i].showEndTime <= new Date()) {
+                    html += "<span class='label radius label-warning'>已结束</span>";
+                } else {
+                    html += "<span class='label radius label-success'>进行中</span>";
+                }
+            } else {
+                html += "<span class='label radius label-danger'>已关闭</span>";
+            }
+            html += "</td>";
+            html += "<td class='f-14 td-manage'>" +
+                "<a style='text-decoration:none' class='ml-5 reqad' title='编辑宣传页面' onclick='layer_show(\"编辑宣传页面\",\"ad-page-edit.html?adId=" + dataa[i].id + "\")'><i class='Hui-iconfont operation-icon'> &#xe692;</i></a>";
+            if (dataa[i].state){
+                html += "<a style='text-decoration:none' class='ml-5' title='取消宣传'  onclick='updateState(\"" + dataa[i].id + "\",false)'><i class='Hui-iconfont operation-icon'> &#xe60b;</i></a>";
+            }else {
+                html += "<a style='text-decoration:none' class='ml-5' title='上架宣传'  onclick='updateState(\"" + dataa[i].id + "\",true)'><i class='Hui-iconfont operation-icon'> &#xe6dc;</i></a>";
+            }
+            html += "</tr>";
+        }
+        $("#mail-list").append(html);
+        var $imgArea = $(".imgArea");
+        $imgArea.viewer(viewerOption());
+        $imgArea.viewer("update");
+    }
+    function imageTitle(value) {
+        var title = '';
+        switch (value) {
+            case 'banner' :
+                title = '轮播图';
+                break;
+            case 'pop' :
+                title = '弹窗';
+                break;
+            case 'share' :
+                title = '分享图';
+                break;
+        }
+        return title;
+    }
+    function locationName(location) {
+        var name = "";
+        switch (location){
+            case 1 : name = "网页";break;
+            case 2 : name = "电影详情";break;
+            case 3 : name = "报名活动";break;
+            case 4 : name = "附近有约详情";break;
+            case 5 : name = "竞拍详情";break;
+        }
+        return name;
+    }
+    function updateState(adId,state) {
+        var content = state ? "您确定要上架改宣传页面吗？如果该宣传页面已过期则无法上架" :"您确定要取消显示该宣传页面吗";
+        layer.confirm(content, function (index) {
+            $.ajax({
+                url: getRootPath_dc() + "/system/updateAdPageState",
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: userId, accessToken: accessToken},
+                data: {adId: adId,state:state},
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        refreshCurrentPage();
+                    } else {
+                        layer.alert(data.msg);
+                    }
+                }
+            });
+            layer.close(index);
+        })
+    }
+</script>
+</body>
+</html>

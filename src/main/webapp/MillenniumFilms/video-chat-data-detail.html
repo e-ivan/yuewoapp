@@ -1,0 +1,175 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>视频聊天详情</title>
+</head>
+<body>
+
+<div class="page-container">
+
+
+    <div class="cl pd-5 bg-1 bk-gray mt-20"><span class="l"> <a href="javascript:;" class="btn btn-primary radius"><i
+            class="Hui-iconfont">&#xe601;</i> 视频聊天详情</a></span> <span class="r">共有数据：<strong
+            id="num11">0</strong> 条</span></div>
+    <table class="table table-border table-bordered table-bg">
+        <tbody id="list-la"></tbody>
+    </table>
+    <div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a>
+        <div class="pagelist"></div>
+        <a class="nextpage paginate_button">下一页</a></div>
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript">
+
+
+</script>
+<script type="text/javascript">
+    var limit = 10;
+    var userId = getQueryString("userId");
+    // 点击添加商品属性
+    $(function () {
+        var userId = $.cookie("userId");
+        var roleType = $.cookie("roleType");
+        var username = $.cookie("username");
+        if (userId == "" || userId == null) {
+            parent.location.href = "login.html";
+            return false;
+        }
+
+    });
+    pubAjax(0);
+    function pubAjax(page) {
+        var id = $.cookie("userId");
+        var accessToken = $.cookie("accessToken");
+
+        $.ajax({
+            url: getRootPath_dc() + '/videoChat/queryMyAcceptVideoChat',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {userId: userId, page: page, limit: $(".limit").val()},
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                if (data.errcode == 0) {
+                    $("#list-la").children().remove();
+                    list(data);
+                    var myobj = eval(data.data);
+                    pageList(myobj);
+                    clickEvents(myobj, pubAjax);
+                } else {
+                    return false;
+                }
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        });
+    }
+    //	function list(data){
+    ////	       加载list开始
+    //	              $("#num11").html(data.data.totalCount);
+    //	              var html = "<tr class='text-c'><th width='20'>序号</th><th>名字</th><th>图片</th><th>SUK属性</th><th>单价</th><th>数量</th><th>总价</th></tr>";
+    //	              var dataa = eval(data.data.iData);
+    //	               for(var i=0; i<dataa.length; i++){
+    //
+    //	                     var imgPath = getMarketImgPath_dc();
+    //	                     html += "<tr class='text-c .table-hover' id='"+dataa[i].id+"'>"+
+    //	                     "<td>"+ parseInt(i+1) +"</td>"+
+    //	                     "<td class='text-c'>"+dataa[i].name+"</td>"+
+    //                         "<td class='text-c'><img src='"+imgPath+dataa[i].img+"' alt='' style='width: 80px;height: 80px;'></td>"+
+    //                         "<td class='text-c'>"+dataa[i].skuPropertiesName+"</td>"+
+    //                         "<td class='text-c'>"+dataa[i].price+"</td>"+
+    //                         "<td class='text-c'>"+dataa[i].nums+"</td>"+
+    //                         "<td class='text-c'>"+dataa[i].amount+"</td>";
+    //
+    //	              html += "</tr>";
+    //	               }
+    //	              $("#list-la").append(html);
+    //
+    ////			加载list结束
+    //	    }
+    function list(data) {
+//	       加载list开始
+        $("#num11").html(data.data.totalCount);
+        var html = "<tr class='text-c'><th width='20'>序号</th><th>订单编号</th><th>拨打人id</th><th>接听人id</th><th>视频开始时间</th><th>通话时长(分钟)</th><th>支付时间</th><th>支付方式</th><th>实付金额</th><th>创建时间</th></tr>";
+        var dataa = eval(data.data.iData);
+        for (var i = 0; i < dataa.length; i++) {
+            var creatTime = dateFormatUtil(dataa[i].createTime);
+            var startTime = dateFormatUtil(dataa[i].startTime);
+            var payTime;
+            if (dataa[i].payTime == null) {
+                payTime = null;
+            }
+            else {
+                payTime = dateFormatUtil(dataa[i].payTime);
+            }
+            html += "<tr class='text-c .table-hover' id='" + dataa[i].id + "\")'>" +
+                "<td>" + parseInt(i + 1) + "</td>" +
+                "<td class='text-c'>" + dataa[i].orderId + "</td>" +
+                "<td class='text-c'>" + "<a href='javascript:layer_show(\"用户信息\",\"user-info-detail.html?userId=" + dataa[i].createUserId + "\")'>" + dataa[i].createUserId + "</a>" + "</td>" +
+                "<td class='text-c'>" + "<a href='javascript:layer_show(\"用户信息\",\"user-info-detail.html?userId=" + dataa[i].acceptUserId + "\")'>" + dataa[i].acceptUserId + "</a>" + "</td>" +
+                "<td class='text-c'>" + startTime + "</td>" +
+                "<td class='text-c'>" + dataa[i].duration + "</td>";
+            if (payTime == null) {
+                html += "<td class='text-c'>" + "null" + "</td>";
+            }
+            else {
+                html += "<td class='text-c'>" + payTime + "</td>";
+            }
+            if (dataa[i].payType == "alipay") {
+                html += "<td class='text-c'>" + "支付宝" + "</td>";
+            }
+            else if (dataa[i].payType == "wxpay") {
+                html += "<td class='text-c'>" + "微信" + "</td>";
+            }
+            else if (dataa[i].payType == "balance") {
+                html += "<td class='text-c'>" + "余额" + "</td>";
+            }
+            else {
+                html += "<td class='text-c'>" + "未知" + "</td>";
+            }
+            html += "<td class='text-c'>" + dataa[i].payMoney + "</td>" +
+                "<td class='text-c'>" + creatTime + "</td>";
+
+            html += "</td></tr>";
+        }
+        $("#list-la").append(html);
+
+//			加载list结束
+    }
+
+</script>
+</body>
+</html>

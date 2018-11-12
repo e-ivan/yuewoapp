@@ -1,0 +1,200 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<script type="text/javascript" src="lib/PIE_IE678.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<link rel="stylesheet" href="lib/zTree/v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<!--[if IE 6]>
+<script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>建材列表</title>
+</head>
+<body>
+<div>
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 视频订单 <span class="c-gray en">&gt;</span> 订单列表 <span class="layui-layer-setwin"><a class="layui-layer-ico layui-layer-close layui-layer-close1" href="javascript:;" onclick="window.history.go(-1)"></a></span></nav>
+	<div class="page-container">
+		<div class="cl pd-5 bg-1 bk-gray mt-20"> 
+		<span class="l">
+			<!-- <a href="javascript:;"  class="btn btn-danger radius"><i class="Hui-iconfont">&#xe61c;</i> 退货情况</a>  -->
+			<a class="btn btn-primary radius" href="javascript:;"><i class="Hui-iconfont">&#xe635;</i> 订单管理</a>
+		</span> 
+		<span class="r">共有数据：<strong id="num11">54</strong> 条</span> </div>
+		<div class="mt-20">
+			<table class="table table-border table-bordered table-bg table-hover table-sort">
+				<thead>
+					<tr class="text-c">
+						<th width="40">序号</th>
+						<th width="120">视频名称</th>
+						<th width="150">视频简介</th>
+						<th width="120">适合情况</th>
+						<th width="75">机构名称</th>
+						<th width="120">机构简介</th>
+						<th width="60">指导教师</th>
+						<th width="120">教师简介</th>
+						<th width="75">视频价格</th>
+						<th width="60">视频销量</th>
+						<th width="50">视频评分</th>
+						<th width="50">购买次数</th>
+						<th width="120">创建时间</th>
+						<th width="60">操作</th>
+					</tr>
+				</thead>
+				<tbody id="dtay"></tbody>
+			</table>
+			<div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a><div class="pagelist"></div><a class="nextpage paginate_button" >下一页</a></div>
+		</div>
+	</div>
+</div>
+<div id="orderm"><span class="layui-layer-setwin" style='margin-bottom: 20px;'><a class="layui-layer-ico layui-layer-close layui-layer-close1" href="javascript:;" onclick="window.history.go(-1)"></a></span></div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script> 
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript">
+$(function(){
+  var userId = $.cookie("userId");
+  var roleType = $.cookie("roleType");
+  var username = $.cookie("username");
+  if(userId==""||userId==null){
+    parent.location.href="login.html"
+  }
+})
+var limit=10;
+pubAjax(0)
+
+function pubAjax(page){
+    var courseStoreId=getQueryString("id")
+    console.log(courseStoreId)
+    $.ajax({
+       url: '/skl/videoCourse/queryVideoCourseOrderForStore',
+       type: "post",
+       dataType: "json",
+       data:{courseStoreId:courseStoreId,page:page,limit:limit},
+          beforeSend: function () {
+               $("#load").css("display","block");
+          },
+          success: function (data) {
+           console.log(data);
+            $("#dtay").children().remove();
+            var dataa = eval(data.data.iData);
+            console.log(dataa)
+            $("#num11").html(data.data.totalCount)
+                for(var i=0;i<dataa.length;i++){
+                  var videoCourse=dataa[i].videoCourse
+                      var html = "<tr class='text-c .table-hover' id='"+dataa[i].id+"'>"+
+                        "<td>"+ parseInt(i+1) +"</td>"+
+                        "<td class='text-l'><u style='cursor:pointer' class='text-primary'>"+ videoCourse.name +"</u></td>"+
+                        "<td>"+videoCourse.intro+"</td>"+
+                        "<td>"+videoCourse.fitPeople+"</td>"+
+                        "<td>"+videoCourse.orgName+"</td>"+
+                        "<td>"+videoCourse.orgIntro+"</td>"+
+                        "<td>"+videoCourse.teacherName+"</td>"+
+                        "<td>"+videoCourse.teacherIntro+"</td>"+
+                        "<td>"+videoCourse.price+"</td>"+
+                        "<td>"+videoCourse.sellCount+"</td>"+
+                        "<td>"+videoCourse.avgScore+"</td>"+
+                        "<td>"+videoCourse.isBuy+"</td>"+
+                        "<td>"+dateFormatUtil(videoCourse.createTime)+"</td>"+
+                        "<td><a href='javascript:;' class='lookl'>查看订单</a></td>"+
+                     $("#dtay").append(html);
+                     var videoCourseOrderUser=dataa[i].videoCourseOrderUser
+                     var li="<ul class='inf' style='display:none'>"+
+                            "<li><img src='/skl"+videoCourseOrderUser.userPhotoHead+"'></li>"+
+                            "<li>姓名: "+videoCourseOrderUser.nickName+"</li>"+
+                            "<li>电话: "+videoCourseOrderUser.phone+"</li>"+
+                            "<li>时间: "+dateFormatUtil(videoCourseOrderUser.createTime)+"</li>"+
+                            "</ul>";
+                      $("#orderm").append(li)
+                }
+                $("#orderm ul:first").show();
+                $("tr .lookl").click(function(){
+                      $("#orderm").show();
+                      var i=$(this).index("tr .lookl")
+                      $("#orderm ul:eq("+i+")").show().siblings("#orderm ul").hide();
+                  })
+          var myobj=eval(data); 
+          pageList(myobj);
+          clickEvents(myobj);
+         },
+        complete: function () {
+            $("#load").css("display","none");
+        },
+    });  
+} 
+
+function pageList(myobj){ 
+   var totalCount = myobj.data.totalCount;
+   var pagelist=$('.pagelist');
+   var limit = myobj.data.limit;                  
+   var page = myobj.data.page;
+   var pageNum = Math.ceil(totalCount/limit) ;
+   var pages = '';
+   for (var i = 1; i < pageNum+1; i++) {
+      pages +=  "<a>" + i + "</a>";
+   }      
+   pagelist.html(pages);
+   var emptyPage = pagelist.html();
+   if(emptyPage==''|| emptyPage==null){
+       $('.prepage,.nextpage').css({display: 'none'});
+   }
+   else{
+    $('.prepage,.nextpage').css({display: 'inline-block'});
+   }
+   pagelist.children().eq(page).addClass('cur').siblings().removeClass('cur');
+}
+
+function clickEvents(myobj){
+    var totalCount = myobj.data.totalCount;
+    var limit = myobj.data.limit;         
+    var page = myobj.data.page;
+    var pageNum = Math.ceil(totalCount/limit) ;
+    $(".nextpage,.prepage,.pagelist a").unbind("click");                   
+    $('.nextpage').click(function() {
+         if (page<= pageNum-2) {
+           page++;
+           pubAjax(page); 
+         } 
+         else{
+            return false;
+         } 
+     });
+    $('.prepage').click(function() {
+     if (page>= 1) {
+         page--;
+         pubAjax(page);  
+       }
+       else{
+         return false;
+       }
+    });
+   $('.pagelist a').click(function() {
+     page =$(this).html()-1;
+     pubAjax(page);
+   }); 
+}
+function getQueryString(id) {
+    var reg = new RegExp("(^|&)" + id + "=([^&]*)(&|$)", "i"); 
+    var r = window.location.search.substr(1).match(reg); 
+    if (r != null) return unescape(r[2]); return null; 
+} 
+</script>
+</body>
+</html>

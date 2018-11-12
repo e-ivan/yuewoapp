@@ -1,0 +1,186 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>约会看电影列表</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 约会看电影列表 <a
+        class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+        href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="text-c">
+		 <span class="select-box inline">
+		 <select name="internal" id="status" class="select">
+			 <option value="">约会状态</option>
+			 <option value="0">创建</option>
+			 <option value="10">接受</option>
+			 <option value="20">结束</option>
+			 <option value="30">成功</option>
+		 </select>
+		 </span>
+        <input type="text" class="input-text" style="width:250px" placeholder="输入用户id,或电影名" id="keyword" name="keyword">
+        <button type="button" class="btn btn-success" id="search" name="" onclick="pubAjax(0)"><i class="Hui-iconfont">
+            &#xe665;</i> 开始搜
+        </button>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"><span class="l"> <a href="javascript:;" class="btn btn-default radius disabled"><i
+            class="Hui-iconfont">&#xe601;</i> 约会看电影列表</a></span> <span class="r">共有数据：<strong
+            id="num11">0</strong> 条</span></div>
+    <table class="table table-border table-bordered table-bg table-hover">
+        <tbody id="list-la"></tbody>
+    </table>
+    <div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a>
+        <div class="pagelist"></div>
+        <a class="nextpage paginate_button">下一页</a></div>
+</div>
+<div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif">
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript">
+    // 点击添加商品属性
+    $(function () {
+        var userId = $.cookie("userId");
+        var roleType = $.cookie("roleType");
+        var username = $.cookie("username");
+        if (userId == "" || userId == null) {
+            parent.location.href = "login.html";
+            return false;
+        }
+    });
+    pubAjax(0);
+    function pubAjax(page) {
+        var id = $.cookie("userId");
+        var accessToken = $.cookie("accessToken");
+        var keyword = $("#keyword").val();
+        var status = $("#status").val();
+
+        $.ajax({
+            url: getRootPath_dc() + '/dating/queryAllDatingFilm',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {page: page, limit: $(".limit").val(), keyword: keyword, status: status},
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                console.log(data);
+                if (data.errcode == 0) {
+                    $("#list-la").children().remove();
+                    list(data);
+                    var myobj = eval(data.data);
+                    pageList(myobj);
+                    clickEvents(myobj, pubAjax);
+                } else {
+                    return false;
+                }
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        });
+    }
+    function list(data) {
+        $("#num11").html(data.data.totalCount);
+        var html = "<tr class='text-c'><th width='20'>序号</th><th>主动方用户id</th><th>被动方用户id</th><th>约会主题</th><th>内容</th><th>用户礼物id</th><th>约会类型</th><th>约会电影</th><th>约会电影院</th><th>约会时间</th><th>交通工具</th><th>是否能带朋友</th><th>是否已删除</th><th>约会状态</th><th>付款类型</th><th>创建时间</th></tr>";
+        var dataa = eval(data.data.iData);
+        for (var i = 0; i < dataa.length; i++) {
+            var createTime = dateFormatUtil(dataa[i].createTime);
+            html += "<tr class='text-c .table-hover' id='" + dataa[i].id + "' onclick='clickLine(this,\"info\")'>" +
+                "<td>" + parseInt(i + 1) + "</td>" +
+                "<td class='text-c'>" + "<a href='javascript:layer_show(\"用户信息\",\"user-info-detail.html?userId=" + dataa[i].createUserId + "\")'>" + dataa[i].createUserId + "</a>" + "</td>" +
+                "<td class='text-c'>" + "<a href='javascript:layer_show(\"用户信息\",\"user-info-detail.html?userId=" + dataa[i].acceptUserId + "\")'>" + dataa[i].acceptUserId + "</a>" + "</td>" +
+                "<td class='text-c'>" + dataa[i].title + "</td>" +
+                "<td class='text-c'>" + dataa[i].intro + "</td>" +
+                "<td class='text-c'>" + dataa[i].fkUserGiftId + "</td>" +
+                "<td class='text-c'>" + dataa[i].datingType + "</td>" +
+                "<td class='text-c'>" + dataa[i].datingFilm + "</td>" +
+                "<td class='text-c'>" + dataa[i].datingCinema + "</td>" +
+                "<td class='text-c'>" + dataa[i].datingTime + "</td>" +
+                "<td class='text-c'>" + dataa[i].transport + "</td>";
+            if (dataa[i].canBringFriends == 0) {
+                html += "<td class='text-c'>" + "不能" + "</td>";
+            }
+            else if (dataa[i].canBringFriends == 1) {
+                html += "<td class='text-c'>" + "能" + "</td>";
+            }
+            else {
+                html += "<td class='text-c'>" + "未知" + "</td>";
+            }
+
+            if (dataa[i].delFlag == 0) {
+                html += "<td class='text-c'>" + "否" + "</td>";
+            }
+            else if (dataa[i].delFlag == 1) {
+                html += "<td class='text-c'>" + "是" + "</td>";
+            }
+            else {
+                html += "<td class='text-c'>" + "未知" + "</td>";
+            }
+
+            if (dataa[i].status == 0) {
+                html += "<td class='text-c'>" + "<span class='label radius label-primary'>" + "创建" + "</span>" + "</td>";
+            }
+            else if (dataa[i].status == 10) {
+                html += "<td class='text-c'>" + "<span class='label radius label-danger'>" + "接受" + "</span>" + "</td>";
+            }
+            else if (dataa[i].status == 20) {
+                html += "<td class='text-c'>" + "<span class='label radius label-warning'>" + "结束" + "</span>" + "</td>";
+            }
+            else if (dataa[i].status == 30) {
+                html += "<td class='text-c'>" + "<span class='label radius label-success'>" + "成功" + "</span>" + "</td>";
+            }
+            else {
+                html += "<td class='text-c'>" + "未知" + "</td>";
+            }
+
+            if (dataa[i].payType == 0) {
+                html += "<td class='text-c'>" + "发起人" + "</td>";
+            }
+            else if (dataa[i].payType == 1) {
+                html += "<td class='text-c'>" + "接受人" + "</td>";
+            }
+            else if (dataa[i].payType == 2) {
+                html += "<td class='text-c'>" + "AA" + "</td>";
+            }
+            else {
+                html += "<td class='text-c'>" + "未知" + "</td>";
+            }
+            html += "<td class='text-c'>" + createTime + "</td></tr>";
+        }
+        $("#list-la").append(html);
+    }
+
+</script>
+</body>
+</html>

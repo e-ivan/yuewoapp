@@ -1,0 +1,137 @@
+    <meta charset="utf-8">
+    <link href="css/base.css" type="text/css" rel="stylesheet">
+    <div id="main">
+      <div class="r-top">添加商品分类</div>
+      <div class="container">
+        <div class="modify">
+        <dl >
+            <dt>商品分类名：</dt>
+            <dd>
+              <input class="login-text" id="address" placeholder="请输入分类名">
+              <input type="hidden" id="fkPurposeId"><button class="textBtn">添加分类名</button>
+            </dd>
+          </dl>
+          <div id="addPicture" style="display: none">
+          <dl >
+            <dt class="h8">添加图片： </dt>
+            <dd>
+              <a href="javascript:void(0);" class="img-content" id="thelist"></a>
+            </dd>
+          </dl>
+          <div id="uploader-demo" class="uploader-demo">
+            <div id="filePicker">选择分类图标</div>
+          </div>
+          <button id="ctlBtn" class="srartUpload" >开始上传</button>
+        </div>
+        </div>
+      </div>
+    </div>
+ 
+ <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+<script type="text/javascript" src="js/jquery.cookie.js"></script>
+<script type="text/javascript" src="uploadify/webuploader.js"></script>
+<script type="text/javascript"> 
+$('.textBtn').click(function(event) {
+  if ($('#address').val()=='') {
+    alert('请输入分类名');
+  }
+ else{
+
+    var name = $('#address').val();
+    jQuery.ajax({
+            url: '/skl/good/addGoodClass',
+            type: "post",
+            dataType: "json",
+            data:{name:name},
+            success: function (data) {
+              if (data.errcode==0) {
+                 var fkPurposeId = data.data.id;
+                 $('#fkPurposeId').val(fkPurposeId);
+                 $('#addPicture').css({
+                   display: 'block'
+                 });
+                 addpic();
+              }
+              else{
+                alert(data.msg);
+              }
+              
+            }              
+          }); 
+   function addpic(){
+    var $list=$("#thelist");    
+   var $btn =$("#ctlBtn");  
+   var thumbnailWidth = 80;  
+   var thumbnailHeight = 80;  
+   var fkPurposeId = $('#fkPurposeId').val();
+   var uploader = WebUploader.create({  
+       auto: false,  
+       swf: 'uploadify/Uploader.swf',  
+       server: '/skl/file/uploadFile',  
+       pick: {'id':'#filePicker','multiple':false},  
+       fileVal:'uploadFile',
+       fileNumLimit:1,
+       formData: {'fileType':'image','filePurpose':'imageClassIconPhoto','fkPurposeId':fkPurposeId},
+       accept: {  
+           title: 'Images',  
+           extensions: 'gif,jpg,jpeg,bmp,png',  
+           mimeTypes: 'image/*'  
+       },  
+       method:'POST',  
+   });  
+   uploader.on( 'fileQueued', function( file ) {  
+       var $li = $(  
+               '<div id="' + file.id + '" class="file-item thumbnail">' +  
+                   '<img>' +  
+               '</div>'  
+               ),  
+       $img = $li.find('img');  
+       $list.html( $li );  
+       uploader.makeThumb( file, function( error, src ) {  
+           if ( error ) {  
+               $img.replaceWith('<span>视频不能预览</span>');  
+               return;  
+           }  
+  
+           $img.attr( 'src', src );  
+       }, thumbnailWidth, thumbnailHeight );  
+   });  
+  
+   // 文件上传成功，给item添加成功class, 用样式标记上传成功。  
+   uploader.on( 'uploadSuccess', function( file ) {  
+       alert(file.name+'上传成功');
+       window.location.href='propertylist.html'
+   });  
+  
+   // 文件上传失败，显示上传出错。  
+   uploader.on( 'uploadError', function( file ) {  
+       var $li = $( '#'+file.id ),  
+           $error = $li.find('div.error');  
+  
+       // 避免重复创建  
+       if ( !$error.length ) {  
+           $error = $('<div class="error"></div>').appendTo( $li );  
+       }  
+  
+       $error.text('上传失败');  
+   });  
+ $btn.on( 'click', function() { 
+       if ($('#address').val()=='') {
+          alert('请输入图片链接地址');
+        } 
+        else{
+          uploader.upload();  
+        }
+         
+      });  
+   }
+ }
+});
+
+
+     
+        
+</script>
+
+  </body>
+</html>

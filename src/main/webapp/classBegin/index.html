@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <title>上课呗</title>
+    <meta charset="utf-8">
+    <link href="css/base.css" type="text/css" rel="stylesheet"></head>
+<body>
+    <header class="topbar">
+      <div class="top-container">
+        <div class="l">上课呗后台管理系统</div>
+        <div class="r">
+          欢迎您，
+          <span id="userNameShow"></span>
+          ！
+          <a class="quit">退出</a>
+        </div>
+      </div>
+    </header>
+
+     <aside class="aside">
+       <dl class="aside-nav">
+         <dt class="jian">报表管理</dt>
+         <dd style="display:block">
+           <ul>
+             <li class="select">
+               <a href="money.html" target="content">交易额</a>
+             </li>
+             <li>
+               <a href="newnember.html" target="content">新增用户</a>
+             </li>
+           </ul>
+         </dd>
+       </dl>
+       <dl class="aside-nav">
+         <dt>消息推送</dt>
+         <dd>
+           <ul>
+             <li>
+               <a href="news-system.html" target="content">系统消息</a>
+             </li>
+           </ul>
+         </dd>
+       </dl>
+       <dl class="aside-nav">
+         <dt>商品管理</dt>
+         <dd>
+           <ul>
+             <li>
+               <a href="propertylist.html" target="content">商品分类列表</a>
+             </li>
+           </ul>
+         </dd>
+       </dl>
+        <dl class="aside-nav">
+         <dt>会员管理</dt>
+         <dd>
+           <ul>
+             <li>
+               <a href="member.html" target="content">会员列表</a>
+             </li>
+           </ul>
+         </dd>
+       </dl>
+       <dl class="aside-nav">
+         <dt>轮播广告</dt>
+         <dd>
+           <ul>
+             <li>
+               <a href="lunbolist.html" target="content">轮播广告列表</a>
+             </li>
+           </ul>
+         </dd>
+       </dl>
+       <dl class="aside-nav">
+         <dt>交易佣金</dt>
+         <dd>
+           <ul>
+             <li>
+               <a href="commissions.html" target="content">交易佣金</a>
+             </li>
+           </ul>
+         </dd>
+       </dl>
+       <dl class="aside-nav">
+         <dt>业务管理</dt>
+         <dd>
+           <ul>
+             <li>
+               <a href="business.html" target="content">业务列表 </a>
+             </li>
+           </ul>
+         </dd>
+       </dl>
+       <dl class="aside-nav">
+         <dt>系统参数</dt>
+         <dd>
+           <ul>
+             <li>
+               <a href="number.html" target="content">账号管理</a>
+             </li>
+             <li>
+               <a href="aboutus.html" target="content">关于我们</a>
+             </li>
+             <li>
+               <a href="helpPageOrg.html" target="content">机构端使用帮助</a>
+             </li>
+             <li>
+               <a href="helpPageStudent.html" target="content">家长端使用帮助</a>
+             </li>
+             <li>
+               <a href="helpPageTeacher.html" target="content">教师端使用帮助</a>
+             </li>
+              <li>
+               <a href="legalNotice.html" target="content">法律</a>
+             </li>
+           </ul>
+         </dd>
+       </dl>
+     </aside>
+
+    <div class="right">
+     <iframe name="content" id="content" src="money.html" frameborder="0"  scrolling="no" width="100%" height="100%" onload="this.height=this.contentWindow.document.documentElement.scrollHeight"></iframe>
+    </div>
+
+   <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="js/left.js"></script>
+    <script type="text/javascript" src="js/quit.js"></script>
+    <script type="text/javascript">
+       function reinitIframe(){
+        var iframe = document.getElementById("content");
+        try{
+        iframe.height =  iframe.contentWindow.document.documentElement.scrollHeight;
+        }catch (ex){}
+        }
+        window.setInterval("reinitIframe()", 200);
+       $(function (){
+       var userId = $.cookie("userId");
+       var userName = $.cookie("userName");
+       if(userId==''||userId==null ){
+            window.location.href="login.html";             
+       }
+       else{
+          $('#userNameShow').html(userName);  
+     }
+    
+        
+     });
+       
+    
+     </script>
+</html>

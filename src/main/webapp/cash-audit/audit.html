@@ -1,0 +1,143 @@
+﻿<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+    <style>
+        .showPic {
+            opacity: 0;
+        }
+    </style>
+    <title>提现审核</title>
+</head>
+<body>
+<article class="page-container">
+
+    <form id="albumForm" name="" enctype="multipart/form-data" method="post" action="">
+        <input type="hidden" id="cashId" name="cashId">
+        <div class="form form-horizontal" id="form-album-add">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">审核留言：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <textarea name="remark" id="remark" class="textarea" placeholder="填写审核信息"></textarea>
+                </div>
+            </div>
+            <div class="row cl">
+                <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                    <button id="cash_auditor_success" onclick="updateCashState(true)" class="btn btn-success radius" type="button"><i class="Hui-iconfont">
+                        &#xe6a7;</i>审核通过
+                    </button>
+                    <button id="cash_auditor_refuse" onclick="updateCashState(false)" class="btn btn-danger radius" type="button"><i class="Hui-iconfont">
+                        &#xe6a6;</i>审核拒绝
+                    </button>
+                    <button id="close_iframe" onclick="layer_close()" class="btn btn-default radius" type="button">
+                        &nbsp;&nbsp;关闭&nbsp;&nbsp;</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+
+</article>
+
+
+<input type="hidden" value="" id="posId">
+<input type="hidden" value="" id="film">
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <script type="text/javascript" src="lib/jquery.cookie.js"></script> <script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript" src="lib/jquery.form.min.js"></script>
+<!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.js"></script>
+
+
+</body>
+</html>
+<script>
+
+
+    $(function () {
+        var userId = $.cookie("userId");
+        var roleType = $.cookie("roleType");
+        var username = $.cookie("username");
+        if (userId == "" || userId == null) {
+            window.location.href = "login.html"
+        }
+    });
+    function updateCashState(state) {
+        var cashId = getQueryString("cashId");
+        if (cashId == "" || cashId == null){
+            layer.alert("数据异常");
+        }
+        var accessToken = $.cookie("accessToken");
+        var userId = $.cookie("userId");
+        var remark = $("#remark").val();
+        console.log(remark);
+        var  url = "";
+        if (state){
+            url = "/account/updateCashSuccess";
+        }else {
+            url = "/account/updateCashRefuse";
+        }
+        $.ajax({
+            type: 'post',
+            url: getRootPath_dc() + url,
+            headers: {tokenUserId: userId, accessToken: accessToken},
+            data: {id: cashId,auditorId:userId,remark:remark},
+            success: function (data) {
+                console.log(data);
+                if (data.errcode == 0) {
+                    layer.alert(data.msg,function () {
+                        window.parent.location.reload();
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    });
+                }else {
+                    layer.alert(data.msg);
+                }
+            }
+        })
+    }
+
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+
+
+</script>

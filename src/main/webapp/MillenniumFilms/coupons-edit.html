@@ -1,0 +1,295 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+    <style type="text/css">
+        .pic {
+            opacity: 0;
+        }
+    </style>
+    <title>添加优惠券</title>
+</head>
+<body>
+<article class="page-container">
+    <div class="form form-horizontal" id="form-article-add">
+        <input type="text" hidden="hidden" value="" id="couponId">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3" style="font-weight:bold">优惠券名称：</label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <input type="text" class="input-text" value="" placeholder="请输入优惠券名称" name="couponName" id="couponName">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3" style="font-weight:bold">优惠券类型：</label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <select name="type" id="type" class="select select-box">
+                    <option value=''>选择优惠券类型</option>
+                    <option value='0'>代金券（用于抵扣指定金额）</option>
+                    <option value='1'>通用券（用于抵扣指定票数）</option>
+                </select>
+            </div>
+        </div>
+        <div class="row cl" id="typeDiv" hidden="hidden">
+            <label class="form-label col-xs-4 col-sm-3" id="selectName" style="font-weight:bold;color: #cb4b16"></label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <input type="text" class="input-text" value="" hidden="hidden" placeholder="请输入优惠券金额（元）" id="money">
+                <select name="seats" id="seats" class="select select-box" hidden="hidden">
+                    <option value='1'>一人</option>
+                    <option value='2'>两人</option>
+                    <option value='3'>三人</option>
+                    <option value='4'>四人</option>
+                </select>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3" style="font-weight:bold">优惠券期限（天）：</label>
+            <div class="formControls col-xs-8 col-sm-8" style="font-weight:bold">
+                <input type="text" class="input-text" value="" placeholder="请输入优惠券期限（天）" id="prescription">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3" style="font-weight:bold">优惠券指定电影：</label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <input type="text" class="input-text" value="" data-id="" data-pic="" placeholder="输入电影名称" name="query"
+                       id="movieQuery">
+                <!--<select name="movieId" id="movieId" class="select-box">
+                </select>-->
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"></label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <button id="sub" class="btn btn-success radius" type="button">
+                    <i class="Hui-iconfont">&#xe632; </i>保存
+                </button>
+                &nbsp;&nbsp;
+                <button class="btn btn-default radius" onclick="layer_close()" type="button">
+                    <i class="Hui-iconfont"></i>关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</article>
+<div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif">
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="lib/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.js"></script>
+
+</body>
+</html>
+<script>
+    var userId = $.cookie("userId");
+    var roleType = $.cookie("roleType");
+    var username = $.cookie("username");
+    var accessToken = $.cookie("accessToken");
+    $(function () {
+        if (userId == "" || userId == null) {
+            window.location.href = "login.html"
+        }
+        loadCouponDetail();
+    });
+    function loadCouponDetail() {
+        var couponId = getQueryString("couponId");
+        if (couponId != null && couponId != '') {
+            $.ajax({
+                url: getRootPath_dc() + '/coupon/getCoupon',
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: userId, accessToken: accessToken},
+                data: {couponId: couponId},
+                beforeSend: function () {
+                    $("#load").css("display", "block");
+                },
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        var myObj = data.data;
+                        $("#couponId").val(myObj.id);
+                        $("#couponName").val(myObj.name);
+                        $("#money").val(myObj.money);
+                        $("#prescription").val(myObj.prescription);
+                        $("#typeDiv").show();
+                        var seats = $("#seats");
+                        var money = $("#money");
+                        var selectName = $("#selectName");
+                        if (myObj.type) {
+                            $("#type option[value='1']").prop("selected", "selected");
+                            selectName.text("优惠张数：");
+                            seats.find("option[value='" + myObj.seats + "']").prop("selected", "selected");
+                            seats.show();
+                            money.hide();
+                        } else {
+                            $("#type option[value='0']").prop("selected", "selected");
+                            selectName.text("优惠金额（元）：");
+                            money.val(myObj.money);
+                            money.show();
+                            seats.hide();
+                        }
+                        if (myObj.movieId != null && myObj.movieId != '') {
+                            queryMovieDetail(myObj.movieId);
+                        }
+                    }else {
+                        layer.alert(data.msg);
+                    }
+                },
+                complete: function () {
+                    $("#load").css("display", "none");
+                }
+            })
+        }
+    }
+    function queryMovieDetail(movieId) {
+        $.ajax({
+            url: getRootPath_dc() + '/cinema/queryKouAllMovie',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: userId, accessToken: accessToken},
+            data: {movieId: movieId, simple: true},
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                if (data.errcode == 0) {
+                    try {
+                        var obj = data.data.suggestions[0];
+                        var movieQuery = $("#movieQuery");
+                        movieQuery.data("id", obj.data.movieId);
+                        movieQuery.data("pic", obj.data.pathVerticalS);
+                        movieQuery.val(obj.value)
+                    } catch (e) {
+                        layer.alert("无电影数据");
+                    }
+                } else {
+                    layer.alert(data.msg);
+                }
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        })
+    }
+    var onAutocompleteSelect = function (value) {
+        //根据返回结果自定义一些操作
+        var movieQuery = $("#movieQuery");
+        var movieId = value.data.movieId;
+        var moviePic = value.data.pathVerticalS;
+        movieQuery.data("id", movieId);
+        movieQuery.data("pic", moviePic);
+    };
+    var options = {
+        serviceUrl: getRootPath_dc() + '/cinema/queryKouAllMovie',
+        type: 'POST',
+        dataType: 'json',
+        ajaxSettings: {headers: {tokenUserId: userId, accessToken: accessToken}},
+        params: {simple: true},
+        paramName: 'keyword',
+        onSelect: onAutocompleteSelect,//选中之后的回调函数
+        noCache: false, //是否启用缓存 默认是开启缓存的
+        transformResult: function (data) {
+            return data.data;
+        },
+        showNoSuggestionNotice: true,
+        noSuggestionNotice: "没有搜索结果"
+    };
+    $('#movieQuery').autocomplete(options);
+    $("#sub").click(function () {
+        var couponId = $("#couponId").val();
+        var name = $("#couponName").val();
+        var money = $("#money").val();
+        var type = $("#type").val();
+        var prescription = $("#prescription").val();
+        var seats = $("#seats").val();
+        var movieQuery = $("#movieQuery");
+        var movieId = movieQuery.data("id");
+        var pic = movieQuery.data("pic");
+        if (isNull(movieQuery.val())) {
+            movieId = '';
+            pic = '';
+        }
+        $.ajax({
+            url: getRootPath_dc() + '/coupon/addCoupon',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: userId, accessToken: accessToken},
+            data: {
+                id: couponId,
+                name: name,
+                money: money,
+                seats: seats,
+                prescription: prescription,
+                movieId: movieId,
+                pic: pic,
+                type: type
+            },
+            success: function (data) {
+                layer.alert(data.msg, function (index) {
+                    if (data.errcode == 0) {
+                        var refresh = parent.$("#refresh");
+                        $(refresh).click();
+                        layer_close();
+                    }
+                    layer.close(index);
+                });
+            }
+        })
+    });
+
+    $("#type").change(function () {
+        var typeDiv = $("#typeDiv");
+        var seats = $("#seats");
+        var money = $("#money");
+        var selectName = $("#selectName");
+        if (this.value == '') {
+            typeDiv.hide();
+        } else if (this.value == 0) {
+            selectName.text("优惠金额（元）：");
+            seats.hide();
+            money.show();
+            typeDiv.show();
+        } else if (this.value == 1) {
+            selectName.text("优惠张数：");
+            money.hide();
+            seats.show();
+            typeDiv.show();
+        }
+    })
+
+</script>

@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <script type="text/javascript" src="jquery-2.2.3.min.js"></script>
+    </head>
+    <title>filmOrderOld</title>
+    <body id="bodybody">
+
+    </body>
+</html>
+
+   <script type="text/javascript">
+
+
+$(function (){
+    jQuery.ajax({
+        url: '/qnyy/filmorder/addFilmOrder',
+        type: "post",
+        dataType: "json",
+        data:{orderId:"587928370",fkUserId:"20003762_4651",money:"30.0"},
+        success: function (data) {
+            console.log(data);
+        }
+
+    });
+});
+
+
+   </script>

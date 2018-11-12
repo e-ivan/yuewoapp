@@ -1,0 +1,286 @@
+body,
+ol,
+ul,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+th,
+td,
+dl,
+dd,
+form,
+fieldset,
+legend,
+input,
+textarea,
+select {
+	margin: 0;
+	padding: 0
+}
+
+body {
+	font: 12px"宋体", "Arial Narrow", HELVETICA;
+	background: #fff;
+	-webkit-text-size-adjust: 100%;
+}
+
+a {
+	color: #2d374b;
+	text-decoration: none
+}
+
+a:hover {
+	color: #cd0200;
+	text-decoration: underline
+}
+
+em {
+	font-style: normal
+}
+
+li {
+	list-style: none
+}
+
+img {
+	border: 0;
+	vertical-align: middle
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0
+}
+
+p {
+	word-wrap: break-word
+}
+
+body {
+	background-color: #F9FBF8;
+	color: #000;
+}
+
+.content {
+	padding-bottom: 30px;
+	width: 100%;
+	height:auto;
+	background-image:url(../img/bg.png);
+	background-size: cover;
+	text-align: center;
+}
+.content .img{
+	position: relative;
+}
+.content .img .wz{
+	width:80%;
+	margin:25px auto;
+}
+.content .img .bmh{
+	width:50px;
+	position: absolute;
+	bottom: -10px;
+	left:10px;
+}
+.content .img .yj{
+	width:50px;
+	position: absolute;
+	bottom: 10px;
+	right:10px;
+}
+.content .box{
+	text-align: center;
+	width:100%;
+}
+.content .box .body{
+	position: relative;
+	width:90%;
+	margin: auto;
+	height:auto;
+	background-color: #F7FBFF;
+	border-radius: 5px;
+}
+.body .longtap{
+	padding:20px 0;
+	text-align: center;
+}
+.longtap .active{
+	margin: auto;
+	width: 75px;
+	height: 75px;
+	border-radius: 50%;
+}
+.longtap p{
+	margin-top:20px;
+	font-size: 21px;
+	color:#0e352a;
+}
+.body .model{
+	width:100%;
+	text-align: center;
+	margin:15px auto;
+}
+.body .model .kuang{
+	width: 60%;
+	height: 70px;
+	background-size: 100% 100%;
+	margin: 0 auto;
+	border: 2px dashed #C8DFFF;
+	text-align: center;
+	line-height: 66px;
+	font-size: 46px;
+}
+.body .message{
+	font-size: 15px;
+	color:#0e352a;
+	padding:30px 0;
+}
+.message li{
+	height:30px;
+	line-height: 30px;
+	overflow: hidden;
+}
+
+.leaveMessage {
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 49px;
+	width: 100%;
+	border-top: 1px solid #ccc;
+	background-color: #F9F9F9;
+	line-height: 49px;
+	z-index: 2;
+}
+
+.leaveMessage .comment {
+	width: 60%;
+	float: left;
+	text-align: center;
+}
+
+.leaveMessage .comment input {
+	width: 80%;
+	border-radius: 34px;
+	height: 34px;
+	border: 1px solid #ccc;
+	padding-left: 10%;
+}
+
+.leaveMessage .up {
+	width: 40%;
+	float: left;
+	line-height: 49px;
+	height: 49px;
+	color: #909694;
+}
+
+.leaveMessage .up span {
+	float: left;
+	line-height: 49px;
+	background-position: 50% 50%;
+}
+
+.leaveMessage .up span {
+	display: inline-block;
+	text-align: right;
+	width: 33%;
+}
+
+.shareBg {
+	position: fixed;
+	top: 50%;
+	left: 20%;
+	width: 60%;
+	height: 140px;
+	margin-top: -140px;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	z-index: 3;
+	background-color: #fff;
+	display: none;
+}
+
+.shareBg>p {
+	line-height: 20px;
+	text-align: right;
+}
+
+.shareBg>p>b {
+	display: inline-block;
+	margin-right: 5px;
+	cursor: pointer;
+	width: 16px;
+	height: 16px;
+	font-size: 24px;
+	text-align: center;
+}
+
+.shareBg>ul>li {
+	line-height: 60px;
+	font-size: 20px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.shareBg>ul>li:nth-of-type(1) {
+	border-bottom: 1px solid #ccc;
+}
+
+.leaveMessage .left {
+	float: left;
+	width: 50%;
+	text-align: left;
+}
+.leaveMessage .left p{
+	line-height: 25px;
+}
+.leaveMessage .left p:nth-of-type(1){
+	font-size: 16px;
+	color:#222;
+}
+.leaveMessage .left p:nth-of-type(2){
+	font-size: 14px;
+	color:#999;
+}
+.leaveMessage .right {
+	float: right;
+	width: 30%;
+	text-align: right;
+}
+.leaveMessage .logo{
+	float: left;
+	width: 20%;
+	height:49px;
+	text-align: center;
+}
+.leaveMessage .logo .img{
+	margin-top:4.5px;
+	display: inline-block;
+	width:40px;
+	height:40px;
+	border-radius: 5px;
+	background-image: url(../img/logo.png);
+	background-position: 100% 100%;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+.leaveMessage .right .download {
+	padding: 8px 15px;
+	cursor: pointer;
+	font-size: 20px;
+	margin-right: 25%;
+	border: 1px solid red;
+	border-radius: 5px;
+	color: red;
+}
+
+.leaveMessage .right a.download:hover,
+.leaveMessage .right a.download:active {
+	text-decoration: none;
+}

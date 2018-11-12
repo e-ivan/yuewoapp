@@ -1,0 +1,48 @@
+
+    <meta charset="utf-8">
+    <link href="css/base.css" type="text/css" rel="stylesheet">
+    <div id="main">
+    <div class="r-top">修改业务</div>
+    <div class="container">
+    <div class="messafe">
+      <dl><dt>业务名：</dt><dd><input class="addcontent" id="operator"></dd></dl>
+      <button class="xiugai">修改</button>
+    </div>  
+     </div>
+   </div>
+    <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript">
+
+    $(function (){
+      var classId = $.cookie("classId");
+      var className = $.cookie("className");
+      $('#operator').val(className);
+      $('.xiugai').click(function() {
+        var className =  $('#operator').val();
+        if (className=='') {
+          alert('请输入业务分类名');
+        }
+        else{
+          jQuery.ajax({
+            url: '/skl/classify/updateClassiftyClassName',
+            type: "post",
+            dataType: "json",
+            data:{classId:classId,className:className},
+            success: function (data) {
+              if (data.errcode==0) {
+                alert(data.msg);
+                window.location.href="business.html";
+              }
+              else{
+                 alert(data.msg);
+              }
+            }              
+          });
+        }
+        
+      });
+    })
+   
+  
+  </script>

@@ -1,0 +1,158 @@
+<?xml  version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+
+    <description>Spring-mvc配置</description>
+    <mvc:annotation-driven />
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/>
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+
+    <!--登陆拦截-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/testDIR/**"/>
+            <mvc:exclude-mapping path="/share/**"/>
+            <mvc:exclude-mapping path="/view/**"/>
+            <mvc:exclude-mapping path="/classBegin/**"/>
+            <mvc:exclude-mapping path="/MillenniumFilms/**"/>
+            <mvc:exclude-mapping path="/tianzhi/**"/>
+            <mvc:exclude-mapping path="/dingdan/**"/>
+            <mvc:exclude-mapping path="/cash-audit/**"/>
+            <mvc:exclude-mapping path="/finance/**"/>
+            <bean class="com.war4.interceptor.LoginInterceptor">
+                <property name="notNeedLoginUrlList">
+                    <list>
+                        <!--
+                        /alipay/notifyUrl
+/anchorroom/queryNearAnchor
+/anchorroom/queryHostAnchor
+/file/uploadFile
+/file/deleteFile
+/sms/sendPhoneValidCode
+/user/login
+/user/changePasswordByPhone
+/user/register
+                        -->
+                        <value>/user/register</value>
+                        <value>/user/login</value>
+                        <value>/user/checkLoginWeChat</value>
+                        <value>/user/rightWeChat</value>
+                        <value>/alipay/notifyUrl</value>
+                        <value>/anchorroom/queryNearAnchor</value>
+                        <value>/anchorroom/queryHostAnchor</value>
+                        <value>/file/uploadFile</value>
+                        <value>/file/deleteFile</value>
+                        <value>/sms/sendPhoneValidCode</value>
+                        <value>/user/changePasswordByPhone</value>
+                        <value>/system/queryHomePageList</value>
+                        <value>/user/queryAllUserList</value>
+                        <value>/user/changeUserStatus</value>
+                        <value>/system/querUserList</value>
+                        <value>/user/addAgreement</value>
+                        <value>/wechatPay/wechatPayCallBack</value>
+                        <value>/user/queryUserRealName</value>
+                        <value>/user/findUserInfo</value>
+                        <value>/user/getUserShareDetail</value>
+                        <value>/user/queryInternalUser</value>
+                        <value>/anchorroom/setVoide</value>
+                        <value>/user/judgeRealName</value>
+                        <value>/anchorroom/queryTrailer</value>
+                        <value>/system/queryActivityList</value>
+                        <value>/share/help.html</value>
+                        <value>/share/about.html</value>
+                        <value>/share/share.html</value>
+                        <value>/share/share1.html</value>
+                        <value>/share/share2.html</value>
+                        <value>/share/active.html</value>
+                        <value>/share/new_file.html</value>
+                        <value>/download</value>
+
+                        <value>/film/queryComingFilm</value>
+                        <value>/film/queryFilmByCityId</value>
+                        <value>/film/queryCinemaFilm</value>
+                        <value>/film/queryCityCinema</value>
+                        <value>/film/queryCinemaByMovie</value>
+                        <value>/film/queryFilmDetail</value>
+                        <value>/film/queryFilmPlan</value>
+                        <value>/film/queryYingCinema</value>
+                        <value>/film/queryYingCinemaFilm</value>
+                        <value>/film/queryYingFilmPlan</value>
+                        <value>/cinema/menu</value>
+
+                        <value>/filmother/queryAllFilmTopics</value>
+                        <value>/filmother/queryFilmComments</value>
+                        <value>/filmother/queryFilmTopics</value>
+                        <value>/common/queryCityByName</value>
+                        <value>/common/queryAllCity</value>
+                        <value>/common/createDemandRequest</value>
+                        <value>/common/homeBar</value>
+                        <value>/common/checkUser</value>
+                        <value>/common/serverTime</value>
+                        <value>/common/shopServer</value>
+                        <value>/common/appUpgrade</value>
+                        <value>/common/uploadApp</value>
+                        <value>/common/variable</value>
+                        <value>/common/queryAdPage</value>
+                        <value>/common/queryComment</value>
+                        <value>/common/getRecommendMsg</value>
+                        <value>/common/uploadAddress</value>
+                        <value>/cinema/getFilmOrderHistory</value>
+                        <value>/cinema/reportFilmOrder</value>
+                        <value>/cinema/reportSuccess</value>
+
+                        <value>/dating/queryDatingUser</value>
+                        <value>/dating/getNearbyDating</value>
+                        <value>/dating/queryNearbyDating</value>
+
+                        <value>/article/selectArticleById</value>
+                        <value>/article/queryArticleComments</value>
+                        <value>/article/queryArticleByModule</value>
+                        <value>/article/queryCommentsInComment</value>
+                        <value>/article/articleHtmlById</value>
+                        <value>/activityBid/queryActivityBidList</value>
+
+
+                        <value>/redeemCoupon/captcha</value>
+                        <value>/remote/getMarketCoupon</value>
+                        <value>/remote/updateMarketCouponState</value>
+
+                    </list>
+                </property>
+            </bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <mvc:resources location="/testDIR/" mapping="/testDIR/**"/>
+    <mvc:resources location="/share/" mapping="/share/**"/>
+    <mvc:resources location="/classBegin/" mapping="/classBegin/**"/>
+    <mvc:resources location="/MillenniumFilms/" mapping="/MillenniumFilms/**"/>
+    <mvc:resources location="/view/" mapping="/view/**"/>
+    <mvc:resources location="/tianzhi/" mapping="/tianzhi/**"/>
+    <mvc:resources location="/dingdan/" mapping="/dingdan/**"/>
+    <mvc:resources location="/cash-audit/" mapping="/cash-audit/**"/>
+    <mvc:resources location="/finance/" mapping="/finance/**"/>
+    <context:component-scan base-package="com.war4.controller"/>
+
+    <!-- 文件上传限制大小 -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- set the max upload size 5GB -->
+        <property name="maxUploadSize">
+            <value>5048576000</value>
+        </property>
+        <property name="maxInMemorySize">
+            <value>4096</value>
+        </property>
+    </bean>
+
+</beans>

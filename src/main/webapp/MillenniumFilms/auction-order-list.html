@@ -1,0 +1,169 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>竞拍订单列表</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 竞拍订单列表 <a
+        class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+        href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="text-c" id="searchContainer">
+		 <span class="select-box inline">
+		 <select name="state" id="state" class="select">
+			 <option value="">状态</option>
+			 <option value="2">已支付</option>
+			 <option value="3">已评价</option>
+		 </select>
+		 </span>
+        <!--<span class="select-box inline">
+		 <select name="payType" id="payType" class="select">
+			 <option value="">支付方式</option>
+			 &lt;!&ndash;<option value="0">支付宝</option>&ndash;&gt;
+			 &lt;!&ndash;<option value="1">微信</option>&ndash;&gt;
+			 <option value="3">余额</option>
+			 <option value="4">活动</option>
+		 </select>
+		 </span>-->
+        <input name="" id="refresh" onclick="refreshCurrentPage();" type="hidden" value="刷新"/>
+        <input name="当前页" id="currentPage" type="hidden"/>
+        <!--<input type="text" class="input-text" style="width:250px" placeholder="输入用户id,昵称,约会内容" id="keyword"-->
+        <!--name="keyword">-->
+        <button type="button" class="btn btn-success" id="search" name="" onclick="pubAjax(0)"><i class="Hui-iconfont">
+            &#xe665;</i> 开始搜
+        </button>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"><span class="l"> <a href="javascript:;" class="btn btn-default radius disabled"><i
+            class="Hui-iconfont">&#xe601;</i> 竞拍订单列表</a></span> <span class="r">共有数据：<strong
+            id="num11">0</strong> 条</span></div>
+    <table class="table table-border table-bordered table-bg table-hover">
+        <tbody id="list-la"></tbody>
+    </table>
+    <div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a>
+        <div class="pagelist"></div>
+        <a class="nextpage paginate_button">下一页</a></div>
+</div>
+<div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif">
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript">
+    // 点击添加商品属性
+    var id = $.cookie("userId");
+    var roleType = $.cookie("roleType");
+    var username = $.cookie("username");
+    var accessToken = $.cookie("accessToken");
+    var auctionId = getQueryString("auctionId");
+    pubAjax(0);
+    function refreshCurrentPage() {
+        var clickLine = $("#list-la").find("tr[class*='info']");
+        var id = clickLine.attr("id");
+        var currentPage = $("#currentPage").val();
+        pubAjax(currentPage, id);
+    }
+    function pubAjax(page,selectId) {
+        var keyword = $("#keyword").val();
+        var payType = $("#payType").val();
+        var state = $("#state").val();
+        if (auctionId) {
+            $("#searchContainer").hide();
+        }
+        $.ajax({
+            url: getRootPath_dc() + '/auction/queryAllAuctionOrder',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {auctionId:auctionId,state: state, payType: payType, page: page, limit: $(".limit").val()},// keyword: keyword, paystatus: paystatus, payway: payway
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                console.log(data);
+                if (data.errcode == 0) {
+                    var bodyList = $("#list-la");
+                    bodyList.children().remove();
+                    list(data);
+                    bodyList.find("tr[id='" + selectId + "']").addClass("info");
+                    var myobj = eval(data.data);
+                    pageList(myobj);
+                    clickEvents(myobj, pubAjax);
+                } else {
+                    return false;
+                }
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        });
+    }
+    function list(data) {
+        $("#num11").html(data.data.totalCount);
+        $("#currentPage").val(data.data.page);
+        var html = "<tr class='text-c'><th width='20'>序号</th><th>订单编号</th><th>竞拍用户ID</th>";
+        if (!auctionId) {
+            html += "<th>发起用户ID</th>";
+        }
+        html += "<th>实付金额（元）</th><th>创建时间</th><th>状态</th><th>操作</th></tr>";
+        var dataa = eval(data.data.iData);
+        html += addTableNoDateHtml(dataa.length);
+        for (var i = 0; i < dataa.length; i++) {
+            html += "<tr class='text-c .table-hover' id='" + dataa[i].id + "\")' onclick='clickLine(this,\"info\")'>" +
+                "<td>" + parseInt(i + 1) + "</td>" +
+                "<td class='text-c'>" + dataa[i].orderId + "</td>" +
+                "<td class='text-c'>" + "<a href='javascript:layer_show(\"用户信息\",\"user-info-detail.html?userId=" + dataa[i].bidUserId + "\")'>" + dataa[i].bidUserId + "</a>" + "</td>";
+            if (!auctionId) {
+                html += "<td class='text-c'>" + "<a href='javascript:layer_show(\"用户信息\",\"user-info-detail.html?userId=" + dataa[i].userId + "\")'>" + dataa[i].userId + "</a>" + "</td>";
+            }
+            html += "<td class='text-c'>" + dataa[i].price + "</td>" +
+                "<td class='text-c'>" + dateFormatUtil(dataa[i].created) + "</td>";
+            html += "<td class='td-status'>";
+            switch (dataa[i].status) {
+                case 1 :
+                    html += "<span class='label radius label-default'>已创建</span>";
+                    break;
+                case 2 :
+                    html += "<a class='label radius label-success' title='设置默认评价' onclick='setOrderEvaluate(\""+dataa[i].orderId+"\")'>已支付</a>";
+                    break;
+                case 3 :
+                    html += "<span class='label radius label-primary'>已评价</span>";
+                    break;
+            }
+            html += "</td><td>";
+            html += "<a style='text-decoration:none' onClick='parent.layer_show(\"竞拍明细订单\",\"auction-item-order-list.html?auctionId="+dataa[i].auctionId+"&userId="+dataa[i].bidUserId+"\",\"1200\")'>查看明细</a>";
+            html += "</td></tr>";
+        }
+        $("#list-la").append(html);
+    }
+
+</script>
+</body>
+</html>

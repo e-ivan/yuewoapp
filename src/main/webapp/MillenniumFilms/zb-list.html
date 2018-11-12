@@ -1,0 +1,131 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>主播列表</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 主播列表 <a
+        class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+        href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <!-- <div class="text-c"> 日期范围：
+        <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}'})" id="datemin" class="input-text Wdate" style="width:120px;" value="">
+        -
+        <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d'})" id="datemax" class="input-text Wdate" style="width:120px;" value="">
+        <input type="text" class="input-text" style="width:250px" placeholder="输入管理员名称" id="" name="">
+        <button type="submit" class="btn btn-success" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 搜用户</button>
+    </div> -->
+    <div class="cl pd-5 bg-1 bk-gray mt-20"><span class="l phg"> <a href="javascript:;" state='0'
+                                                                    class="btn btn-red radius giftph"><i
+            class="Hui-iconfont">&#xe61b;</i> 礼物排行</a> <a href="javascript:;" state='1'
+                                                          class="btn btn-primary radius peoph"><i class="Hui-iconfont">&#xe6cc;</i> 人数排行</a></span>
+        <span class="r">共有数据：<strong id="num11">0</strong> 条</span></div>
+    <table class="table table-border table-bordered table-bg">
+        <tbody id="list-la"></tbody>
+    </table>
+    <div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a>
+        <div class="pagelist"></div>
+        <a class="nextpage paginate_button">下一页</a></div>
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript">
+    // 点击添加商品属性
+    $(function () {
+        var userId = $.cookie("userId");
+        var roleType = $.cookie("roleType");
+        var username = $.cookie("username");
+        if (userId == "" || userId == null) {
+            parent.location.href = "login.html";
+            return false;
+        }
+    });
+    $(".phg a").click(function () {
+        $(this).addClass("giftph").siblings().removeClass("giftph");
+        var page = 0;
+        pubAjax(page)
+    });
+    pubAjax(0);
+    function pubAjax(page) {
+        var id = $.cookie("userId");
+        var accessToken = $.cookie("accessToken");
+        var state = $(".giftph").attr("state");
+        $.ajax({
+            url: getRootPath_dc() + '/system/querUserList',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {page: page, limit: $(".limit").val(), state: state},
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                console.log(data);
+                if (data.errcode == 0) {
+                    $("#list-la").children().remove();
+                    list(data);
+                    var myobj = eval(data.data);
+                    pageList(myobj);
+                    clickEvents(myobj, pubAjax);
+                } else {
+                    return false;
+                }
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        });
+    }
+    function list(data) {
+        $("#num11").html(data.data.totalCount);
+        var html = "<tr class='text-c'><th width='50'>序号</th><th width='70'>头像</th><th width='100'>用户名称</th><th width='80'>用户昵称</th><th width='95'>电话</th><th width='150'>爱好</th><th width='80'>礼物价值</th><th width='80'>粉丝数量</th><th>简介</th><th width='60'>年龄</th><th width='100'>工作</th></tr>";
+        var dataa = eval(data.data.iData);
+        for (var i = 0; i < dataa.length; i++) {
+            html += "<tr class='text-c .table-hover' id='" + dataa[i].id + "'>" +
+                "<td>" + parseInt(i + 1) + "</td>" +
+                "<td><img src='" + dataa[i].userPhotoHead + "' width='60'  height='60'></td>" +
+                "<td>" + dataa[i].username + "</td>" +
+                "<td>" + dataa[i].nickName + "</td>" +
+                "<td>" + dataa[i].phone + "</td>" +
+                "<td>" + dataa[i].interest + "</td>" +
+                "<td>￥" + dataa[i].giftValue + "</td>" +
+                "<td>" + dataa[i].fanNum + "</td>" +
+                "<td>" + dataa[i].intro + "</td>" +
+                "<td>" + dataa[i].age + "</td>" +
+                "<td>" + dataa[i].job + "</td>" +
+                "</tr>";
+        }
+        $("#list-la").append(html);
+    }
+</script>
+</body>
+</html>

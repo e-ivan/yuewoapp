@@ -1,0 +1,166 @@
+﻿<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/viewer/css/viewer.min.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+    <style>
+        .showPic {
+            opacity: 0;
+        }
+    </style>
+    <title>竞拍审核</title>
+</head>
+<body>
+<article class="page-container">
+
+    <form id="albumForm" name="" enctype="multipart/form-data" method="post" action="">
+        <div class="form form-horizontal" id="form-album-add">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">竞拍内容：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span id="content"></span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">竞拍图片：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <div id="albums_list">
+                    </div>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">审核留言：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <textarea name="remark" id="remark" class="textarea" placeholder="填写审核信息"></textarea>
+                </div>
+            </div>
+            <div class="row cl">
+                <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                    <button id="auditor_success" onclick="updateAuctionState(true)" class="btn btn-success radius"
+                            type="button"><i class="Hui-iconfont">
+                        &#xe6a7;</i>审核通过
+                    </button>
+                    <button id="auditor_refuse" onclick="updateAuctionState(false)" class="btn btn-danger radius"
+                            type="button"><i class="Hui-iconfont">
+                        &#xe6a6;</i>审核拒绝
+                    </button>
+                    <button onclick="layer_close()" class="btn btn-default radius" type="button">
+                        &nbsp;&nbsp;关闭&nbsp;&nbsp;</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript" src="lib/jquery.form.min.js"></script>
+<!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.js"></script>
+<script type="text/javascript" src="lib/viewer/js/viewer-jquery.min.js"></script>
+
+
+</body>
+</html>
+<script>
+    var userId = $.cookie("userId");
+    var username = $.cookie("username");
+    var auctionId = getQueryString("auctionId");
+    var accessToken = $.cookie("accessToken");
+    $(function () {
+        if (userId == "" || userId == null) {
+            window.location.href = "login.html"
+        }
+        $.ajax({
+            type: 'post',
+            url: getRootPath_dc() + '/auction/getAuction',
+            headers: {tokenUserId: userId, accessToken: accessToken},
+            data: {auctionId: auctionId},
+            success: function (data) {
+                console.log(data);
+                if (data.errcode == 0) {
+                    $("#content").text(data.data.content);
+                    var albumsList = $("#albums_list");
+                    var albums = data.data.albums;
+                    for (var album in albums) {
+                        albumsList.append('<img src="' + albums[album] + '" width="120" style="margin-right:10px">');
+                    }
+                    albumsList.viewer(viewerOption());
+                    if (data.data.status != 10) {
+                        $("#auditor_success").remove();
+                        $("#auditor_refuse").remove();
+                        var remark = $("#remark");
+                        remark.val(data.data.remark);
+                        remark.attr("disabled", true);
+                    }
+                } else {
+                    layer.alert(data.msg);
+                }
+            }
+        });
+    });
+    function updateAuctionState(state) {
+        if (auctionId == "" || auctionId == null) {
+            layer.alert("数据异常");
+        }
+        var remark = $("#remark").val();
+        $.ajax({
+            type: 'post',
+            url: getRootPath_dc() + "/audit/updateAuctionState",
+            headers: {tokenUserId: userId, accessToken: accessToken},
+            data: {id: auctionId, auditorId: userId, remark: remark, pass: state},
+            success: function (data) {
+                if (data.errcode == 0) {
+                    layer.alert(data.msg, function () {
+                        var refresh = parent.$("#refresh");
+                        $(refresh).click();
+                        layer_close();
+                    });
+                }else {
+                    layer.alert(data.msg);
+                }
+            }
+        })
+    }
+
+
+</script>

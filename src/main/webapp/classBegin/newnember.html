@@ -1,0 +1,129 @@
+
+    <meta charset="utf-8">
+    <link href="css/base.css" type="text/css" rel="stylesheet">
+    <div id="main">
+      <div class="r-top">新增用户</div>
+    <div class="container">
+      <div class="search"><input class="startTime" placeholder="请选择开始时间"><input class="endTime" placeholder="请选择结束时间"><button id="search">搜索</button></div>
+          <table class="village-list">
+          </table>  
+          <div class="page"><a class="prepage" >上一页</a><div class="pagelist"></div><a class="nextpage" >下一页</a></div> 
+     </div>
+   </div>
+    <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="http://www.js-css.cn/jscode/jquery.min.js"></script>
+    <script type="text/javascript" src="js/date_input.js"></script>
+    <script type="text/javascript">
+    $(function (){
+     $('.startTime').date_input();
+     $('.endTime').date_input();
+     var startTime  = $('.startTime').val();
+     var endTime  = $('.endTime').val();
+     var limit = 10;
+     function pubAjax(page,startTime,endTime){
+      jQuery.ajax({
+        url: '/skl/user/queryAllUserList',
+        type: "post",
+        dataType: "json",
+        data:{page:page,limit:limit,roleType:'student',startTime:startTime,endTime:endTime},
+        success: function (data) {
+          list(data);
+          pageList(data);
+          clickEvents(data);
+        }              
+      }); 
+     }
+    pubAjax(0,startTime,endTime);
+    function list(data){
+       var tableDom = $('.village-list');
+       var html = "<tr>"+"<th>"+"用户名"+"</th>"+"<th>"+"昵称"+"</th>"+"<th>"+"性别"+"</th>"+"<th>"+"年龄"+"</th>"+"<th>"+"电话"+"</th>" +"</tr>";                   
+        for (var i = 0, len = data.data.iData.length; i < len; i++) {
+          html += "<tr>" + 
+        "<td>" + data.data.iData[i].username+ "</td>" +  
+        "<td>" +  data.data.iData[i].nickName + "</td>" +  
+        "<td class='sex' status="+ data.data.iData[i].sex +">" + '' + "</td>" +  
+        "<td>" + data.data.iData[i].age + "</td>" +  
+        "<td>" + data.data.iData[i].phone + "</td>" +  
+        "</tr>";  
+        }
+       tableDom.html(html);
+       $('.village-list tr').each (function (){
+           var status = $(this).find('.sex').attr("status");           
+           if (status==0){
+            $(this).find('.sex').html('女');
+           }
+           if (status==1){
+            $(this).find('.sex').html('男');
+           }
+      })
+    }
+
+  function pageList(data){ 
+     var totalCount = data.data.totalCount;
+     var pagelist=$('.pagelist');
+     var limit = data.data.limit;                  
+     var page = data.data.page;
+     var pageNum = Math.ceil(totalCount/limit) ;
+     var pages = '';
+     for (var i = 1; i < pageNum+1; i++) {
+        pages +=  "<a>" + i + "</a>"; 
+     }      
+    pagelist.html(pages);
+    var emptyPage = pagelist.html();
+     if(emptyPage==''|| emptyPage==null){
+         $('.prepage,.nextpage').css({display: 'none'});
+    }
+    else{
+      $('.prepage,.nextpage').css({display: 'inline-block'});
+    }
+    pagelist.children().eq(page).addClass('cur').siblings().removeClass('cur');       
+  }
+  function clickEvents(data){
+     var startTime  = $('.startTime').val();
+     var endTime  = $('.endTime').val();
+     var totalCount = data.data.totalCount;
+     var limit = data.data.limit;         
+     var page = data.data.page;
+     var pageNum = Math.ceil(totalCount/limit) ;
+     $(".nextpage,.prepage,.pagelist a").unbind("click");                   
+     $('.nextpage').click(function() {
+          if (page<= pageNum-2) {
+            page++;
+            pubAjax(page,startTime,endTime); 
+          } 
+          else{
+             return false;
+          } 
+
+      });
+     $('.prepage').click(function() {
+      if (page>= 1) {
+          page--;
+          pubAjax(page,startTime,endTime);  
+        }
+        else{
+          return false;
+        }
+     });
+    $('.pagelist a').click(function() {
+      page =$(this).html()-1;
+      pubAjax(page,startTime,endTime);
+    }); 
+    $('#search').click(function() {
+        var startTime  = $('.startTime').val();
+        var start=new Date(startTime.replace("-", "/").replace("-", "/"));  
+        var endTime  = $('.endTime').val();
+        var end=new Date(endTime.replace("-", "/").replace("-", "/")); 
+        if(start>end){
+          alert('开始时间不能超过结束时间');
+        }
+        else{
+          page = 0;
+          pubAjax(page,startTime,endTime);
+          }
+      });  
+  }
+})
+   
+  
+  </script>

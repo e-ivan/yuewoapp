@@ -1,0 +1,129 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/viewer/css/viewer.min.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+    <title>用户信息</title>
+</head>
+<body>
+<div style="display: flex; justify-content: center; margin: 15px">
+    <article class="page-container" style="flex: 1;">
+        <form class="form form-horizontal" id="form-article-add">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold; text-align: right;">电影名称：</label>
+                <div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+                    <label class="" id="movieName" style="width: 500px;text-align: left;"></label>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold; text-align: right;">电影海报：</label>
+                <div class="formControls col-xs-8 col-sm-9 moviePic" >
+                    <img src="" id="pathVerticalS" alt="" style="height: 80px;"><br/>
+                    <img src="" id="pathHorizonH" alt="" style="height: 20px;">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold; text-align: right;">上映时间：</label>
+                <div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+                    <label class="" id="publishTime" style="width: 500px;text-align: left;"></label>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold; text-align: right;">导演：</label>
+                <div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+                    <label class="" id="director" style="width: 500px;text-align: left;"></label>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold; text-align: right;">演员：</label>
+                <div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+                    <label class="" id="actor" style="width: 500px;text-align: left;"></label>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold; text-align: right;">简介：</label>
+                <div class="formControls col-xs-8 col-sm-9" style="height: 30px">
+                    <label class="" id="intro" style="width: 500px;text-align: left;"></label>
+                </div>
+            </div>
+        </form>
+    </article>
+</div>
+<div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif"></div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript" src="lib/viewer/js/viewer-jquery.min.js"></script>
+</body>
+</html>
+<script type="text/javascript">
+    $(function () {
+        var movieId = getQueryString("movieId");
+        var id = $.cookie("userId");
+        var accessToken = $.cookie("accessToken");
+        $(".moviePic").viewer();
+        $.ajax({
+            url: getRootPath_dc() + '/cinema/queryKouAllMovie',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {movieId: movieId},
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                if (data.errcode == 0) {
+                    try {
+                        var data = data.data.iData[0];
+                        $("#movieName").text(data.movieName);
+                        $("#publishTime").text(data.publishTime);
+                        $("#director").text(data.director);
+                        $("#actor").text(data.actor);
+                        $("#intro").text(data.intro);
+                        $("#pathVerticalS").attr("src",data.pathVerticalS);
+                        $("#pathHorizonH").attr("src",data.pathHorizonH);
+                    }catch (e){
+                        layer.alert("无数据");
+                    }
+                }else {
+                    layer.alert(data.msg);
+                }
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        });
+    });
+
+</script>

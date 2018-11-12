@@ -1,0 +1,45 @@
+
+    <meta charset="utf-8">
+    <link href="css/base.css" type="text/css" rel="stylesheet">
+    <div id="main">
+    <div class="r-top">添加业务分类</div>
+    <div class="container">
+    <div class="messafe">
+      <dl><dt>业务分类名：</dt><dd><input class="addcontent" id="operator"></dd></dl>
+      <button class="xiugai">添加</button>
+    </div>  
+     </div>
+   </div>
+    <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript">
+
+    $(function (){
+      $('.xiugai').click(function() {
+        var name =  $('#operator').val();
+        if (name=='') {
+          alert('请输入业务分类名');
+        }
+        else{
+          jQuery.ajax({
+            url: '/skl/classify/addClassifyGroup',
+            type: "post",
+            dataType: "json",
+            data:{name:name},
+            success: function (data) {
+              if (data.errcode==0) {
+                alert(data.msg);
+                window.location.href="business.html";
+              }
+              else{
+                 alert(data.msg);
+              }
+            }              
+          });
+        }
+        
+      });
+    })
+   
+  
+  </script>

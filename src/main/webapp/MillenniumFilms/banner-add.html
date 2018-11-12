@@ -1,0 +1,507 @@
+﻿<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+    <style>
+        .showPic {
+            opacity: 0;
+        }
+    </style>
+    <title>添加轮播</title>
+</head>
+<body>
+<div class="layui-layer-title tab" style="cursor: pointer;">添加轮播</div>
+
+<span class="layui-layer-setwin"><a class="layui-layer-ico layui-layer-close layui-layer-close1" href="javascript:;"
+                                    onclick="window.location.href='banner-list.html'"></a></span>
+<article class="page-container">
+    <div class="form form-horizontal" id="form-article-add">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span style="color: red">*</span>标题：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="分享标题" id="t_name">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span style="color: red">*</span>内容：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="分享内容" id="c_name">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">图片跳转地址：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="与影片ID二选一" id="d_name">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">影片ID：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="与跳转地址二选一" id="m_name">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">轮播或弹窗：</label>
+            <select name="type" id="type" style="width: 120px;height: 30px;margin-left: 15px">
+                <option value=0>轮播</option>
+                <option value=1>弹窗</option>
+                <option value=2>轮播和弹窗</option>
+            </select>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">关联活动：</label>
+            <select name="type" id="activityId" style="width: 200px;height: 30px;margin-left: 15px">
+            </select>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">跳转：</label>
+            <select name="location" id="location" style="width: 120px;height: 30px;margin-left: 15px">
+                <option value="1">网页</option>
+                <option value="2">app内部</option>
+                <option value="3">报名表</option>
+                <option value="4">一元购</option>
+            </select>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><a href="javascript:;" id="sub"
+                                                           style="display: block;padding: .65rem;background: red;text-align: center;color: #fff;width: 80px;float: right;margin-right: -135px;">添加</a></label>
+        </div>
+
+        <div class="row cl showPic">
+            <label class="form-label col-xs-4 col-sm-2">添加图片(轮播)：</label>
+            <div class="col-sm-9">
+                <div id="picker"
+                     style="position: relative;width: 108px;height: 128px;line-height: 128px;text-align: center;border: 1px solid #ddd;float: left">
+                    &nbsp;&nbsp;&nbsp;&nbsp;</div>
+                <div id="thelist" class="uploader-list " style="float: left;margin-bottom: 10px"></div>
+            </div>
+        </div>
+        <div class="row cl showPic">
+            <label class="form-label col-xs-4 col-sm-2"><a href="javascript:;" id="sub1"
+                                                           style="display: block;padding: .65rem;background: red;text-align: center;color: #fff;width: 80px;float: right;margin-right: -135px;margin-top: 20px;">添加</a></label>
+        </div>
+
+        <div class="row cl showPic">
+            <label class="form-label col-xs-4 col-sm-2">添加图片(弹窗)：</label>
+            <div class="col-sm-9">
+                <div id="picker_pop"
+                     style="position: relative;width: 108px;height: 128px;line-height: 128px;text-align: center;border: 1px solid #ddd;float: left">
+                    &nbsp;&nbsp;&nbsp;&nbsp;</div>
+                <div id="thelist_pop" class="uploader-list " style="float: left;margin-bottom: 10px"></div>
+            </div>
+        </div>
+        <div class="row cl showPic">
+            <label class="form-label col-xs-4 col-sm-2"><a href="javascript:;" id="sub1_pop"
+                                                           style="display: block;padding: .65rem;background: red;text-align: center;color: #fff;width: 80px;float: right;margin-right: -135px;margin-top: 20px;">添加</a></label>
+        </div>
+
+
+        <div class="row cl showPic">
+            <label class="form-label col-xs-4 col-sm-2">添加分享图片：</label>
+            <div class="col-sm-9">
+                <div id="picker_share"
+                     style="position: relative;width: 108px;height: 128px;line-height: 128px;text-align: center;border: 1px solid #ddd;float: left">
+                    &nbsp;&nbsp;&nbsp;&nbsp;</div>
+                <div id="thelist_share" class="uploader-list" style="float: left;margin-bottom: 10px"></div>
+            </div>
+        </div>
+        <div class="row cl showPic">
+            <label class="form-label col-xs-4 col-sm-2"><a href="javascript:;" id="sub1_share"
+                                                           style="display: block;padding: .65rem;background: red;text-align: center;color: #fff;width: 80px;float: right;margin-right: -135px;margin-top: 20px;">添加</a></label>
+        </div>
+
+
+    </div>
+</article>
+<input type="hidden" value="" id="posId">
+<input type="hidden" value="" id="film">
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.js"></script>
+
+</body>
+</html>
+<script>
+    $(function () {
+        $("#add_type").click(function () {
+            var div = "<p><input type='text' class='input-text' value='' placeholder='请输入影片题材'  class='d_end' style='width: 200px;'><span style='display: inline-block;cursor: pointer;color: red;margin-left: 10px;font-size: 16px;' class='d_del'><i class='Hui-iconfont'> &#xe6a1;</i></span></p>";
+            $("#d-dtype").append(div);
+            $(".d_del").click(function () {
+                $(this).parent().remove();
+            })
+        });
+        var userId = $.cookie("userId");
+        var roleType = $.cookie("roleType");
+        var username = $.cookie("username");
+        if (userId == "" || userId == null) {
+            window.location.href = "login.html"
+        }
+
+        var id = $.cookie("userId");
+        var accessToken = $.cookie("accessToken");
+        $.ajax({
+            url: getRootPath_dc() + '/system/queryActivityList',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {page: 0, limit: 10000},
+            success: function (data) {
+                console.log(data);
+                if (data.errcode == 0) {
+
+                    var html = "<option value=\"\">不关联</option>";
+                    for (var i = 0, len = data.data.iData.length; i < len; i++) {
+                        html += "<option value=" + data.data.iData[i].id + ">" + data.data.iData[i].title + "</option>";
+                    }
+                    $("#activityId").html(html);
+
+                } else {
+                    return false;
+                }
+
+            },
+            complete: function () {
+
+            }
+        });
+
+    });
+    $("#sub").click(function () {
+
+        var id = $.cookie("userId");
+        var accessToken = $.cookie("accessToken");
+        var url = $("#d_name").val();
+        var movieId = $("#m_name").val();
+        var title = $("#t_name").val();
+        var content = $("#c_name").val();
+        var type = $("#type").val();
+        var activityId = $("#activityId").val();
+        var location = $("#location").val();
+
+        if (title.length <= 0 || content.length <= 0 || (movieId.length <= 0 && url.length <= 0)) {
+            layer.alert("请输入指定内容");
+            return;
+        }
+        if (movieId.length > 0 && url.length > 0) {
+            layer.alert("跳转地址和电影ID不能同时存在");
+            return;
+        }
+        $.ajax({
+
+            url: getRootPath_dc() + '/system/addHomePage',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {
+                url: url,
+                movieId: movieId,
+                title: title,
+                content: content,
+                type: type,
+                activityId: activityId,
+                location: location
+            },
+            success: function (data) {
+
+                console.log(data);
+                $("#posId").val(data.data.id);
+                alert(data.msg);
+                // 添加图片
+                $(function () {
+
+                    var $list = $('#thelist');
+                    var $btn1 = $('#sub1');
+                    var thumbnailWidth = 100;
+                    var thumbnailHeight = 100;
+                    var fkPurposeId = data.data.id;
+                    console.log(fkPurposeId);
+                    var uploader;
+                    uploader = WebUploader.create({
+                        auto: false,
+                        swf: 'js/Uploader.swf',
+                        server: getRootPath_dc() + '/file/uploadFile',
+                        pick: '#picker',
+                        fileVal: 'uploadFile',
+                        formData: {'fileType': 'image', 'filePurpose': 'imageHomePageAd', 'fkPurposeId': fkPurposeId},
+                        fileNumLimit: 3,
+                        threads: 3,
+                        chunkRetry: 3,
+                        accept: {
+                            title: 'Images',
+                            extensions: 'gif,jpg,jpeg,bmp,png',
+                            mimeTypes: 'image/png,image/jpeg,image/jpg,image/gif'
+
+                        },
+                        method: 'post',
+                    });
+                    uploader.on('fileQueued', function (file) {
+                        var $li = $(
+                                '<div id="' + file.id + '" class="file-item thumbnail remove-this">' +
+                                '<img>' +
+                                '<div class="info">' + file.name + '</div>' +
+                                '</div>'
+                            ),
+                            $img = $li.find('img');
+
+                        // $list为容器jQuery实例
+                        $list.prepend($li);
+                        // 创建缩略图
+                        // 如果为非图片文件，可以不用调用此方法。
+                        // thumbnailWidth x thumbnailHeight 为 100 x 100
+                        uploader.makeThumb(file, function (error, src) {
+                            if (error) {
+                                $img.replaceWith('<span>不能预览</span>');
+                                return;
+                            }
+                            $img.attr('src', src);
+                        }, thumbnailWidth, thumbnailHeight);
+                        // $(".remove-this").live('click', function() {
+                        //    alert(0)
+                        //     uploader.removeFile(file,true);
+                        // })
+                    });
+                    uploader.on('uploadSuccess', function (file) {
+                        alert(file.name + '上传成功');
+                        console.log(file)
+                    });
+                    uploader.on('uploadError', function (file) {
+                        var $li = $('#' + file.id),
+                            $error = $li.find('div.error');
+
+                        // 避免重复创建
+                        if (!$error.length) {
+                            $error = $('<div class="error"></div>').appendTo($li);
+                        }
+
+                        $error.text('上传失败');
+                    });
+                    $btn1.on('click', function () {
+                        var fkPurposeId = $("#posId").val();
+                        if (fkPurposeId == "") {
+                            alert("上传有误");
+                        } else {
+                            uploader.upload();
+
+                        }
+                    });
+
+                    var $list_share = $('#thelist_share');
+                    var $btn1_share = $('#sub1_share');
+                    var thumbnailWidth_share = 100;
+                    var thumbnailHeight_share = 100;
+                    var fkPurposeId_share = data.data.id;
+                    console.log(fkPurposeId_share)
+                    var uploader_share;
+                    uploader_share = WebUploader.create({
+                        auto: false,
+                        swf: 'js/Uploader.swf',
+                        server: getRootPath_dc() + '/file/uploadFile',
+                        pick: '#picker_share',
+                        fileVal: 'uploadFile',
+                        formData: {
+                            'fileType': 'image',
+                            'filePurpose': 'imageHomePageShare',
+                            'fkPurposeId': fkPurposeId
+                        },
+                        fileNumLimit: 3,
+                        threads: 3,
+                        chunkRetry: 3,
+                        accept: {
+                            title: 'Images',
+                            extensions: 'gif,jpg,jpeg,bmp,png',
+                            mimeTypes: 'image/png,image/jpeg,image/jpg,image/gif'
+
+                        },
+                        method: 'post',
+                    });
+
+                    uploader_share.on('fileQueued', function (file) {
+                        var $li_share = $(
+                                '<div id="' + file.id + '_share' + '" class="file-item thumbnail remove-this">' +
+                                '<img>' +
+                                '<div class="info">' + file.name + '</div>' +
+                                '</div>'
+                            ),
+                            $img_share = $li_share.find('img');
+
+                        // $list为容器jQuery实例
+                        $list_share.prepend($li_share);
+                        // 创建缩略图
+                        // 如果为非图片文件，可以不用调用此方法。
+                        // thumbnailWidth x thumbnailHeight 为 100 x 100
+                        uploader_share.makeThumb(file, function (error, src) {
+                            if (error) {
+                                $img_share.replaceWith('<span>不能预览</span>');
+                                return;
+                            }
+                            $img_share.attr('src', src);
+                        }, thumbnailWidth_share, thumbnailHeight_share);
+                        // $(".remove-this").live('click', function() {
+                        //    alert(0)
+                        //     uploader.removeFile(file,true);
+                        // })
+                    });
+                    uploader_share.on('uploadSuccess', function (file) {
+                        alert(file.name + '上传成功');
+                        console.log(file)
+                    });
+
+                    uploader_share.on('uploadError', function (file) {
+                        var $li_share = $('#' + file.id + '_share'),
+                            $error_share = $li_share.find('div.error');
+
+                        // 避免重复创建
+                        if (!$error_share.length) {
+                            $error_share = $('<div class="error"></div>').appendTo($li_share);
+                        }
+
+                        $error_share.text('上传失败');
+                    });
+
+                    $btn1_share.on('click', function () {
+                        var fkPurposeId = $("#posId").val();
+                        if (fkPurposeId == "") {
+                            alert("上传有误");
+                        } else {
+                            uploader_share.upload();
+
+                        }
+                    });
+
+                    //start
+                    var $list_pop = $('#thelist_pop');
+                    var $btn1_pop = $('#sub1_pop');
+                    var thumbnailWidth_pop = 100;
+                    var thumbnailHeight_pop = 100;
+                    var fkPurposeId_pop = data.data.id;
+                    console.log(fkPurposeId_pop)
+                    var uploader_pop;
+                    uploader_pop = WebUploader.create({
+                        auto: false,
+                        swf: 'js/Uploader.swf',
+                        server: getRootPath_dc() + '/file/uploadFile',
+                        pick: '#picker_pop',
+                        fileVal: 'uploadFile',
+                        formData: {
+                            'fileType': 'image',
+                            'filePurpose': 'imageHomePagePopUp',
+                            'fkPurposeId': fkPurposeId
+                        },
+                        fileNumLimit: 3,
+                        threads: 3,
+                        chunkRetry: 3,
+                        accept: {
+                            title: 'Images',
+                            extensions: 'gif,jpg,jpeg,bmp,png',
+                            mimeTypes: 'image/png,image/jpeg,image/jpg,image/gif'
+
+                        },
+                        method: 'post',
+                    });
+
+                    uploader_pop.on('fileQueued', function (file) {
+                        var $li_pop = $(
+                                '<div id="' + file.id + '_pop' + '" class="file-item thumbnail remove-this">' +
+                                '<img>' +
+                                '<div class="info">' + file.name + '</div>' +
+                                '</div>'
+                            ),
+                            $img_pop = $li_pop.find('img');
+
+                        // $list为容器jQuery实例
+                        $list_pop.prepend($li_pop);
+                        // 创建缩略图
+                        // 如果为非图片文件，可以不用调用此方法。
+                        // thumbnailWidth x thumbnailHeight 为 100 x 100
+                        uploader_pop.makeThumb(file, function (error, src) {
+                            if (error) {
+                                $img_pop.replaceWith('<span>不能预览</span>');
+                                return;
+                            }
+                            $img_pop.attr('src', src);
+                        }, thumbnailWidth_pop, thumbnailHeight_pop);
+                        // $(".remove-this").live('click', function() {
+                        //    alert(0)
+                        //     uploader.removeFile(file,true);
+                        // })
+                    });
+                    uploader_pop.on('uploadSuccess', function (file) {
+                        alert(file.name + '上传成功');
+                        console.log(file)
+                    });
+
+                    uploader_pop.on('uploadError', function (file) {
+                        var $li_pop = $('#' + file.id + '_pop'),
+                            $error_pop = $li_pop.find('div.error');
+
+                        // 避免重复创建
+                        if (!$error_pop.length) {
+                            $error_pop = $('<div class="error"></div>').appendTo($li_pop);
+                        }
+
+                        $error_pop.text('上传失败');
+                    });
+
+                    $btn1_pop.on('click', function () {
+                        var fkPurposeId = $("#posId").val();
+                        if (fkPurposeId == "") {
+                            alert("上传有误");
+                        } else {
+                            uploader_pop.upload();
+                        }
+                    });
+                    //end
+                });
+
+            },
+            complete: function (data) {
+                $(".showPic").css("opacity", "1");
+            }
+
+        })
+
+    });
+
+
+</script>

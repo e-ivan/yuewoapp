@@ -1,0 +1,327 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<LINK rel="Bookmark" href="/favicon.ico" >
+<LINK rel="Shortcut Icon" href="/favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<script type="text/javascript" src="lib/PIE_IE678.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>电影订单列表</title>
+</head>
+<body>
+<nav class="breadcrumb"> 电影订单列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	 <div class="text-c">
+		 <span class="select-box inline">
+		 <select name="paysrc" id="paysrc" class="select">
+			 <option value="">支付来源</option>
+			 <option value="tianzhi">天智</option>
+			 <option value="kouMovie">抠电影</option>
+		 </select>
+		 </span>
+		 <span class="select-box inline">
+		 <select name="payway" id="payway" class="select">
+			 <option value="">支付方式</option>
+			 <option value="wxpay">微信</option>
+			 <option value="alipay">支付宝</option>
+		 </select>
+		 </span>
+		 <span class="select-box inline">
+		 <select name="status" id="status" class="select">
+			 <option value="99">订单状态</option>
+			 <option value="3">支付成功</option>
+			 <option value="4">购票成功</option>
+			 <option value="5">已评价</option>
+			 <option value="7">待评价</option>
+		 </select>
+		 </span>
+		<input type="text" class="input-text" style="width:250px" placeholder="输入订单号,或用户id,或商户订单号" id="keyword" name="keyword">
+		<button type="button" class="btn btn-success" id="search" name="" onclick="pubAjax(0)"><i class="Hui-iconfont">&#xe665;</i> 搜订单</button>
+	</div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"> <a href="javascript:;"  class="btn btn-primary radius"><i class="Hui-iconfont">&#xe601;</i> 电影订单列表</a></span> <span class="r">共有数据：<strong id="num11">0</strong> 条</span> </div>
+	<table class="table table-border table-bordered table-bg">
+		<tbody id="list-la"></tbody>
+	</table>
+	<div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a><div class="pagelist"></div><a class="nextpage paginate_button" >下一页</a></div>
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script> 
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script> 
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript">
+/*管理员-增加*/
+
+/*管理员-删除*/
+function admin_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		//此处请求后台程序，下方是成功后的前台处理……
+		
+		$(obj).parents("tr").remove();
+		layer.msg('已删除!',{icon:1,time:1000});
+	});
+}
+/*管理员-编辑*/
+function admin_edit(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+/*管理员-停用*/
+function admin_stop(id){
+	if (confirm('确认要停用吗？')) {
+		$.post(getRootPath_dc() + "/user/changeUserStatus",{userId:id,status:30},function(data){
+			console.log(data);
+			if (data.errcode==0) {
+				alert('已停用!');
+				window.location.reload();
+				//$("tr#"+id).children("td.td-status").html('<span class="label radius">停用中</span>')
+			}else{
+				alert(data.msg);
+			}
+		})
+	}
+	
+}
+
+/*管理员-启用*/
+function admin_start(id){
+	if (confirm('确认要启用吗？')) {
+		$.post(getRootPath_dc() + "/user/changeUserStatus",{userId:id,status:20},function(data){
+			if (data.errcode==0) {
+				alert('已启用!');
+				window.location.reload();
+				//$("tr#"+id).children("td.td-status").html('<span class="label radius label-success">已启用</span>')
+			}else{
+				alert(data.msg);
+			}
+		})
+	}
+	
+}
+</script>
+<script type="text/javascript">
+	// 点击添加商品属性
+	$(function(){
+	  var userId = $.cookie("userId");
+	  var roleType = $.cookie("roleType");
+	  var username = $.cookie("username");
+	  if(userId==""||userId==null){
+	    parent.location.href="login.html";
+	    return false;
+	  }
+	});
+	pubAjax(0);
+	function pubAjax(page){
+	    var id=$.cookie("userId");
+	    var accessToken=$.cookie("accessToken");
+	    var keyword = $("#keyword").val();
+	    var payway = $("#payway").val();
+		var status = $("#status").val();
+        var paysrc = $("#paysrc").val();
+
+	    $.ajax({
+	       url: getRootPath_dc()+'/cinema/queryAllFilmOrderList',
+	       type: "post",
+	       dataType: "json",
+	       headers:{tokenUserId:id,accessToken:accessToken},
+	       data:{page:page,limit:10,keyword:keyword,status:status,payway:payway,paysrc:paysrc}, //
+	          beforeSend: function () {
+	               $("#load").css("display","block");
+	          },
+	          success: function (data) {
+	           console.log(data);
+	           if (data.errcode == 0) {
+	              $("#list-la").children().remove();
+	              var dataa = eval(data.data.iData);
+	              $("#num11").html(data.data.totalCount);
+	              list(data);
+	              var myobj=eval(data); 
+	              pageList(myobj);
+	              clickEvents(myobj);
+	           }else{
+	              return false;
+	           }
+	          
+	         },
+	        complete: function () {
+	            $("#load").css("display","none");
+	        }
+	    });  
+	} 
+	function list(data){
+//	       加载list开始
+	              $("#num11").html(data.data.totalCount);
+	              var html = "<tr class='text-c'><th width='20'>序号</th><th>订单ID</th><th>支付来源</th><th>用户id</th><th>状态</th><th>订单总金额</th><th>实际支付金额</th><th>单价</th><th>优惠金额（优惠券）</th><th>影票数量</th><th>接收短信号码</th><th>支付方式</th><th>支付时间</th><th>创建时间</th><th>手续费（总）</th><th>其它费用（总）</th><th>服务费(总）</th></tr>";
+	              var dataa = eval(data.data.iData);  
+	               for(var i=0; i<dataa.length; i++){
+
+	                   var creatTime = unixTodateWithSecond(dataa[i].createdAt);
+	                     html += "<tr class='text-c .table-hover' id='"+dataa[i].fkOrderId+"'>"+
+	                     "<td>"+ parseInt(i+1) +"</td>";
+
+                       html += "<td>" +
+                           "<a onClick='orderDetail(\"电影订单详情\",\"film-order-detail.html?orderId=" + dataa[i].fkOrderId + "\")'>"+dataa[i].fkOrderId+"</a>";
+                       html+= "</td>";
+
+	                     if(isContains(dataa[i].fkOrderId,"a")){
+                            html += "<td class='text-c'>"+"抠电影"+"</td>";
+						 }
+						 else if(isContains(dataa[i].fkOrderId,"t")){
+                             html += "<td class='text-c'>"+"天智"+"</td>";
+						 }
+						 else {
+                             html += "<td class='text-c'>"+"未知"+"</td>";
+						 }
+						 html += "<td class='text-c'>"+dataa[i].fkUserId+"</td>";
+
+						 if(dataa[i].status == 1){
+                             html +=  "<td class='td-status'><span class='label radius' style='background-color: #0d5ab1'>"+"已创建"+"</span></td>";
+						 }
+						 else if(dataa[i].status == 2){
+                             html +=  "<td class='td-status'><span class='label radius' style='background-color: #5f6263'>"+"已取消"+"</span></td>";
+						 }
+                         else if(dataa[i].status == 3){
+                             html +=  "<td class='td-status'><span class='label radius' style='background-color: #4BB94B'>"+"支付成功"+"</span></td>";
+                         }
+                         else if(dataa[i].status == 4){
+                             html +=  "<td class='td-status'><span class='label radius' style='background-color: #6c71c4'>"+"购票成功"+"</span></td>";
+                         }
+                         else if(dataa[i].status == 5){
+                             html +=  "<td class='td-status'><span class='label radius' style='background-color: #9cb945'>"+"已评价"+"</span></td>";
+                         }
+                         else if(dataa[i].status == 6){
+                             html +=  "<td class='td-status'><span class='label radius' style='background-color: #8b743d'>"+"购票失败"+"</span></td>";
+                         }
+                         else if(dataa[i].status == 7){
+                             html +=  "<td class='td-status'><span class='label radius' style='background-color: #ec4844'>"+"待评价"+"</span></td>";
+                         }
+
+//                       html += "<td class='text-c'>"+dataa[i].fkUserCouponId+"</td>"+
+                       html +=  "<td class='text-c'>"+dataa[i].money+"</td>"+
+                             "<td class='text-c'>"+dataa[i].payMoney+"</td>"+
+                             "<td class='text-c'>"+dataa[i].unitPrice+"</td>"+
+
+                             "<td class='text-c'>"+dataa[i].reducePrice+"</td>"+
+                             "<td class='text-c'>"+dataa[i].count+"</td>"+
+                             "<td class='text-c'>"+dataa[i].mobile+"</td>";
+
+                             if(dataa[i].payType == "alipay"){
+                                 html += "<td class='text-c'>"+"支付宝"+"</td>";
+							 }
+							 else if(dataa[i].payType == "wxpay"){
+                                 html += "<td class='text-c'>"+"微信"+"</td>";
+							 }
+							 else {
+                                 html += "<td class='text-c'>"+"null"+"</td>";
+                             }
+
+//					   html += "<td class='text-c'>"+dataa[i].outTradeNo+"</td>";
+                             if(dataa[i].payTime != null) {
+                                 html += "<td class='text-c'>"+unixTodateWithMilliSecond(dataa[i].payTime)+"</td>";
+                             }
+                             else {
+                                 html += "<td class='text-c'>"+"null"+"</td>";
+							 }
+                       		if(dataa[i].createTime != null) {
+                                 html += "<td class='text-c'>"+unixTodateWithMilliSecond(dataa[i].createTime)+"</td>";
+                       			}
+                      		else {
+                                 html += "<td class='text-c'>"+"null"+"</td>";
+                       		}
+
+                       html += "<td class='text-c'>"+dataa[i].handleFee+"</td>"+
+                             "<td class='text-c'>"+dataa[i].otherFee+"</td>"+
+                             "<td class='text-c'>"+dataa[i].serviceFee+"</td>";
+
+	              html += "</tr>";  
+	               }
+	              $("#list-la").append(html);
+	              
+//			加载list结束
+	    }
+	function pageList(myobj){ 
+	   var totalCount = myobj.data.totalCount;
+	   var pagelist=$('.pagelist');
+	   var limit = myobj.data.limit;                  
+	   var page = myobj.data.page;
+	   var pageNum = Math.ceil(totalCount/limit) ;
+	   var pages = '';
+	   for (var i = 1; i < pageNum+1; i++) {
+	      pages +=  "<a>" + i + "</a>";
+	   }      
+	   pagelist.html(pages);
+	   var emptyPage = pagelist.html();
+	   if(emptyPage==''|| emptyPage==null){
+	       $('.prepage,.nextpage').css({display: 'none'});
+	   }
+	   else{
+	    $('.prepage,.nextpage').css({display: 'inline-block'});
+	   }
+	   pagelist.children().eq(page).addClass('cur').siblings().removeClass('cur');
+	}
+
+	function clickEvents(myobj){
+	    var totalCount = myobj.data.totalCount;
+	    var limit = myobj.data.limit;         
+	    var page = myobj.data.page;
+	    var pageNum = Math.ceil(totalCount/limit) ;
+	    $(".nextpage,.prepage,.pagelist a").unbind("click");                   
+	    $('.nextpage').click(function() {
+	         if (page<= pageNum-2) {
+	           page++;
+	           pubAjax(page); 
+	         } 
+	         else{
+	            return false;
+	         } 
+	     });
+	    $('.prepage').click(function() {
+	     if (page>= 1) {
+	         page--;
+	         pubAjax(page);  
+	       }
+	       else{
+	         return false;
+	       }
+	    });
+	   $('.pagelist a').click(function() {
+	     page =$(this).html()-1;
+	     pubAjax(page);
+	   }); 
+	}
+
+    function  userDetail(title,url){
+        layer_show(title,url,'','');
+    }
+
+
+    function  orderDetail(title,url){
+        layer_show(title,url,'','700');
+    }
+
+    function isContains(str, substr) {
+        return str.indexOf(substr) >= 0;
+    }
+
+</script>
+</body>
+</html>

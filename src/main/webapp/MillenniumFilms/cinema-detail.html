@@ -1,0 +1,408 @@
+﻿<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+    <style>
+        .showPic {
+            opacity: 0;
+        }
+    </style>
+    <title>电影院详情</title>
+</head>
+<body>
+<article class="page-container">
+
+    <form id="albumForm" name="" enctype="multipart/form-data" method="post" action="">
+        <input type="hidden" id="cineMovieNum" name="cineMovieNum">
+        <!--<input type="hidden" name="fileType" value="image">-->
+        <!--<input type="hidden" name="filePurpose" value="imageAlbum">-->
+        <div class="form form-horizontal" id="form-album-add">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">电影院名称：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="cinemaName" name="cinemaName" style="width: 500px;height: 25px;" type="text"
+                           class="input-text">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">营业状态：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <select name="state" id="state" style="width: 500px;height: 25px;" class="select-box">
+                        <option value="0">关闭</option>
+                        <option value="1">正常营业</option>
+                        <option value="2">未营业</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">影院所属：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <select name="source" id="source" style="width: 500px;height: 25px;" class="select-box">
+                        <option value="0">天智创客</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">电影院电话：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="cinemaTel" name="cinemaTel" style="width: 500px;height: 25px;" type="text"
+                           class="input-text">
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">电影院地址：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="cinemaAddress" name="cinemaAddress" style="width: 500px;height: 25px;" type="text"
+                           class="input-text">
+                </div>
+            </div>
+
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">所在城市：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="cityName" name="cityName" style="width: 500px;height: 25px;" type="text"
+                           class="input-text">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">标记：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="flag" name="flag" style="width: 500px;height: 25px;" type="text"
+                           class="input-text">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">热度：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="hot" name="hot" style="width: 500px;height: 25px;" type="text" class="input-text"
+                           value="0" placeholder="请输入数字类型">
+                </div>
+
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">纬度：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="latitude" name="latitude" style="width: 500px;height: 25px;" type="text"
+                           class="input-text">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">经度：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="longitude" name="longitude" style="width: 500px;height: 25px;" type="text"
+                           class="input-text">
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">简介：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="intro" name="intro" style="width: 500px;height: 25px;" type="text"
+                           class="input-text">
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">图片：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <!--<input id="pathVerticalS" name="pathVerticalS" style="width: 500px;height: 25px;" type="text"-->
+                    <!--class="input-text">-->
+                    <img id="logo" src="" alt="无图片" style="height: 200px;">
+
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">添加图片：</label>
+                <div class="col-sm-9">
+                    <div id="picker"
+                         style="position: relative;width: 108px;height: 128px;line-height: 128px;text-align: center;border: 1px solid #ddd;float: left">
+                        &nbsp;&nbsp;&nbsp;&nbsp;</div>
+                    <div id="thelist" class="uploader-list " style="float: left;margin-bottom: 10px"></div>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"><a href="javascript:;" id="sub1"
+                                                               style="display: block;padding: .65rem;background: red;text-align: center;color: #fff;width: 80px;float: right;margin-right: -135px;margin-top: 20px;">添加</a></label>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <button style="margin:50px" name="" id="submit" class="btn btn-primary" type="button">
+                        提交
+                    </button>
+                    <button style="margin:50px" name="" id="close" onclick="layer_close()" class="btn btn-default"
+                            type="button">
+                        关闭
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+
+</article>
+
+
+<input type="hidden" value="" id="posId">
+<input type="hidden" value="" id="film">
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript" src="lib/jquery.form.min.js"></script>
+<!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.js"></script>
+
+
+</body>
+</html>
+<script>
+
+
+    $(function () {
+        var userId = $.cookie("userId");
+        var roleType = $.cookie("roleType");
+        var username = $.cookie("username");
+        if (userId == "" || userId == null) {
+            window.location.href = "login.html"
+        }
+
+        var id = $.cookie("userId");
+        var accessToken = $.cookie("accessToken");
+
+        var cinemaId = getQueryString("cinemaId");
+        var cinemaName = getQueryString("cinemaName");
+        $("#cinemaName").val(decodeURI(getQueryString("cinemaName")));
+
+        //获取某电影院信息
+        $.ajax({
+            type: 'post',
+            url: getRootPath_dc() + '/cinema/getYingCinemaDetail',
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {cinemaId: cinemaId},
+            success: function (data) {
+                console.log(data);
+                if (data.errcode == 0) {
+                    if (data.data != null) {
+                        $("#cinemaName").val(data.data.cinemaName);
+                        $("#cinemaTel").val(data.data.cinemaTel);
+                        $("#cinemaAddress").val(data.data.cinemaAddress);
+                        $("#cityName").val(data.data.cityName);
+                        $("#flag").val(data.data.flag);
+                        $("#hot").val(data.data.hot);
+                        $("#latitude").val(data.data.latitude);
+                        $("#longitude").val(data.data.longitude);
+                        $("#logo").val(data.data.logo);
+                        $("#logo").attr("src", data.data.logo);
+                        $("#intro").val(data.data.intro);
+                        $("#state").find("option:eq(" + data.data.state + ")").prop("selected", true);
+                        $("#source").find("option:eq(" + data.data.source + ")").prop("selected", true);
+                    }
+                    picInit(cinemaId);
+                }
+                else {
+                    layer.alert('搜索电影院失败!');
+                }
+            }
+        })
+    });
+
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+    $("#submit").click(function () {
+        var cinemaAddress = $("#cinemaAddress").val();
+        var cinemaName = $("#cinemaName").val();
+        var cinemaTel = $("#cinemaTel").val();
+        var cityName = $("#cityName").val();
+        if (cityName === "" || cityName == null) {
+            layer.alert("请输入城市名称");
+            return;
+        }
+        var flag = $("#flag").val();
+        var hot = parseInt($("#hot").val());
+        if (isNaN(hot)) {
+            layer.alert("请在热度输入数字");
+            return;
+        }
+        var latitude = $("#latitude").val();
+        var longitude = $("#longitude").val();
+        var logo = $("#logo").val();
+        var intro = $("#intro").val();
+        var state = $("#state").val();
+        var source = $("#source").val();
+        var cinemaId = parseInt(getQueryString("cinemaId"));
+        var id = $.cookie("userId");
+        var accessToken = $.cookie("accessToken");
+        $.ajax({
+            type: 'post',
+            url: getRootPath_dc() + '/cinema/updateCinemaRelation',
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {
+                cinemaId: cinemaId,
+                cinemaAddress: cinemaAddress,
+                cinemaName: cinemaName,
+                cinemaTel: cinemaTel,
+                cityName: cityName,
+                flag: flag,
+                hot: hot,
+                latitude: latitude,
+                longitude: longitude,
+                logo: logo,
+                intro: intro,
+                state: state,
+                source: source
+            },
+            success: function (data) {
+                if (data.errcode == 0) {
+                    layer.alert(data.msg, function () {
+                        window.parent.location.reload();
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                        layer_close();
+                    });
+                } else {
+                    layer.alert(data.msg);
+                }
+            }
+        })
+    });
+
+
+    function picInit(cinemaId) {
+        var $list = $('#thelist');
+        var $btn1 = $('#sub1');
+        var thumbnailWidth = 100;
+        var thumbnailHeight = 100;
+        var fkPurposeId = cinemaId;// data.data.id;
+        var uploader;
+        uploader = WebUploader.create({
+            auto: false,
+            swf: 'js/Uploader.swf',
+            server: getRootPath_dc() + '/file/uploadFileForCinemaPhoto',
+            pick: '#picker',
+            fileVal: 'uploadFile',
+            formData: {'fileType': 'image', 'filePurpose': 'imageCinema', 'fkPurposeId': fkPurposeId},
+            fileNumLimit: 3,
+            threads: 3,
+            chunkRetry: 3,
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/png,image/jpeg,image/jpg,image/gif'
+
+            },
+            method: 'post'
+        });
+        uploader.on('fileQueued', function (file) {
+            var $li = $(
+                    '<div id="' + file.id + '" class="file-item thumbnail remove-this">' +
+                    '<img>' +
+                    '<div class="info">' + file.name + '</div>' +
+                    '</div>'
+                ),
+                $img = $li.find('img');
+
+            // $list为容器jQuery实例
+            $list.prepend($li);
+            // 创建缩略图
+            // 如果为非图片文件，可以不用调用此方法。
+            // thumbnailWidth x thumbnailHeight 为 100 x 100
+            uploader.makeThumb(file, function (error, src) {
+                if (error) {
+                    $img.replaceWith('<span>不能预览</span>');
+                    return;
+                }
+                $img.attr('src', src);
+            }, thumbnailWidth, thumbnailHeight);
+            // $(".remove-this").live('click', function() {
+            //    alert(0)
+            //     uploader.removeFile(file,true);
+            // })
+        });
+        uploader.on('uploadSuccess', function (file) {
+            alert(file.name + '上传成功');
+            var id = $.cookie("userId");
+            var accessToken = $.cookie("accessToken");
+            //获取图片url
+            $.ajax({
+                type: 'post',
+                url: getRootPath_dc() + '/film/queryCinemaImage',
+                headers: {tokenUserId: id, accessToken: accessToken},
+                data: {id: cinemaId},
+                success: function (data) {
+                    console.log(data);
+                    $("#logo").attr("src", data.data.logo);
+                    $("#logo").val(data.data.logo);
+                }
+            });
+
+        });
+        uploader.on('uploadError', function (file) {
+            var $li = $('#' + file.id),
+                $error = $li.find('div.error');
+
+            // 避免重复创建
+            if (!$error.length) {
+                $error = $('<div class="error"></div>').appendTo($li);
+            }
+
+            $error.text('上传失败');
+        });
+        $btn1.on('click', function () {
+            var fkPurposeId = cinemaId;
+            if (fkPurposeId == "") {
+                alert("上传有误");
+            } else {
+                uploader.upload();
+
+            }
+        });
+    }
+
+
+</script>

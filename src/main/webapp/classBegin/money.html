@@ -1,0 +1,57 @@
+
+    <meta charset="utf-8">
+    <link href="css/base.css" type="text/css" rel="stylesheet">
+    <div id="main">
+      <div class="r-top"><a href="money.html" class="current">视频会员订单</a><a href="money-video.html">视频订单</a><a href="money-mall.html">商城订单</a><a href="money-course.html">课程订单</a></div>
+    <div class="container">
+      <div class="search"><input placeholder="请输入年份" id="year"><button id="search">搜索</button></div>
+          <table class="village-list">
+          </table> 
+     </div>
+   </div>
+    <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript">
+    $(function (){
+      var mydate = new Date();
+      var year=mydate.getFullYear();
+      function pubAjax(year){
+        jQuery.ajax({
+          url: '/skl/videoCourse/queryVideoVIPOrderTotalByYear',
+          type: "post",
+          dataType: "json",
+          data:{year:year},
+          success: function (data) {
+            list(data);
+          }              
+         }); 
+      }
+      pubAjax(year);
+      function list(data){        
+       var tableDom = $('.village-list');
+       var html = "<tr>"+"<th>"+"月份"+"</th>"+"<th>"+"金额"+"</th>"+"</tr>";
+       for (var i = 1, len =13; i < len; i++) { 
+        var money = '0';
+        for(var j = 0;j<data.data.length;j++){
+            if(i == data.data[j].month){
+              money=data.data[j].money;
+            }
+        }
+        html+="<tr>" + "<td>" +i+ "</td>" + "<td>" +money+'（元）'+ "</td>" + "</tr>"; 
+       }
+        tableDom.html(html);
+      }
+      $('#search').click(function() {
+        var fourTest = /^\d{4}$/;
+        var year = $('#year').val();
+        if(year == '' || year == null){
+          alert('请输入年份')
+        }
+        else if(!(fourTest.test(year))){ 
+          alert("格式有误，请输入4位数的年份"); 
+        }
+        else{pubAjax(year);} 
+      });
+    })
+   
+  
+  </script>

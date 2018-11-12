@@ -1,0 +1,121 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<script type="text/javascript" src="lib/PIE_IE678.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<!--/meta 作为公共模版分离出去-->
+
+<title>剧组详情</title>
+</head>
+<body>
+<div class="layui-layer-title" style="cursor: move;" move="ok">剧组详情</div>
+<span class="layui-layer-setwin"><a class="layui-layer-ico layui-layer-close layui-layer-close1" href="javascript:;" onclick="window.history.go(-1)"></a></span>
+<article class="page-container">
+	<form class="form form-horizontal" id="form-article-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">剧组名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="d_fl" readonly=''>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">剧组分类：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value=""  id="d_name" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">剧组类型：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value=""  id="d_type" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">上映类型：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value=""  id="d_move" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">开机时间：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value=""  id="d_time" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">拍摄地点：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value=""  id="d_location" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">拍摄时长：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value=""  id="d_long" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">招募开始：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value=""  id="d_start" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">招募结束：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value=""  id="d_end" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">视频截图：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<div id="lunbo"></div>
+			</div>
+		</div>
+		<input type="hidden" value="" id="sstatus1">
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script> 
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript" src="lib/detail.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script> 
+<script type="text/javascript" src="lib/jquery.cookie.js"></script> 
+<script type="text/javascript">
+$(function(){
+	var userId = $.cookie("userId");
+	var roleType = $.cookie("roleType");
+	var username = $.cookie("username");
+	if(userId==""||userId==null){
+		parent.location.href="login.html"
+	}
+})
+</script>
+</body>
+</html>

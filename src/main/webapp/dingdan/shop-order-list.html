@@ -1,0 +1,362 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>商城订单列表</title>
+</head>
+<body>
+<header class="navbar-wrapper">
+    <div class="navbar navbar-fixed-top">
+        <div class="container-fluid cl"><a class="logo navbar-logo f-l mr-10 hidden-xs" href="javascript:;">约我科技</a>
+            <nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
+                <ul class="cl">
+                    <li class="dropDown dropDown_hover"><a href="#" class="dropDown_A namma"><i class="Hui-iconfont">
+                        &#xe6d5;</i></a>
+                        <ul class="dropDown-menu menu radius box-shadow">
+                            <li><a href="javascript:viewPopUp('个人信息','user-info-detail.html');">个人信息</a></li>
+                            <li><a href="javascript:logout();">切换账户</a></li>
+                            <li><a href="javascript:changeCode('修改密码','change-code.html');">修改密码</a></li>
+                            <li><a href="javascript:logout();">退出</a></li>
+                        </ul>
+                    </li>
+                    <li id="Hui-skin" class="dropDown right dropDown_hover"><a href="javascript:;" class="dropDown_A"
+                                                                               title="换肤"><i class="Hui-iconfont"
+                                                                                             style="font-size:18px">
+                        &#xe62a;</i></a>
+                        <ul class="dropDown-menu menu radius box-shadow">
+                            <li><a href="javascript:;" data-val="default" title="默认（黑色）">默认（黑色）</a></li>
+                            <li><a href="javascript:;" data-val="blue" title="蓝色">蓝色</a></li>
+                            <li><a href="javascript:;" data-val="green" title="绿色">绿色</a></li>
+                            <li><a href="javascript:;" data-val="red" title="红色">红色</a></li>
+                            <li><a href="javascript:;" data-val="yellow" title="黄色">黄色</a></li>
+                            <li><a href="javascript:;" data-val="orange" title="绿色">橙色</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+<nav class="breadcrumb"> 商城订单列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+                                   href="javascript:location.replace(location.href);" title="刷新"><i
+        class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="text-c">
+        <!--<span class="select-box inline">-->
+        <!--<select name="sex" id="payway" class="select">-->
+        <!--<option value="">支付方式</option>-->
+        <!--<option value="wxpay">微信</option>-->
+        <!--<option value="alipay">支付宝</option>-->
+        <!--</select>-->
+        <!--</span>-->
+        <span class="select-box inline">
+		 <select name="internal" id="paystatus" class="select">
+			 <option value="">支付状态</option>
+             <!--<option value="0">待付款</option>-->
+			 <option value="1">已付款</option>
+             <!--<option value="2">待发货</option>-->
+             <!--<option value="3">已完成</option>-->
+             <!--<option value="4">已取消</option>-->
+			 <option value="5">已发货</option>
+		 </select>
+		 </span>
+        <input type="text" class="input-text" style="width:250px" placeholder="输入订单号,或用户id,或姓名,或电话" id="keyword" name="keyword">
+        <button type="button" class="btn btn-success" id="search" name="" onclick="pubAjax(0)"><i class="Hui-iconfont">
+            &#xe665;</i> 搜订单
+        </button>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"><span class="l"> <a href="javascript:;" class="btn btn-primary radius"><i
+            class="Hui-iconfont">&#xe601;</i> 商城订单列表</a></span> <span class="r">共有数据：<strong
+            id="num11">0</strong> 条</span></div>
+    <table class="table table-border table-bordered table-bg">
+        <tbody id="list-la"></tbody>
+    </table>
+    <div class="dataTables_paginate"></div>
+    <div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a>
+        <div class="pagelist"></div>
+        <a class="nextpage paginate_button">下一页</a></div>
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <script type="text/javascript" src="lib/jquery.cookie.js"></script> <script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript">
+    /*管理员-增加*/
+
+    /*管理员-删除*/
+    function admin_del(obj, id) {
+        layer.confirm('确认要删除吗？', function (index) {
+            //此处请求后台程序，下方是成功后的前台处理……
+
+            $(obj).parents("tr").remove();
+            layer.msg('已删除!', {icon: 1, time: 1000});
+        });
+    }
+    /*管理员-编辑*/
+    function admin_edit(title, url, id, w, h) {
+        layer_show(title, url, w, h);
+    }
+    /*管理员-停用*/
+    function admin_stop(id) {
+        if (confirm('确认要停用吗？')) {
+            $.post(getRootPath_dc() + "/user/changeUserStatus", {userId: id, status: 30}, function (data) {
+                console.log(data);
+                if (data.errcode == 0) {
+                    alert('已停用!');
+                    window.location.reload();
+                    //$("tr#"+id).children("td.td-status").html('<span class="label radius">停用中</span>')
+                } else {
+                    alert(data.msg);
+                }
+            })
+        }
+
+    }
+
+    /*管理员-启用*/
+    function admin_start(id) {
+        if (confirm('确认要启用吗？')) {
+            $.post(getRootPath_dc() + "/user/changeUserStatus", {userId: id, status: 20}, function (data) {
+                if (data.errcode == 0) {
+                    alert('已启用!');
+                    window.location.reload();
+                    //$("tr#"+id).children("td.td-status").html('<span class="label radius label-success">已启用</span>')
+                } else {
+                    alert(data.msg);
+                }
+            })
+        }
+
+    }
+</script>
+<script type="text/javascript">
+    // 点击添加商品属性
+    $(function () {
+        var userId = $.cookie("userId");
+        var roleType = $.cookie("roleType");
+        var username = $.cookie("username");
+        if (userId == "" || userId == null) {
+            parent.location.href = "login.html";
+            return false;
+        }
+        var nickName = $.cookie("nickName");
+        $(".namma").html(nickName);
+    });
+    pubAjax(0);
+    function pubAjax(page) {
+        var id = $.cookie("userId");
+        var accessToken = $.cookie("accessToken");
+        var keyword = $("#keyword").val();
+//	    var payway = $("#payway").val();
+        var paystatus = $("#paystatus").val();
+        if (paystatus == "") {
+            paystatus = "15";
+        }
+
+        $.ajax({
+            url: getRootPath_dc() + '/marketorder/queryAllOrderList',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {page: page, limit: 10, keyword: keyword, paystatus: paystatus},
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                console.log(data);
+                if (data.errcode == 0) {
+                    $("#list-la").children().remove();
+                    var dataa = eval(data.data.iData);
+                    $("#num11").html(data.data.totalCount);
+                    list(data);
+                    var myobj = eval(data);
+                    pageList(myobj);
+                    clickEvents(myobj);
+                } else {
+                    return false;
+                }
+
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        });
+    }
+    function list(data) {
+//	       加载list开始
+        $("#num11").html(data.data.totalCount);
+        var html = "<tr class='text-c'><th width='20'>序号</th><th>订单编号</th><th>用户id</th><th>收货人姓名</th><th>收货人电话</th><th>实付金额</th><th>订单状态</th><th>运费</th><th>支付时间</th><th>创建时间</th><th width='120'>操作</th></tr>";
+        var dataa = eval(data.data.iData);
+        for (var i = 0; i < dataa.length; i++) {
+            var phone = "";
+            var name = "";
+            var address = "";
+            if (dataa[i].orderAddress != null) {
+                address = encodeURI(encodeURI(dataa[i].orderAddress.address)).replace(/'/g, '&apos;');
+                name = encodeURI(encodeURI(dataa[i].orderAddress.name)).replace(/'/g, '&apos;');
+                phone = encodeURI(encodeURI(dataa[i].orderAddress.phone)).replace(/'/g, '&apos;');
+            }
+
+            var creatTime = unixTodateWithSecond(dataa[i].createdAt);
+            html += "<tr class='text-c .table-hover' id='" + dataa[i].id + "' ondblclick='orderDetail(\"订单详情\",\"shop-order-detail.html?orderId=" + dataa[i].id + "&address=" + address + "&name=" + name + "&phone=" + phone + "\")'>" +
+                "<td>" + parseInt(i + 1) + "</td>" +
+                "<td class='text-c'>" + dataa[i].orderNo + "</td>" +
+                "<td class='text-c'>" + "<a href='javascript:userDetail(\"用户信息\",\"user-info-detail.html?userId=" + dataa[i].userId + "\")'>" + dataa[i].userId + "</a>" + "</td>";
+//						 "<td class='text-c'>"+dataa[i].userId+"</td>"+
+//                         "<td class='text-c'>"+dataa[i].outTradeNo+"</td>"+
+//						 "<td class='text-c'>"+dataa[i].couponMoney+"</td>"+
+//                         "<td class='text-c'>"+dataa[i].couponAmount+"</td>"+
+//                         "<td class='text-c'>"+dataa[i].goodsNums+"</td>"+
+//                         "<td class='text-c'>"+dataa[i].goodsAmount+"</td>";
+//
+//
+//	                     if (dataa[i].payStatus == "wxpay"){
+//                             html += "<td class='text-c'>"+"微信"+"</td>";
+//						 }else if(dataa[i].payStatus == "alipay"){
+//                             html += "<td class='text-c'>"+"支付宝"+"</td>";
+//						 }
+//						 else {
+//                             html += "<td class='text-c'>"+"未定义"+"</td>";
+//						 }
+            html += "<td class='text-c'>" + dataa[i].orderAddress.name + "</td>" +
+            "<td class='text-c'>" + dataa[i].orderAddress.phone + "</td>" ;
+
+            html += "<td class='text-c'>" + dataa[i].realAmount + "</td>";
+
+            if (dataa[i].status == 1) {
+                html += "<td class='td-status'><span class='label radius label-danger'>已付款</span></td>";
+            }
+            else if (dataa[i].status == 5) {
+                html += "<td class='td-status'><span class='label radius'>已发货</span></td>";
+            }
+            else {
+                html += "<td class='td-status'><span class='label radius'>未知</span></td>";
+            }
+
+            html += "<td class='text-c'>" + dataa[i].freight + "</td>" +
+                "<td class='text-c'>" + (dataa[i].payTime == null ? '' : unixTodateWithMilliSecond(dataa[i].payTime)) + "</td>" +
+                "<td class='text-c'>" + creatTime + "</td>";
+            html += "<td class='text-c'>" +
+                "<a style='text-decoration:none' onClick='orderDetail(\"订单详情\",\"shop-order-detail.html?orderId=" + dataa[i].id + "&address=" + address + "&name=" + name + "&phone=" + phone + "\")'>详情</a>&nbsp;&nbsp;";
+            if (dataa[i].status == 1){
+                html+= "<a style='text-decoration:none' onClick='delivery(\"发货\",\"delivery.html?&orderId="+dataa[i].id+"&status=1"+ "\")'>发货</a>";
+            }else if(dataa[i].status == 5){
+                html+= "<a style='text-decoration:none' onClick='delivery(\"物流信息\",\"delivery.html?orderId="+dataa[i].id+"&status=5"+ "\")'>物流信息</a>";
+            }
+            html += "</td></tr>";
+        }
+        $("#list-la").append(html);
+
+//			加载list结束
+    }
+    function pageList(myobj) {
+        var totalCount = myobj.data.totalCount;
+        var pagelist = $('.pagelist');
+        var limit = myobj.data.limit;
+        var page = myobj.data.page;
+        var pageNum = Math.ceil(totalCount / limit);
+        var pages = '';
+        for (var i = 1; i < pageNum + 1; i++) {
+            pages += "<a>" + i + "</a>";
+        }
+        pagelist.html(pages);
+        var emptyPage = pagelist.html();
+        if (emptyPage == '' || emptyPage == null) {
+            $('.prepage,.nextpage').css({display: 'none'});
+        }
+        else {
+            $('.prepage,.nextpage').css({display: 'inline-block'});
+        }
+        pagelist.children().eq(page).addClass('cur').siblings().removeClass('cur');
+    }
+
+    function clickEvents(myobj) {
+        var totalCount = myobj.data.totalCount;
+        var limit = myobj.data.limit;
+        var page = myobj.data.page;
+        var pageNum = Math.ceil(totalCount / limit);
+        $(".nextpage,.prepage,.pagelist a").unbind("click");
+        $('.nextpage').click(function () {
+            if (page <= pageNum - 2) {
+                page++;
+                pubAjax(page);
+            }
+            else {
+                return false;
+            }
+        });
+        $('.prepage').click(function () {
+            if (page >= 1) {
+                page--;
+                pubAjax(page);
+            }
+            else {
+                return false;
+            }
+        });
+        $('.pagelist a').click(function () {
+            page = $(this).html() - 1;
+            pubAjax(page);
+        });
+    }
+
+    function userDetail(title, url) {
+        layer_show(title, url, '', '');
+    }
+
+
+    function orderDetail(title, url) {
+        layer_show(title, url, '', '');
+    }
+
+    function logout() {
+        $.cookie("nickName", null);
+        $.cookie("roleType", null);
+        $.cookie("username", null);
+        $.cookie("userId", null);
+        $.cookie("accessToken", null);
+        window.location.href = "login.html";
+    }
+
+    function changeCode(title, url) {
+        layer_show(title, url, 800, 600);
+    }
+    function viewPopUp(title, url) {
+        layer_show(title, url, 800, 700);
+    }
+
+    function delivery(title, url) {
+        layer_show(title, url, 900, 600);
+    }
+
+    function deliveryDetail(title, url) {
+        layer_show(title, url, 900, 600);
+    }
+
+</script>
+</body>
+</html>

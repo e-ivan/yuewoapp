@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>评论</title>
+    <link href="css/style.css" rel="stylesheet"/>
+    <link href="css/dropload.css" rel="stylesheet"/>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.liveTimeAgo.min.js"></script>
+    <script type="text/javascript" src="js/dropload.min.js"></script>
+    <script type="text/javascript" src="js/commonArticleMethod.js"></script>
+</head>
+
+<body>
+<div class="message">
+    <div class="topNav">
+        用户留言
+    </div>
+    <ul class="message-list">
+    </ul>
+</div>
+<!--
+<div id="leaveMessage" class="leaveMessage">
+    <div class="comment">
+        <form action="#" method="post">
+            <input type="text" name="discuss" id="discuss" value="" placeholder="写评论"/>
+            <input type="hidden" id="reply_id" value=""/>
+        </form>
+    </div>
+    <div class="up">
+        <span class="reply">9</span>
+        <span class="like">12</span>
+        <span class="share">&nbsp;</span>
+    </div>
+</div>
+-->
+<script type="text/javascript">
+
+    $(function () {
+        var request = getRequest();
+        var id = request["id"];
+        var userId = request["userId"];
+        // 页数
+        var page = -1;
+        // 每页展示5个
+        var size = 5;
+        $(".message").dropload({
+            scrollArea: window,
+            domDown:{
+                domNoData : '<div class="dropload-noData"><span style="color: #CCCCCC">Σヽ(ﾟД ﾟ; )ﾉ 这里没东西了</span></div>'
+            },
+            loadDownFn: function (me) {
+                page++;
+                // 拼接HTML
+                var result = '';
+                $.ajax({
+                    url: getRootPath_dc() + '/article/queryArticleComments',
+                    type: "post",
+                    dataType: "json",
+                    data: {contentId: id, orderBy: "", page: page, limit: size},
+                    success: function (data) {
+                        if (data.errcode == 0) {
+                            var ret = data.data;
+                            if (page < ret.totalPage) {
+                                var comments = ret.iData;
+                                //显示留言
+                                $.each(comments, function (index, comment) {
+                                    result += handleComments(comment);
+                                });
+                            }else {
+                                // 锁定
+                                me.lock();
+                                // 无数据
+                                me.noData();
+                            }
+                        }
+                        // 为了测试，延迟1秒加载
+                        setTimeout(function () {
+                            // 插入数据到页面，放到最后面
+                            $('.message-list').append(result);
+                            //初始化
+                            /*$('.time').liveTimeAgo({
+                                translate: {
+                                    'year': '% 年前',
+                                    'years': '% 年前',
+                                    'month': '% 个月前',
+                                    'months': '% 个月前',
+                                    'day': '% 天前',
+                                    'days': '% 天前',
+                                    'hour': '% 小时前',
+                                    'hours': '% 小时前',
+                                    'minute': '% 分钟前',
+                                    'minutes': '% 分钟前',
+                                    'seconds': '% 秒钟前',
+                                    'error': '未知的时间'
+                                }
+                            });*/
+                            // 每次数据插入，必须重置
+                            me.resetload();
+                        }, 0);
+                    },
+                    error: function (xhr, type) {
+                        //alert('Ajax error!');
+                        // 即使加载出错，也得重置
+                        me.resetload();
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+
+</html>

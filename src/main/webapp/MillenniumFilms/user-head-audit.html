@@ -1,0 +1,175 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/viewer/css/viewer.min.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>用户头像审核</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户头像审核 <a
+        class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+        href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="text-c">
+        <input type="text" class="input-text" style="width:250px" placeholder="输入用户信息" id="keyword" name="keyword">
+        <input name="" id="refresh" onclick="refreshCurrentPage();" type="hidden" value="刷新"/>
+        <input name="当前页" id="currentPage" type="hidden"/>
+        <button type="button" class="btn btn-success" id="search" name="" onclick="pubAjax(0)"><i class="Hui-iconfont">
+            &#xe665;</i> 搜用户
+        </button>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"><span class="l"> <a href="javascript:;" class="btn btn-default radius disabled"><i
+            class="Hui-iconfont">&#xe601;</i> 用户头像审核</a></span> <span class="r">共有数据：<strong
+            id="num11">0</strong> 条</span></div>
+    <table class="table table-border table-bordered table-bg table-hover">
+        <tbody id="list-la"></tbody>
+    </table>
+    <div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif">
+    </div>
+    <div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a>
+        <div class="pagelist"></div>
+        <a class="nextpage paginate_button">下一页</a></div>
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript" src="lib/viewer/js/viewer-jquery.min.js"></script>
+<script type="text/javascript">
+    var id = $.cookie("userId");
+    var accessToken = $.cookie("accessToken");
+    var roleType = $.cookie("roleType");
+    var username = $.cookie("username");
+    $(function () {
+        if (id == "" || id == null) {
+            parent.location.href = "login.html";
+            return false;
+        }
+    });
+    pubAjax(0);
+    function pubAjax(page) {
+        var keyword = $("#keyword").val();
+        var startTime = $("#datemin").val();
+        var endTime = $("#datemax").val();
+        var internal = $("#internal").val();
+        var sex = $("#sex").val();
+
+        $.ajax({
+            url: getRootPath_dc() + '/user/queryAllUserHeadList',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {
+                page: page,
+                limit: $(".limit").val(),
+                roleType: "commonUser",
+                keyword: keyword,
+                startTime: startTime,
+                endTime: endTime,
+                internal: internal,
+                sex: sex
+            },
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                console.log(data);
+                if (data.errcode == 0) {
+                    $("#list-la").children().remove();
+                    list(data);
+                    var myobj = eval(data).data;
+                    pageList(myobj);
+                    clickEvents(myobj, pubAjax);
+                } else {
+                    return false;
+                }
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        });
+    }
+    function list(data) {
+//	       加载list开始
+        $("#currentPage").val(data.data.page);
+        $("#num11").html(data.data.totalCount);
+        var html = "<tr class='text-c'><th width='20'>序号</th><th style='text-align: left' width='130'>用户ID</th><th style='text-align: left' width='80'>昵称</th><th width='80'>用户名</th><th width='100'>注册时间</th><th width='100'>头像</th><th>审核状态</th><th width='120'>操作</th></tr>";
+        var dataa = eval(data.data.iData);
+        html += addTableNoDateHtml(dataa.length);
+        for (var i = 0; i < dataa.length; i++) {
+            html += "<tr class='text-c .table-hover' id='" + dataa[i].id + "' onclick='clickLine(this,\"danger\")'>" +
+                "<td>" + parseInt(i + 1) + "</td>" +
+                "<td class='text-l'>" + dataa[i].id + "</td>" +
+                "<td class='text-l'>" + dataa[i].nickName + "</td>" +
+                "<td>" + dataa[i].username + "</td>" +
+                "<td>" + dateFormatUtil(dataa[i].createTime) + "</td>";
+            if (dataa[i].userPhotoHead == null) {
+                html += "<td>无</td>";
+            } else {
+                html += "<td><img class='userHeadImg' alt='" + dataa[i].nickName + "' src='" + dataa[i].userPhotoHead + "' width='60' height='60'></td>";
+            }
+            if (dataa[i].headState == 0) {
+                html += "<td class='td-status'><span class='label radius label-danger'>不通过</span></td>";
+            } else if (dataa[i].headState == 1) {
+                html += "<td class='td-status'><span class='label radius label-default'>通过</span></td>";
+            } else {
+                html += "<td class='td-status'><span class='label radius label-info'>待审核</span></td>";
+            }
+            html += "<td class='td-manage'><a style='text-decoration:none' onClick='passOrFailed(1,\"" + dataa[i].id + "\")'>通过</a>&nbsp;&nbsp;" + "<a style='text-decoration:none' onClick='passOrFailed(0,\"" + dataa[i].id + "\")'>不通过</a></td>";
+            html += "</tr>";
+        }
+        var listLa = $("#list-la");
+        listLa.append(html);
+        $(".userHeadImg").viewer({toolbar: false, navbar: false});
+    }
+
+    function passOrFailed(state, userId) {
+        $.ajax({
+            type: 'post',
+            url: getRootPath_dc() + '/audit/updateUserHeadState',
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {state: state, userId: userId},
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                if (data.errcode == 0) {
+                    window.location.reload();
+                } else {
+                    layer.alert('修改失败!');
+                }
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        })
+    }
+</script>
+</body>
+</html>

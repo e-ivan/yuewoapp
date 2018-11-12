@@ -1,0 +1,184 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>商城订单列表</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 商城订单列表 <a
+        class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+        href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="text-c">   <span class="select-box inline">
+		 <select name="sex" id="payway" class="select">
+			 <option value="">支付方式</option>
+			 <option value="wxpay">微信</option>
+			 <option value="alipay">支付宝</option>
+		 </select>
+		 </span>
+        <span class="select-box inline">
+		 <select name="internal" id="paystatus" class="select">
+			 <option value="">支付状态</option>
+			 <option value="0">待付款</option>
+			 <option value="1">已付款</option>
+			 <option value="2">待发货</option>
+			 <option value="3">已完成</option>
+			 <option value="4">已取消</option>
+             <option value="5">已发货</option>
+		 </select>
+		 </span>
+        <input type="text" class="input-text" style="width:250px" placeholder="输入订单号,或用户id,或姓名,或电话" id="keyword"
+               name="keyword">
+        <button type="button" class="btn btn-success" id="search" name="" onclick="pubAjax(0)"><i class="Hui-iconfont">
+            &#xe665;</i> 搜订单
+        </button>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"><span class="l"> <a href="javascript:;" class="btn btn-default radius disabled"><i
+            class="Hui-iconfont">&#xe601;</i> 商城订单列表</a></span> <span class="r">共有数据：<strong
+            id="num11">0</strong> 条</span></div>
+    <table class="table table-border table-bordered table-bg table-hover">
+        <tbody id="list-la"></tbody>
+    </table>
+    <div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a>
+        <div class="pagelist"></div>
+        <a class="nextpage paginate_button">下一页</a></div>
+</div>
+<div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif">
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <script type="text/javascript" src="lib/jquery.cookie.js"></script> <script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript">
+    // 点击添加商品属性
+    $(function () {
+        var userId = $.cookie("userId");
+        var roleType = $.cookie("roleType");
+        var username = $.cookie("username");
+        if (userId == "" || userId == null) {
+            parent.location.href = "login.html";
+            return false;
+        }
+    });
+    pubAjax(0);
+    function pubAjax(page) {
+        var id = $.cookie("userId");
+        var accessToken = $.cookie("accessToken");
+        var keyword = $("#keyword").val();
+        var payway = $("#payway").val();
+        var paystatus = $("#paystatus").val();
+
+        $.ajax({
+            url: getRootPath_dc() + '/marketorder/queryAllOrderList',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {page: page, limit: $(".limit").val(), keyword: keyword, paystatus: paystatus, payway: payway},
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                if (data.errcode == 0) {
+                    $("#list-la").children().remove();
+                    list(data);
+                    var myobj = eval(data.data);
+                    pageList(myobj);
+                    clickEvents(myobj,pubAjax);
+                } else {
+                    return false;
+                }
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        });
+    }
+    function list(data) {
+        $("#num11").html(data.data.totalCount);
+        var html = "<tr class='text-c'><th width='20'>序号</th><th>订单编号</th><th>用户id</th><th>收货人姓名</th><th>收货人电话</th><th>优惠券总额</th><th>优惠券抵扣金额</th><th>商品总数量</th><th>商品总价</th><th>支付方式</th><th>实付金额</th><th>订单状态</th><th>运费</th><th>支付时间</th><th>创建时间</th><th width='120'>操作</th></tr>";
+        var dataa = eval(data.data.iData);
+        for (var i = 0; i < dataa.length; i++) {
+            var phone = "";
+            var name = "";
+            var address = "";
+            if (dataa[i].orderAddress != null) {
+                address = encodeURI(encodeURI(dataa[i].orderAddress.address)).replace(/'/g, '&apos;');
+                name = encodeURI(encodeURI(dataa[i].orderAddress.name)).replace(/'/g, '&apos;');
+                phone = encodeURI(encodeURI(dataa[i].orderAddress.phone)).replace(/'/g, '&apos;');
+            }
+
+            var creatTime = unixTodateWithSecond(dataa[i].createdAt);
+            html += "<tr class='text-c .table-hover' id='" + dataa[i].id + "' onclick='clickLine(this,\"info\")' ondblclick='layer_show(\"订单详情\",\"shop-order-detail.html?orderId=" + dataa[i].id + "&address=" + address + "&name=" + name + "&phone=" + phone + "\")'>" +
+                "<td>" + parseInt(i + 1) + "</td>" +
+                "<td class='text-c'>" + dataa[i].orderNo + "</td>" +
+                "<td class='text-c'>" + "<a href='javascript:layer_show(\"用户信息\",\"user-info-detail.html?userId=" + dataa[i].userId + "\")'>" + dataa[i].userId + "</a>" + "</td>" +
+                "<td class='text-c'>" + dataa[i].orderAddress.name + "</td>" +
+                "<td class='text-c'>" + dataa[i].orderAddress.phone + "</td>" +
+                "<td class='text-c'>" + dataa[i].couponMoney + "</td>" +
+                "<td class='text-c'>" + dataa[i].couponAmount + "</td>" +
+                "<td class='text-c'>" + dataa[i].goodsNums + "</td>" +
+                "<td class='text-c'>" + dataa[i].goodsAmount + "</td>" +
+                "<td class='td-status'>" + parsePayType(dataa[i].payStatus)+ "</td>";
+            html += "<td class='text-c'>" + dataa[i].realAmount + "</td>";
+
+            if (dataa[i].status == 0) {
+                html += "<td class='td-status'><span class='label radius label-primary'>待付款</span></td>";
+            }
+            else if (dataa[i].status == 1) {
+                html += "<td class='td-status'><span class='label radius label-danger'>已付款</span></td>";
+            }
+            else if (dataa[i].status == 2) {
+                html += "<td class='td-status'><span class='label radius label-warning'>待发货</span></td>";
+            }
+            else if (dataa[i].status == 3) {
+                html += "<td class='td-status'><span class='label radius label-success'>已完成</span></td>";
+            }
+            else if (dataa[i].status == 5) {
+                html += "<td class='td-status'><span class='label radius label-success'>已发货</span></td>";
+            }
+            else {
+                html += "<td class='td-status'><span class='label radius'>已取消</span></td>";
+            }
+
+            html += "<td class='text-c'>" + dataa[i].freight + "</td>" +
+                "<td class='text-c'>" + (dataa[i].payTime == null ? "" : dateFormatUtil(dataa[i].payTime)) + "</td>" +
+                "<td class='text-c'>" + creatTime + "</td>";
+            html += "<td class='text-c'>" +
+                "<a style='text-decoration:none' onClick='layer_show(\"订单详情\",\"shop-order-detail.html?orderId=" + dataa[i].id + "&address=" + address + "&name=" + name + "&phone=" + phone + "\")'>详情</a>&nbsp;&nbsp;";
+            if (dataa[i].status == 1){
+                html+= "<a style='text-decoration:none' onClick='layer_show(\"发货\",\"delivery.html?&orderId="+dataa[i].id+"&status=1"+ "\")'>发货</a>";
+            }else if(dataa[i].status == 5){
+                html+= "<a style='text-decoration:none' onClick='layer_show(\"物流信息\",\"delivery.html?orderId="+dataa[i].id+"&status=5"+ "\")'>物流信息</a>";
+            }
+            html+= "</td></tr>";
+        }
+        $("#list-la").append(html);
+    }
+
+</script>
+</body>
+</html>

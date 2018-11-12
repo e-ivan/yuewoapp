@@ -1,0 +1,192 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/viewer/css/viewer.min.css"/>
+    <style>
+        .img {
+            height: 30px;
+            margin: 5px;
+        }
+    </style>
+    <title>用户朋友圈列表</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户朋友圈 <span
+        class="c-gray en">&gt;</span> 用户朋友圈列表 <a class="btn btn-success radius r"
+                                                style="line-height:1.6em;margin-top:3px"
+                                                href="javascript:location.replace(location.href);" title="刷新"><i
+        class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="text-c">
+        <span class="select-box inline">
+		 <select name="state" id="state" class="select">
+			 <option value='1'>正常</option>
+			 <option value='0'>删除</option>
+		 </select>
+		 </span>
+        <input type="text" class="input-text" style="width:250px" placeholder="输入朋友圈内容,用户信息" id="keyword" name="keyword">
+        <input name="" id="refresh" onclick="refreshCurrentPage();" type="hidden" value="刷新"/>
+        <input name="当前页" id="currentPage" type="hidden"/>
+        <button type="button" class="btn btn-success" id="search" name="" onclick="pubAjax(0)">
+        <i class="Hui-iconfont"> &#xe665;</i> 搜记录
+        </button>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span>
+          <a class="btn btn-default radius disabled">
+              <i class="Hui-iconfont">&#xe601;</i><span id="btnTitle"> 用户朋友圈</span></a>
+        </span>
+        <span class="r">共有数据：<strong id="num11">0</strong> 条</span>
+    </div>
+    <div class="mt-20 mma">
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <tbody id="mail-list"></tbody>
+        </table>
+        <div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a>
+            <div class="pagelist"></div>
+            <a class="nextpage paginate_button">下一页</a></div>
+    </div>
+</div>
+<div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif">
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript" src="lib/viewer/js/viewer-jquery.min.js"></script>
+<script type="text/javascript">
+
+    // 点击添加商品属性
+    var userId = $.cookie("userId");
+    var roleType = $.cookie("roleType");
+    var username = $.cookie("username");
+    var accessToken = $.cookie("accessToken");
+    var queryUserId = getQueryString("userId");
+    var limit = 10;
+    pubAjax(0);
+    function refreshCurrentPage() {
+        var clickLine = $("#mail-list").find("tr[class*='info']");
+        var id = clickLine.attr("id");
+        var currentPage = $("#currentPage").val();
+        pubAjax(currentPage, id);
+    }
+    function pubAjax(page, selectId) {
+        var state = $("#state").val();
+        var keyword = $("#keyword").val();
+        $.ajax({
+            url: getRootPath_dc() + '/moment/queryAllMoment',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: userId, accessToken: accessToken},
+            data: {state: state, keyword:keyword,userId:queryUserId,page: page, limit: $(".limit").val()},
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                if (data.errcode == 0) {
+                    var bodyList = $("#mail-list");
+                    bodyList.children().remove();
+                    list(data);
+                    bodyList.find("tr[id='" + selectId + "']").addClass("info");
+                    var myobj = eval(data.data);
+                    pageList(myobj);
+                    clickEvents(myobj, pubAjax);
+                } else {
+                    return false;
+                }
+
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        });
+    }
+    function list(data) {
+        $("#num11").html(data.data.totalCount);
+        $("#currentPage").val(data.data.page);
+        var html = "<tr class='text-c'><th width='50'>序号</th>";
+        if (!queryUserId) {
+            html += "<th width='140'>用户ID</th>";
+        }
+         html += "<th width='100'>用户昵称</th><th width='300'>内容</th><th>图片</th><th>点赞总数</th><th>评论总数</th><th>创建时间</th><th> 状态 </th><th >操作</th></tr>";
+        var dataa = eval(data.data.iData);
+        html += addTableNoDateHtml(dataa.length);
+        for (var i = 0; i < dataa.length; i++) {
+            html += "<tr class='text-c table-hover ext'  id='" + dataa[i].id + "' onclick='clickLine(this,\"info\")'>" +
+                "<td>" + parseInt(i + 1) + "</td>";
+            if (!queryUserId) {
+                html += "<td><a href='javascript:layer_show(\"用户信息\",\"user-info-detail.html?userId=" + dataa[i].userId + "\")'>" + dataa[i].userId + "</a></td>";
+            }
+            html += "<td>"+dataa[i].nickname+"</td>";
+            html += "<td class='text-c'>" + substringText(dataa[i].content) + "</td><td>";
+            html += assembleImage(dataa[i].photos);
+            html += "</td><td>" + dataa[i].voteCount + "</td>" +
+                "<td>" + dataa[i].commentCount + "</td>";
+            html += "<td>" + dateFormatUtil(dataa[i].created) + "</td>" ;
+            html += "<td>";
+            if (dataa[i].state) {
+                html += "<a class='label radius label-primary' title='点击删除' onclick='updateState(\"" + dataa[i].id + "\",\""+dataa[i].userId+"\",false)'>正常</a>";
+            } else {
+                html += "<a class='label radius label-default' title='点击恢复' onclick='updateState(\"" + dataa[i].id + "\",\""+dataa[i].userId+"\",true)'>已删除</a>";
+            }
+            html += "</td>";
+            html += "<td class='f-14 td-manage'>" +
+                "<a style='text-decoration:none' class='ml-5 reqad' title='编辑用户朋友圈' onclick='layer_show(\"编辑用户朋友圈\",\"moment-edit.html?id=" + dataa[i].id + "\")'><i class='Hui-iconfont operation-icon'> &#xe692;</i></a>";
+            html += "</tr>";
+        }
+        $("#mail-list").append(html);
+        $(".imgArea").viewer(viewerOption());
+        $(".imgArea").viewer("update");
+    }
+    
+    function assembleImage(images) {
+        var html = "<div class='imgArea'>";
+        for (var i = 0;i < images.length;i++) {
+                html += "<img src='" + images[i].path + "' alt='图片' class='img-responsive img'>";
+        }
+        html += "</div>";
+        return html;
+    }
+    
+    function updateState(momentId,momentUserId,state) {
+        layer.confirm("您确定需要<span style='color: red'>"+(state ? "恢复" : "删除")+"</span>该朋友圈吗？", function (index) {
+            $.ajax({
+                url: getRootPath_dc() + "/moment/updateMomentState",
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: userId, accessToken: accessToken},
+                data: {momentId: momentId,userId:momentUserId,state:state},
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        refreshCurrentPage();
+                    } else {
+                        layer.alert(data.msg);
+                    }
+                }
+            });
+            layer.close(index);
+        })
+    }
+</script>
+</body>
+</html>

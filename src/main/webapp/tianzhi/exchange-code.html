@@ -1,0 +1,274 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>获取兑换码</title>
+
+    <style>
+        .div1 {
+            width: 100%;
+            height: 60px;
+            overflow: hidden;
+        }
+
+        .div2 {
+            width: 30%;
+            float: left;
+            overflow: hidden;
+        }
+
+        .div3 {
+            float: left;
+            margin-left: 20px;
+        }
+        .div4 {
+            width: 100%;
+            height: 110px;
+            overflow: hidden;
+        }
+
+    </style>
+
+</head>
+<body>
+<header class="navbar-wrapper">
+    <div class="navbar navbar-fixed-top">
+        <div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" onclick="javascript:layer.alert('感谢对约我科技的支持')">约我科技</a>
+            <nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
+                <ul class="cl">
+                    <li class="dropDown dropDown_hover"> <a href="#" class="dropDown_A namma"><i class="Hui-iconfont">&#xe6d5;</i></a>
+                        <ul class="dropDown-menu menu radius box-shadow">
+                            <li><a href="javascript:viewPopUp('个人信息','user-info-detail.html');">个人信息</a></li>
+                            <li><a href="javascript:logout();">切换账户</a></li>
+                            <li><a href="javascript:changeCode('修改密码','change-code.html');">修改密码</a></li>
+                            <li><a href="javascript:logout();">退出</a></li>
+                        </ul>
+                    </li>
+                    <li id="Hui-skin" class="dropDown right dropDown_hover"> <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
+                        <ul class="dropDown-menu menu radius box-shadow">
+                            <li><a href="javascript:;" data-val="default" title="默认（黑色）">默认（黑色）</a></li>
+                            <li><a href="javascript:;" data-val="blue" title="蓝色">蓝色</a></li>
+                            <li><a href="javascript:;" data-val="green" title="绿色">绿色</a></li>
+                            <li><a href="javascript:;" data-val="red" title="红色">红色</a></li>
+                            <li><a href="javascript:;" data-val="yellow" title="黄色">黄色</a></li>
+                            <li><a href="javascript:;" data-val="orange" title="绿色">橙色</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+<div class="page-container" style="font-size:xx-large;">
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l" id="data-nav">
+	<a class="btn btn-green radius" data-title="兑换码记录" onclick="showRedeemCodeList()" data-id="1"><i class="Hui-iconfont">&#xe681;</i> 兑换码记录</a>
+	</span></div>
+    <div style="width: 800px;background-position: center;overflow: hidden;margin: auto">
+
+        <div class="div4" style="text-align: center">
+                <span style="height: 90px; font-size: 80px">约我商城现金券</span>
+        </div>
+        <div class="div1" style="text-align: center">
+        </div>
+        <div class="div1">
+            <div class="div2">
+                <span style="float: right">手机号码：</span>
+            </div>
+            <div class="div3">
+                <input id="mobile" type="text" class="input-text" style="height: 45px; font-size: 30px;">
+            </div>
+        </div>
+
+        <div class="div1">
+            <div class="div2">
+                <span style="float: right">优惠券总金额：</span>
+            </div>
+            <div class="div3">
+                <select style="width: 300px;font-size: 30px" name="couponSplit" id="couponSplit" >
+                </select>
+            </div>
+        </div>
+
+        <div class="div1">
+            <div class="div2">
+                <span style="float: right">输入验证码：</span>
+            </div>
+            <div class="div3">
+                <input id="code" type="text" class="input-text" style="width: 150px;height: 45px;font-size: 30px;">
+                <img id="redeemPic" alt="无图片" style="width: 210px;height: 48px;">
+                <a id="changeExchangeCode" style="font-size: small;background-color: white;border: 0px;color: #0d5ab1;">看不清，换一张</a>
+            </div>
+        </div>
+
+        <div class="div1">
+            <div class="div2">
+                <span style="float: right">发送短信通知：</span>
+            </div>
+            <div class="div3">
+                <input id="sendMsg" type="checkbox" checked="checked" style="width: 35px;height: 35px;">
+            </div>
+        </div>
+
+        <div class="div1">
+            <div class="div2">
+                <input type="button" class="btn btn-primary radius" value="提交" id="submit"
+                       style="height: 35px;width: 80px;float: right;margin-top: 10px">
+            </div>
+            <div class="div3">
+                <span id="getMsg" style="font-size: medium;color: red"></span>
+            </div>
+        </div>
+
+        <div class="div1">
+            <div class="div2">
+                <span style="float: right">兑换码：</span>
+            </div>
+            <div class="div3">
+                <span id="getRedeem" style="color: #1397ff"></span>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/Validform/5.3.2/Validform.min.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <script type="text/javascript" src="lib/jquery.cookie.js"></script> <script type="text/javascript" src="lib/common.js"></script>
+
+</body>
+</html>
+<script type="text/javascript">
+    $(function () {
+
+        var userId = $.cookie("userId");
+        var roleType = $.cookie("roleType");
+        var username = $.cookie("username");
+        if (userId == "" || userId == null) {
+            window.location.href = "login.html";
+            return false;
+        }
+        //var dname=getQueryString("dat")
+        var nickName = $.cookie("nickName");
+        $(".namma").html(nickName);
+
+        var id = $.cookie("userId");
+        var accessToken = $.cookie("accessToken");
+
+        $.ajax({
+            url: getRootPath_dc() + "/redeemCoupon/queryCouponSplit",
+            type: "post",
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {type: 'market'},
+            success: function (data) {
+                if (data.errcode == 600){
+                    layer.alert("登录失效，请重新登录！",function () {
+                        window.location.href = "login.html";
+                    });
+                    return false;
+                }
+                var html = "";
+                for (var i = 0, len = data.data.length; i < len; i++) {
+                    html += "<option value=" + data.data[i].id + ">" + data.data[i].title + "</option>";
+                }
+                $("#couponSplit").html(html);
+
+            }
+        });
+        getExchangeCode();
+        $("#mobile").Huitextarealength({
+            maxlength:11
+        });
+    });
+
+    $("#changeExchangeCode").click(function () {
+        getExchangeCode();
+    });
+
+    $("#submit").click(function () {
+
+        var id = $.cookie("userId");
+        var accessToken = $.cookie("accessToken");
+
+        var mobile = $("#mobile").val();
+        var couponSplit = $("#couponSplit").val();
+        var captchaCode = $("#code").val();
+        var sendMsg = $("#sendMsg").is(':checked');
+        var $getMsg = $("#getMsg");
+        $getMsg.text("");
+        if (isNaN(mobile) || mobile.length != 11){
+            $getMsg.text("手机号码格式错误！");
+            return;
+        }
+        if (captchaCode.length <= 0){
+            $getMsg.text("请输入验证码！");
+            return;
+        }
+        if (couponSplit == ""){
+            $getMsg.text("选项错误！");
+            return;
+        }
+        var hasSendMsg;
+        hasSendMsg = !!sendMsg;
+
+        $.ajax({
+            url: getRootPath_dc() + "/redeemCoupon/createRedeemCode",
+            type: "post",
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {mobile: mobile, split: couponSplit, userId: id, captchaCode: captchaCode, sendMsg: hasSendMsg},
+            success: function (data) {
+                console.log(data);
+                if (data.errcode == 0) {
+                    $("#getMsg").text("");
+                    $("#getRedeem").text(data.data);
+                }
+                else {
+                    $("#getMsg").text(data.msg);
+                    $("#getRedeem").text("");
+                }
+            }
+        });
+
+    });
+
+    function getExchangeCode() {
+        var id = $.cookie("userId");
+        $("#redeemPic").attr("src", getRootPath_dc() + "/redeemCoupon/captcha?userId=" + id + "&random=" + Math.random());
+    }
+
+    function logout() {
+        $.cookie("nickName", null);
+        $.cookie("roleType", null);
+        $.cookie("username", null);
+        $.cookie("userId", null);
+        $.cookie("accessToken", null);
+        window.location.href="login.html";
+    }
+    function showRedeemCodeList() {
+        layer_show('兑换码记录','redeem-record-list.html?type=market','1200')
+    }
+
+</script>
+

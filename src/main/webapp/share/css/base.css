@@ -1,0 +1,240 @@
+@charset "utf-8";
+/*全局*/
+body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,figcaption,figure,fieldset,legend,button,input,textarea,th,td{
+	margin:0;
+	padding:0
+}
+body,button,input,select,textarea{
+	font-family: Lucida Grande,'Microsoft YaHei',"Lucida Grande","Lucida Sans Unicode",Helvetica,Arial,Verdana,sans-serif
+}
+h1,h2,h3,h4,h5,h6{
+	font-size:100%;
+	font-weight:normal
+}
+address,cite,dfn,em,var,i{
+	font-style:normal
+}
+code,kbd,pre,samp,tt{
+	font-family:"Courier New",Courier,monospace
+}
+ul,ol,li{
+	list-style:none
+}
+a{
+	text-decoration:none; 
+	cursor:pointer; 
+	color: inherit;
+}
+abbr[title],acronym[title]{
+	border-bottom:1px dotted;
+	cursor:help
+}
+q:before,q:after{
+	content:''
+}
+button{ 
+	cursor:pointer;
+}
+fieldset,img{
+	border:0
+}
+table{
+	border-collapse:collapse;
+	border-spacing:0
+}
+*{
+	-ms-word-break:break-all;
+	word-break:break-all;
+	-ms-word-wrap:break-word;
+	word-wrap:break-word;
+	-webkit-tap-highlight-color:rgba(0,0,0,0);
+	outline: none;
+}
+input,button,select{ 
+	outline:none;
+}
+input,textarea,button { 
+	border: 0; 
+	margin: 0; 
+	padding: 0;
+	font-family: "Microsoft YaHei", "Helvetica Neue", Helvetica, STHeiTi, Arial, sans-serif;
+}
+.clearfix{ 
+	clear:both; zoom:1;
+}
+.clear:after{ 
+	content:''; 
+	clear:both; 
+	display:table-cell;
+}
+html {
+	font-size:100px;
+	font-size: 625%;
+}
+body {  
+	font-size: 0.14rem
+}
+textarea { 
+	resize: none;
+}
+*:before,*:after { 
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+body{ 
+	background: #f0f0f0; 
+	color: #333;
+}
+.fl{
+	float: left;
+}
+.fr{
+	float: right;
+}
+.clear{
+	clear: both;
+	height: 0;
+	overflow: hidden;
+}
+
+/*top 样式*/
+.mgt{
+	margin-top: 0.15rem;
+}
+.white{
+	background: #fff;
+}
+.top{
+	position: relative;
+}
+.top h2{
+	background: #01b095;
+	color: #fff;
+	/* padding: 0.12rem 0; */
+	text-align: center;
+	height: 44px;
+	line-height: 44px;
+}
+.pos_left{
+	position: absolute;
+	left: 0;
+	top: 0;
+	padding:  0.12rem 0 0.12rem 0.12rem;
+}
+.pos_left a.abj{
+	color: #fff; 
+	display: block;
+	background: url(../images/pos.png) no-repeat left center;
+	background-size: 29%;
+	padding-left: 0.2rem
+}
+.pos_right{
+	position: absolute;
+	right: 0;
+	top: 0;
+	/*padding:  0.12rem 0.12rem 0.12rem 0 ;*/
+}
+#thelist li h3{
+	padding: 10px 0;
+	height: 0.3rem;
+	overflow: hidden;
+}
+.pos_right a {
+	display: inline-block;
+    margin-left: 0.1rem;
+    color: #fff;
+    height: 44px;
+    line-height: 44px;
+    padding: 0 0.12rem;
+}
+.pos_right .bbut {
+	display: inline-block;
+    margin-left: 0.1rem;
+    color: #fff;
+    height: 44px;
+    line-height: 44px;
+    padding: 0 0.12rem;
+    background: #01b095;
+    border:none;
+}
+.pos_right a:active{
+	color: #f0f0f0
+}
+.pos_right a img{
+	width: 0.2rem;
+	vertical-align: middle;
+}
+.back{
+	display: inline-block;
+	margin-top: 0.01rem;
+}
+.back img{
+	width: 66%;
+}
+.top h1{
+	background: #01b095;
+	color: #fff;
+	text-align: center;
+	padding: 0.04rem;
+}
+.se{
+	width: 76%;
+	display: block;
+	border-radius: 5px;
+	background-color: #fff;
+	padding:0.08rem;
+	margin: 0 auto;
+}
+.btn{
+	background: url(../images/seach.png) no-repeat center center;
+	width: 15px; 
+	height: 15px;
+	margin-top: 0.02rem;
+}
+#shopsearch{
+	width: 75%;
+	text-align: left;
+	padding: 0 0.12rem;
+	color: #999
+}
+/*底部导航样式*/
+.nav{  
+	height:0.5rem; 
+	background: #fff; 
+	position: fixed; 
+	bottom: 0; 
+	width: 100%; 
+	left: 0; 
+	box-shadow: 2px 0px 4px #ccc; 
+	z-index: 3;
+}
+.nav li{ 
+	float: left; 
+	width: 25%; 
+	text-align: center; 
+	font-size: 0.11rem; 
+	color: #999;
+}
+.nav img {
+    margin-top: 0.08rem; 
+    vertical-align: top;
+}
+.nav a .active{ 
+    color: #01b095;
+}
+.nav p{ 
+	margin-top: 0.05rem;
+}
+#download a{
+	position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    background: steelblue;
+    height: 35px;
+    line-height: 35px;
+    color: #fff;
+}
+.fenl li,.ttl input,.jian,.jia,.goods label input,.main_image a,#buys,.add,.reduce,#shopcar,.jju,.remove-this,.main_image a,.add-detail,#s_city li,#s_county li,.delete{cursor: pointer;}

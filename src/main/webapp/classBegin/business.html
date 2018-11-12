@@ -1,0 +1,75 @@
+
+    <meta charset="utf-8">
+    <link href="css/base.css" type="text/css" rel="stylesheet">
+    <div id="main">
+    <div class="r-top">业务列表<span style="color: #01b095;" onclick='window.location.href="add-bussiness.html"'>添加业务分类</span></div>
+    <div class="container">
+      <div class="items">
+        <ul id="items">
+        </ul>
+      </div>
+     </div>
+   </div>
+    <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript">
+    $(function (){
+      jQuery.ajax({
+          url: '/skl/classify/queryOrgClassifyClassGroupsList',
+          type: "post",
+          dataType: "json",
+          success: function (data) { 
+             if(data.errcode==0){
+                var items = $('#items');
+                var item = "";
+                for (var i = 0, len = data.data.iData.length; i < len; i++) {
+                  var itemUl = "";
+                  var itemChild = "";
+                  for(var j = 0, lens = data.data.iData[i].list.length; j < lens; j++){
+                    itemChild += "<li>"+
+                    "<input type='hidden' value="+data.data.iData[i].list[j].id+">"+
+                    "<span>" +data.data.iData[i].list[j].name+ "</span>" +
+                    "<a class='modService'>修改业务</a>"+
+                    "</li>";
+                  }
+                  itemUl= "<ul class='pics'>" + itemChild+ "</ul>";
+                  item +=  "<li class='item'>" +
+                  "<input type='hidden' value="+data.data.iData[i].id+" >"+
+                  "<span>" + data.data.iData[i].name+ "</span>" +
+                  "<a class='addService'>添加业务</a><a class='modBuss'>修改业务分类</a>"+
+                  "</li>"+itemUl;
+                }
+                items.html(item);
+                findPics();
+              } 
+              else{alert(data.msg);}  
+          }
+      });
+      function findPics(){
+        $('.item span').click(function() {
+          $(this).parent().next('.pics').toggle();
+        });
+        $('.modBuss').click(function() {
+          var groupId = $(this).parent().find('input').val();
+          $.cookie("groupId",groupId);
+          var groupName = $(this).parent().find('span').html();
+          $.cookie("groupName",groupName);
+          window.location.href='modify-bussiness.html';
+        });
+        $('.addService').click(function() {
+          var groupId = $(this).parent().find('input').val();
+          $.cookie("groupId",groupId);
+          window.location.href='add-service.html';
+        });
+        $('.modService').click(function() {
+          var classId = $(this).parent().find('input').val();
+          $.cookie("classId",classId);
+          var className = $(this).parent().find('span').html();
+          $.cookie("className",className);
+          window.location.href='mod-service.html';
+        });
+      }
+    })
+   
+  
+  </script>

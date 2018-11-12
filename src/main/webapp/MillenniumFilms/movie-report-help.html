@@ -1,0 +1,106 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/viewer/css/viewer.min.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+
+    <title>影票上报专资帮助</title>
+</head>
+<body>
+
+<article class="page-container">
+    <h1 style="text-align:center">票房专资上报说明</h1>
+    <hr>
+    <br>
+    <p class="MsoListParagraph" style="margin-left:24px">
+        1.<span style="font:9px &#39;Times New Roman&#39;">&nbsp;&nbsp;&nbsp;&nbsp; </span>登录国家票务系统 <a target="view_window" href="http://www.gjdyzjb.cn">http://www.gjdyzjb.cn</a>
+    </p>
+    <p style="text-indent:24px">
+        账号：<span id="username"></span>
+    </p>
+    <p class="MsoListParagraph" style="margin-left:24px;text-indent:0">
+        密码：<span id="password"></span>
+    </p>
+    <p class="MsoListParagraph" style="margin-left:24px;text-indent:0">
+        <img src="static/images/help/help-000001.png" style="width: 500px"/>
+    </p>
+    <p class="MsoListParagraph" style="margin-left:24px">
+        2.<span style="font:9px &#39;Times New Roman&#39;">&nbsp;&nbsp;&nbsp;&nbsp; </span>选择票房管理，对照每个月的上报天数
+    </p>
+    <p class="MsoListParagraph" style="margin-left:24px;text-indent:0">
+        <img src="static/images/help/help-000002.png" style="width: 500px"/>
+    </p>
+    <p class="MsoListParagraph" style="margin-left:24px;text-indent:0">
+        对照上报的票数或票房总数是否相符
+    </p>
+    <p class="MsoListParagraph" style="margin-left:48px">
+        ①<span style="font:9px &#39;Times New Roman&#39;">&nbsp;&nbsp;&nbsp; </span>查看该月上报的日期和票房。
+    </p>
+    <p class="MsoListParagraph" style="margin-left:24px;text-indent:0">
+        <img src="static/images/help/help-000003.png" style="width: 500px"/>
+    </p>
+    <p class="MsoListParagraph" style="margin-left:48px">
+        ②<span style="font:9px &#39;Times New Roman&#39;">&nbsp;&nbsp;&nbsp; </span>查看期间内的票数和票房
+    </p>
+    <p class="MsoListParagraph" style="margin-left:48px;text-indent:0">
+        <img src="static/images/help/help-000004.png" style="width: 500px"/>
+    </p>
+    <p class="MsoListParagraph" style="margin-left:24px;text-indent:0">
+        <img src="static/images/help/help-000005.png" style="width: 500px"/>
+    </p>
+    <p class="MsoListParagraph" style="margin-left:24px;text-indent:0">
+        <img src="static/images/help/help-000006.png" style="width: 500px"/>
+    </p>
+    <p class="MsoListParagraph" style="margin-left:24px;text-indent:0">
+        主要是对照天智创客的订单的票数，和影票的放映时间是否与票房系统上报的时间和票房相同。
+    </p>
+    <p class="MsoListParagraph" style="margin-left:24px">
+        3.<span style="font:9px &#39;Times New Roman&#39;">&nbsp;&nbsp;&nbsp;&nbsp; </span>漏报影票补报
+    </p>
+    <p class="MsoListParagraph" style="margin-left:24px;text-indent:0">
+        如果有查询到有影票是没有上报的，在电影订单列表中有补报任务。请在此处选择具体漏报的票房的订单支付期间（如8月2日票房中有影票没有上报成功，而影票是在7月16日买的，那个这里的日期就需要现在7月16日），然后点击重新上报。后台则会再次执行上报任务。补报影票数据会存在延迟（后台任务五分钟左右执行一次，上报成功票房系统也不会离开显示），等待半天或一天后可以查看影票是否有补报成功，若果没有，则可能是选择的日期不对，请仔细查看。
+    </p>
+    <p class="MsoListParagraph" style="margin-left:24px;text-indent:0">
+        注：这里选择日期的期间跨度应该尽可能的小，如果有日期两个以上日期是相隔比较远，那么就进行两次重新上报操作。因为这里的补报是将你所选的期间能的所有影票重新上报的，如果数据太多，会消耗系统信息，且容易出错。所以一般建议期间选择不大于一个月。
+    </p>
+    <p class="MsoListParagraph" style="margin-left: 24px; text-indent: 0px;">
+        <img src="static/images/help/help-000007.png" style="width: 500px"/>
+    </p>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/viewer/js/viewer-jquery.min.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#username").text(getQueryString("username"));
+        $("#password").text(getQueryString("password"));
+        $(".page-container").viewer({toolbar:false,navbar:false});
+    })
+</script>
+</body>
+</html>

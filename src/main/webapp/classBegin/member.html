@@ -1,0 +1,174 @@
+
+    <meta charset="utf-8">
+    <link href="css/base.css" type="text/css" rel="stylesheet">
+    <div id="main">
+    <div class="r-top"><a roleType="student" class="current">学生</a><a roleType="organization">机构</a><a roleType="store">商城商家</a><a roleType="teacher">老师</a><a roleType="videoStore">视频商家</a><span><a href="add-member.html">创建商城账号</a><a href="add-Videomember.html">创建视频账号</a></span></div>
+    <div class="container">
+          <table class="village-list">
+          </table>  
+          <div class="page"><a class="prepage" >上一页</a><div class="pagelist"></div><a class="nextpage" >下一页</a></div> 
+     </div>
+   </div>
+    <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript">
+    $(function (){
+     var limit = 10;
+     function pubAjax(page,roleType){
+      jQuery.ajax({
+        url: '/skl/user/queryAllUserList',
+        type: "post",
+        dataType: "json",
+        data:{page:page,limit:limit,roleType:roleType},
+        success: function (data) {
+          list(data);
+          pageList(data);
+          clickEvents(data);
+          auditing();
+        }              
+      }); 
+     }
+    pubAjax(0,"student");
+    function list(data){
+       var tableDom = $('.village-list');
+       var html = "<tr>"+"<th>"+"用户名"+"</th>"+"<th>"+"昵称"+"</th>"+"<th>"+"性别"+"</th>"+"<th>"+"年龄"+"</th>"+"<th>"+"电话"+"</th>" +"<th>"+"状态"+"</th>" +"<th>"+"审核"+"</th>" +"</tr>";                   
+        for (var i = 0, len = data.data.iData.length; i < len; i++) {
+          html += "<tr>" + 
+        "<input type='hidden' value="+data.data.iData[i].id+" class='classifyId'>"+
+        "<td>" + data.data.iData[i].username+ "</td>" +  
+        "<td>" +  data.data.iData[i].nickName + "</td>" +  
+        "<td class='sex' status="+ data.data.iData[i].sex +">" + '' + "</td>" +  
+        "<td>" + data.data.iData[i].age + "</td>" +  
+        "<td>" + data.data.iData[i].phone + "</td>" +  
+        "<td class='status' status="+ data.data.iData[i].status +">" + '' + "</td>" +  
+        "<td>" + '<span class="modify"></span>' + "</td>" +  
+        "</tr>";  
+        }
+       tableDom.html(html);
+       $('.village-list tr').each (function (){
+           var sex = $(this).find('.sex').attr("status");           
+           if (sex==0){
+            $(this).find('.sex').html('女');
+           }
+           if (sex==1){
+            $(this).find('.sex').html('男');
+           }
+           var status = $(this).find('.status').attr("status"); 
+           if (status==10){
+            var modify = '<a href="javascript:void(0)" class="pass">通过</a><a href="javascript:void(0)" class="passFail">不通过</a></span>'
+            $(this).find('.status').html('审核中');
+            $(this).find('.modify').append(modify);
+           }          
+           if (status==20){
+            $(this).find('.status').html('正常');
+           }
+           if (status==30){
+            $(this).find('.status').html('停用');
+           }
+           
+      })
+    }
+  function auditing(){
+     
+     $('.pass').click(function() {
+      var userId = $(this).parent().parent().parent().find('.classifyId').val();
+      var statu = $(this).parent().parent().parent().find('.status');
+      var parent = $(this).parent();
+       jQuery.ajax({
+          url: '/skl/user/changeUserStatus',
+          type: "post",
+          dataType: "json",
+          data:{userId:userId,status:20},
+          success: function (data) {
+            if (data.errcode==0) {
+               $(statu).html('正常');
+               $(parent).html('');
+            }
+            else{
+              alert(data.msg);
+            }
+            
+          }              
+        }); 
+     }); 
+     $('.passFail').click(function() {
+      var userId = $(this).parent().parent().parent().find('.classifyId').val();
+      var statu = $(this).parent().parent().parent().find('.status');
+      var parent = $(this).parent();
+       jQuery.ajax({
+          url: '/skl/user/changeUserStatus',
+          type: "post",
+          dataType: "json",
+          data:{userId:userId,status:30},
+          success: function (data) {
+            if (data.errcode==0) {
+               $(statu).html('停用');
+               $(parent).html('');
+            }
+            else{
+              alert(data.msg);
+            }
+          }              
+        }); 
+     }); 
+  }
+  function pageList(data){ 
+     var totalCount = data.data.totalCount;
+     var pagelist=$('.pagelist');
+     var limit = data.data.limit;                  
+     var page = data.data.page;
+     var pageNum = Math.ceil(totalCount/limit) ;
+     var pages = '';
+     for (var i = 1; i < pageNum+1; i++) {
+        pages +=  "<a>" + i + "</a>"; 
+     }      
+    pagelist.html(pages);
+    var emptyPage = pagelist.html();
+     if(emptyPage==''|| emptyPage==null){
+         $('.prepage,.nextpage').css({display: 'none'});
+    }
+    else{
+      $('.prepage,.nextpage').css({display: 'inline-block'});
+    }
+    pagelist.children().eq(page).addClass('cur').siblings().removeClass('cur');       
+  }
+  function clickEvents(data){
+    var roleType = $('.current').attr("roleType");
+    $('.r-top a').click(function() {
+        $(this).addClass('current').siblings().removeClass('current');
+        var roleType = $('.current').attr("roleType");
+        page = 0;
+        pubAjax(page,roleType);
+      });
+     var totalCount = data.data.totalCount;
+     var limit = data.data.limit;         
+     var page = data.data.page;
+     var pageNum = Math.ceil(totalCount/limit) ;
+     $(".nextpage,.prepage,.pagelist a").unbind("click");                   
+     $('.nextpage').click(function() {
+          if (page<= pageNum-2) {
+            page++;
+            pubAjax(page,roleType); 
+          } 
+          else{
+             return false;
+          } 
+
+      });
+     $('.prepage').click(function() {
+      if (page>= 1) {
+          page--;
+          pubAjax(page,roleType);  
+        }
+        else{
+          return false;
+        }
+     });
+    $('.pagelist a').click(function() {
+      page =$(this).html()-1;
+      pubAjax(page,roleType);
+    }); 
+  }
+})
+   
+  
+  </script>

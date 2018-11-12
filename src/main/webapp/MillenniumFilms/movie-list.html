@@ -1,0 +1,246 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/viewer/css/viewer.min.css"/>
+    <style>
+        .img {
+            height: 30px;
+            margin: 5px;
+        }
+    </style>
+    <title>电影</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 电影系统 <span
+        class="c-gray en">&gt;</span> 电影管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+                                              href="javascript:location.replace(location.href);" title="刷新"><i
+        class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="text-c">
+        <span class="select-box inline">
+		 <select name="publish" id="publish" class="select">
+			 <option value=''>上映状态</option>
+			 <option value='1'>已上映</option>
+			 <option value='0'>未上映</option>
+		 </select>
+		 </span>
+        <input type="text" name="keyword" id="keyword" placeholder="请输入电影相关信息" style="width:250px" class="input-text">
+        <button name="" id="mSearch" onclick="pubAjax(0)" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索
+        </button>
+        <input name="" id="refresh" onclick="refreshCurrentPage();" type="hidden" value="刷新"/>
+        <input name="当前页" id="currentPage" type="hidden"/>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l" id="data-nav">
+	<a class="btn btn-default radius disabled" data-title="电影列表" data-id="1"><i class="Hui-iconfont">&#xe601;</i> 电影列表</a>
+    <a class="btn btn-red radius btn-addItem" onclick="updateCinemaData('updateKouMovie')"><i class="Hui-iconfont">&#xe68f;</i>更新抠电影影片数据</a>
+	</span> <span class="r">共有数据：<strong id="num11">54</strong> 条</span></div>
+    <div class="mt-20 mma">
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <tbody id="mail-list"></tbody>
+        </table>
+        <div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a>
+            <div class="pagelist"></div>
+            <a class="nextpage paginate_button">下一页</a></div>
+    </div>
+</div>
+<div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif">
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript" src="lib/viewer/js/viewer-jquery.min.js"></script>
+<script type="text/javascript">
+
+    var userId = $.cookie("userId");
+    var roleType = $.cookie("roleType");
+    var username = $.cookie("username");
+    pubAjax(0);
+    function refreshCurrentPage() {
+        var clickLine = $("#mail-list").find("tr[class*='info']");
+        var id = clickLine.attr("id");
+        var currentPage = $("#currentPage").val();
+        pubAjax(currentPage, id);
+    }
+    function pubAjax(page, selectId) {
+        var keyword = $("#keyword").val();
+        var publish = $("#publish").val();
+        var limit = $(".limit").val();
+        $.ajax({
+            url: getRootPath_dc() + '/cinema/queryKouAllMovie',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: userId, accessToken: accessToken},
+            data: {keyword:keyword,publish:publish,page: page, limit: limit == null ? 10 : limit},
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                console.log(data);
+                if (data.errcode == 0) {
+                    var bodyList = $("#mail-list");
+                    bodyList.children().remove();
+                    list(data);
+                    bodyList.find("tr[id='" + selectId + "']").addClass("info");
+                    var myobj = eval(data.data);
+                    pageList(myobj);
+                    clickEvents(myobj, pubAjax);
+                } else {
+                    layer.alert(data.msg);
+                }
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        });
+    }
+    function list(data) {
+        $("#num11").html(data.data.totalCount);
+        $("#currentPage").val(data.data.page);
+        var html = "<tr class='text-c'><th width='20'>序号</th><th width='50'>电影ID</th><th width='120'>电影名称</th><th width='200'>电影图片</th><th width='40'>评分</th><th width='80'>类型</th>" +
+            "<th width='120'>演员</th><th width='50'>导演</th><th width='120'>简介</th><th width='80'>上映时间</th><th width='40'>长度</th><th width='40'>上映状态</th><th width='40'>操作</th></tr>";
+        var dataa = eval(data.data.iData);
+        html += addTableNoDateHtml(dataa.length);
+        for (var i = 0; i < dataa.length; i++) {
+            html += "<tr class='text-c .table-hover' id='" + dataa[i].movieId + "' onclick='clickLine(this,\"info\")'>" +
+                "<td>" + parseInt(i + 1) + "</td>" +
+                "<td>" + dataa[i].movieId + "</td>" +
+                "<td>" + dataa[i].movieName + "</td>" +
+                "<td>" + assembleImage(dataa[i].pathVerticalS,dataa[i].pathHorizonH) + "</td>" +
+                "<td><span class='badge radius badge-warning'>" + dataa[i].score + "</span></td>" +
+                "<td>" + dataa[i].movieType + "</td>" +
+                "<td>" + substringText(dataa[i].actor,30)+ "</td>" +
+                "<td>" + substringText(dataa[i].director,10) + "</td>" +
+                "<td>" + substringText(dataa[i].intro,30) + "</td>" +
+                "<td>" + dataa[i].publishTime + "</td>" +
+                "<td>" + dataa[i].movieLength + "</td>";
+            html += "<td>";
+            if (dataa[i].publish) {
+                html += "<span class='label radius label-primary'>已上映</span>";
+            } else {
+                html += "<span class='label radius label-default'>未上映</span>";
+            }
+            html += "</td>";
+            html += "<td class='f-14 td-manage'>" +
+                "<a style='text-decoration:none' class='ml-5' title='编辑电影' onclick='layer_show(\"编辑电影\",\"movie-info.html?movieId=" + dataa[i].movieId + "\")'><i class='Hui-iconfont operation-icon'> &#xe692;</i></a>" +
+                "<a style='text-decoration:none' class='ml-5' title='删除'  onclick='del(\"" + dataa[i].movieId + "\")'><i class='Hui-iconfont operation-icon'> &#xe609;</i></a>" +
+                "</tr>";
+            html += "</tr>";
+        }
+        $("#mail-list").append(html);
+        $(".imgArea").viewer(viewerOption());
+        $(".imgArea").viewer("update");
+    }
+
+    function assembleImage(pathVerticalS,pathHorizonH) {
+        var html = "<div class='imgArea'>";
+        if (pathVerticalS) {
+            html += "<img src='" + pathVerticalS + "' alt='海报' class='img-responsive img'>";
+        }
+        if (pathHorizonH) {
+            html += "<img src='" + pathHorizonH + "' alt='横幅' class='img-responsive img'>";
+        }
+        html += "</div>";
+        return html;
+    }
+
+    function del(id) {
+        layer.confirm("您确定要删除吗",function (index) {
+            $.ajax({
+                url: getRootPath_dc() + "/cinema/delMovieInfo",
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: userId, accessToken: accessToken},
+                data: {id: id},
+                beforeSend: function () {
+                    $("#load").css("display", "block");
+                },
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        refreshCurrentPage();
+                    }else {
+                        layer.alert(data.msg);
+                    }
+                },
+                complete: function () {
+                    $("#load").css("display", "none");
+                }
+            });
+            layer.close(index);
+        })
+    }
+
+    //更新影院相关信息
+    function updateCinemaData(action) {
+        var msg = "";
+        if (action == 'updateCinema') {
+            msg = '影院将向鼎新重新获取数据并保存';
+        } else if (action == 'updateCinemaHall') {
+            msg = '所有影院影厅及座位信息，此过程会很耗性能且时间很长';
+        } else if (action == 'updateCinemaPlan') {
+            msg = '所有影院最新排期和电影信息，此过程会很耗性能且时间很长'
+        } else if (action == 'updateKouMovie') {
+            msg = '抠电影影片数据，将重置以前修改的抠电影数据，此过程会很耗性能且时间很长'
+        } else if (action == 'updateKouCity') {
+            msg = '抠电影城市数据'
+        }else if (action == 'updateKouCinema') {
+            msg = '抠电影影院数据'
+        }
+        layer.confirm('重新加载<font style="color: red">' + msg + '</font>，确认加载？', {
+            icon: 3,
+            title: '加载确认'
+        }, function (index) {
+            var id = $.cookie("userId");
+            var accessToken = $.cookie("accessToken");
+            var url = getRootPath_dc() + '/cinema/' + action;
+            var password = "ivan";
+            $.ajax({
+                url: url,
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: id, accessToken: accessToken},
+                data: {password: password},
+                beforeSend: function () {
+                    $("#load").css("display", "block");
+                },
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        layer.alert(data.msg, function () {
+                            location.replace(location.href);
+                        });
+                    } else {
+                        layer.alert(data.msg);
+                    }
+                },
+                complete: function () {
+                    $("#load").css("display", "none");
+                }
+            });
+            layer.close(index);
+        })
+    }
+
+</script>
+
+</body>
+</html>

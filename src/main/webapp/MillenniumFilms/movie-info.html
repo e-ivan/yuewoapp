@@ -1,0 +1,300 @@
+﻿<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/viewer/css/viewer.min.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+    <style>
+
+    </style>
+    <title>电影详情</title>
+</head>
+<body>
+<article class="page-container">
+    <form id="form" name="" enctype="multipart/form-data" method="post" action="">
+        <div class="form form-horizontal" id="form-album-add">
+            <input type="hidden" name="movieId" id="movieId">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">电影名称：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="movieName" name="movieName" type="text"
+                           class="input-text">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">评分：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="score" name="score" type="text" class="input-text"
+                           placeholder="请输入数字类型">
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">热度：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="hot" name="hot" type="text" class="input-text"
+                           placeholder="请输入数字类型">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">影片时长：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="movieLength" name="movieLength" type="text"
+                           class="input-text" placeholder="请输入数字类型">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">演员：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="actor" name="actor" type="text" class="input-text">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">导演：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="director" name="director" type="text"
+                           class="input-text">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">影片介绍：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <textarea name="intro" id="intro" class="textarea" placeholder="请输入影片介绍"></textarea>
+                </div>
+            </div>
+
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">影片类型：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input id="movieType" name="movieType" type="text" class="input-text">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">海报：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <div class="imgArea">
+                    <img id="pathVerticalS" src="" data-disabled="1" alt="海报" style="height: 100px;" class="img-responsive showImg">
+                    <div class="img-btn">
+                        <span class="btn-upload form-group" style="float:left">
+                                <a href="javascript:" class="btn btn-grey upload-btn"><i class="Hui-iconfont"></i> 浏览文件</a>
+                            <input name="verticalImg" class="input-file" onchange="selectImg(this)" type="file">
+                        </span>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">横幅：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <div class="imgArea">
+                        <img id="pathHorizonH" src="" data-disabled="1" alt="横幅" style="height: 30px;" class="img-responsive showImg">
+                        <div class="img-btn">
+                        <span class="btn-upload form-group" style="float:left">
+                                <a href="javascript:" class="btn btn-secondary upload-btn"><i class="Hui-iconfont"></i> 浏览文件</a>
+                            <input name="horizonImg" class="input-file" onchange="selectImg(this)" type="file">
+                        </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2">标记过期：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <label class="radio">
+                        <input type="radio" name="expired" value="0">
+                        未过期
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="expired" value="1">
+                        已过期
+                    </label>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <button name="" id="update" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">
+                        &#xe632;</i>
+                        保存
+                    </button>
+                    <button name="" id="reset" class="btn btn-warning radius" type="button"><i class="Hui-iconfont">
+                        &#xe66c;</i>
+                        重置信息
+                    </button>
+                    <button name="" id="" class="btn btn-default radius" onclick="layer_close()"
+                            type="button" title="关闭"><i class="Hui-iconfont"></i> 关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</article>
+<div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif"></div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript" src="lib/jquery.form.min.js"></script>
+<script type="text/javascript" src="lib/viewer/js/viewer-jquery.min.js"></script>
+<!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.js"></script>
+
+</body>
+</html>
+<script>
+
+    var id = $.cookie("userId");
+    var accessToken = $.cookie("accessToken");
+    var roleType = $.cookie("roleType");
+    var username = $.cookie("username");
+    var movieId = getQueryString("movieId");
+
+    if (movieId) {
+        //获取电影信息
+        $.ajax({
+            type: 'post',
+            url: getRootPath_dc() + '/film/queryFilmDetail',
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {filmId:movieId},
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                try {
+                    if (data.errcode == 0) {
+                        var movie = data.data;
+                        $("#movieId").val(movie.movieId);
+                        $("#movieName").val(movie.movieName);
+                        $("#score").val(movie.score);
+                        $("#hot").val(movie.hot);
+                        $("#movieLength").val(movie.movieLength);
+                        $("#actor").val(movie.actor);
+                        $("#director").val(movie.director);
+                        $("#intro").val(movie.intro);
+                        $("#movieType").val(movie.movieType);
+                        $("input:radio[name=expired][value='"+(movie.expired ? 1 : 0)+"']").attr("checked",true);
+                        if (movie.expired) {
+                        }else
+                            $("input:radio[name=expired][value='0']").attr("checked",true);
+                        $("#pathHorizonH").attr("src",movie.pathHorizonH);
+                        $("#pathVerticalS").attr("src",movie.pathVerticalS);
+                        $(".imgArea").viewer(viewerOption());
+                    }else {
+                        layer.alert(data.msg);
+                    }
+                }catch (e){
+                    layer.alert("电影不存在");
+                }
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        })
+    }
+    function selectImg(ele) {
+        $(ele).data("disabled","0");//选择文件后将原来不需要提交的字段设置为需要提交
+        var file = ele.files[0];
+        var imgBtn = $(ele).closest('.img-btn');
+        var target = imgBtn.siblings('.showImg');
+        readFileSrc(file, target.get(0));
+    }
+
+    $("#update").click(function () {
+        if (isNull(movieId)) {
+            layer.alert("无法获取电影Id");
+            return;
+        }
+        //拥有data-disabled=1的才不需要提交
+        $(".imgArea input").each(function () {
+            var $2 = $(this);
+            if ($2.data("disabled") == 1) {
+                $2.attr("disabled",true);
+            }
+        });
+        $("#form").ajaxSubmit({
+            type: 'post',
+            url: getRootPath_dc() + '/cinema/updateMovieInfo',
+            headers: {tokenUserId: id, accessToken: accessToken},
+            contentType: 'multipart/form-data',
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                layer.alert(data.msg, function (index) {
+                    if (data.errcode == 0) {
+                        var refresh = parent.$("#refresh");
+                        $(refresh).click();
+                        layer_close();
+                    }
+                    layer.close(index);
+                });
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        })
+    });
+
+    $("#reset").click(function () {
+        layer.confirm("是否需要重置回抠电影数据？",function (index) {
+            $.ajax({
+                type: 'post',
+                url: getRootPath_dc() + '/cinema/resetMovieInfo',
+                headers: {tokenUserId: id, accessToken: accessToken},
+                data: {movieId:movieId},
+                beforeSend: function () {
+                    $("#load").css("display", "block");
+                },
+                success: function (data) {
+                    layer.alert(data.msg, function (index) {
+                        if (data.errcode == 0) {
+                            var refresh = parent.$("#refresh");
+                            $(refresh).click();
+                            layer_close();
+                        }
+                        layer.close(index);
+                    });
+                },
+                complete: function () {
+                    $("#load").css("display", "none");
+                }
+            })
+        })
+    })
+
+</script>

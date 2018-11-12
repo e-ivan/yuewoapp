@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>资讯</title>
+    <link href="../MillenniumFilms/lib/Hui-iconfont/1.0.7/iconfont.css" rel="stylesheet" type="text/css"/>
+    <link href="../MillenniumFilms/static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css"/>
+    <link href="../MillenniumFilms/static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css"/>
+    <link href="css/style.css" rel="stylesheet"/>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.liveTimeAgo.min.js"></script>
+    <script type="text/javascript" src="js/commonArticleMethod.js"></script>
+</head>
+<body>
+<div class="main">
+    <h1 id="title" class="title"></h1>
+    <p id="articleTime" class="timestamp"></p>
+    <div id="content" class="content">
+    </div>
+    <div id="showAll" class="showAll">
+        查看全文
+        <b class="bottom"><i class="bottom-arrow1"></i><i class="bottom-arrow2"></i></b>
+    </div>
+
+</div>
+<div class="segmentation"></div>
+<div class="message">
+    <div class="topNav">
+        用户留言
+        <span id="allMessage" class="allMessage">全部
+					<b class="right"><i class="right-arrow1"></i><i class="right-arrow2"></i></b>
+				</span>
+    </div>
+    <ul class="message-list">
+
+    </ul>
+</div>
+<!--
+<div id="leaveMessage" class="leaveMessage">
+    <div class="comment">
+        <form id="commentForm" action="#" method="post">
+            <input type="text" name="text" id="discuss" value="" placeholder="写评论"/>
+            <input type="hidden" name="parentId" id="parentId">
+            <input type="hidden" name="contentId" id="contentId">
+            <input type="hidden" name="userId" id="userId">
+            <input type="hidden" name="author" id="author">
+            <input type="hidden" name="module" id="module">
+        </form>
+    </div>
+    <div class="up">
+        <span class="reply">9</span>
+        <span class="like">12</span>
+        <span class="share">&nbsp;</span>
+    </div>
+</div>
+-->
+<script type="text/javascript">
+    $(function () {
+        var request = getRequest();
+        var id = request["id"];
+        var userId = request["userId"];
+        var author = request["author"];
+
+        var cf = $("#commentForm");//回复表单
+        var discuss = $("#discuss");
+        var parentId = $("#parentId");
+        $.ajax({
+            url: getRootPath_dc() + '/article/selectArticleById',
+            type: "post",
+            dataType: "json",
+            data: {id: id, userId: userId},
+            success: function (data) {
+                console.log(data);
+                if (data.errcode == 0) {
+                    var article = data.data;
+                    $("#title").text(article.title);
+                    $("#content").html(article.text);
+                    $("#articleTime").text(formatDate(new Date(article.modified)));
+//                    $("#views").text(article.viewCount);
+//                    $("#comments").text(article.commentCount);
+//                    $("#votes").text(article.voteUp);
+                    $("#contentId").val(article.id);
+                    $("#module").val(article.module);
+                    $("#userId").val(userId);
+                    $("#author").val(author);
+                    queryComments();
+                } else {
+                    $("body").html('<section class="container-fluid page-404 minWP text-c">' +
+                        '<p class="error-title"><i class="Hui-iconfont va-m" style="font-size:80px">&#xe688;</i><span class="va-m"> 404</span></p>' +
+                        '<p class="error-description">不好意思，您访问的页面不存在~</p>' +
+                        '<p class="error-info">您可以：<a href="javascript:;" onclick="history.go(-1)" class="c-primary">&lt; 返回上一页</a><span class="ml-20"></span></p>' +
+                        '</section>');
+                    return;
+                }
+
+            }
+        });
+        function queryComments() {
+            $.ajax({
+                url: getRootPath_dc() + '/article/queryArticleComments',
+                type: "post",
+                dataType: "json",
+                data: {contentId: id, orderBy: '', page: 0, limit: 3},
+                success: function (data) {
+                    console.log(data);
+                    if (data.errcode == 0) {
+                        var comments = data.data.iData;
+                        //显示留言
+                        var list = $(".message-list");
+                        $.each(comments, function (index, comment) {
+                            var li_list = handleComments(comment);
+                            list.append(li_list);
+                        });
+                    }
+                },
+                complete: function () {
+                    //初始化配置
+                    console.log("生成时间");
+                   /*$('.time').liveTimeAgo({
+                        translate: {
+                            'year': '% 年前',
+                            'years': '% 年前',
+                            'month': '% 个月前',
+                            'months': '% 个月前',
+                            'day': '% 天前',
+                            'days': '% 天前',
+                            'hour': '% 小时前',
+                            'hours': '% 小时前',
+                            'minute': '% 分钟前',
+                            'minutes': '% 分钟前',
+                            'seconds': '% 秒钟前',
+                            'error': '未知的时间'
+                        }
+                    });*/
+                    //回复绑定事件
+                    <!--
+                    var fun = $(".fun");
+                    $.each(fun, function (i, c) {
+                        var c = $(c);
+                        var author = c.siblings(".name").text();
+                        var id = c.siblings(".id").text();
+                        var reply = c.find(".reply");
+                        reply.on("click", function () {
+                            parentId.val(id);
+                            discuss.attr("placeholder", "回复 " + author);
+                        });
+                    })
+                    -->
+                }
+            });
+
+        }
+
+        var showAll = document.getElementById("showAll");
+        var content = document.getElementById("content");
+        showAll.addEventListener("click", function () {
+            content.style.height = "auto";
+            showAll.style.display = "none";
+        });
+        $("#allMessage").click(function () {
+            window.location.href = "message.html?t="+( new Date() ).getTime().toString() + "&id=" + id + "&userId=" + userId;
+        });
+
+    })
+</script>
+</body>
+</html>

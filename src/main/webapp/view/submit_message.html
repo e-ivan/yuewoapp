@@ -1,0 +1,277 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>约我科技</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	</head>
+	<style type="text/css">
+		body,
+		ol,
+		ul,
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6,
+		p,
+		th,
+		td,
+		dl,
+		dd,
+		form,
+		fieldset,
+		legend,
+		input,
+		textarea,
+		select {
+			margin: 0;
+			padding: 0
+		}
+		
+		body {
+			font: 12px"宋体", "Arial Narrow", HELVETICA;
+			background: #fff;
+			-webkit-text-size-adjust: 100%;
+		}
+		
+		a {
+			color: #2d374b;
+			text-decoration: none
+		}
+		
+		a:hover {
+			color: #cd0200;
+			text-decoration: underline
+		}
+		
+		em {
+			font-style: normal
+		}
+		
+		li {
+			list-style: none
+		}
+		
+		img {
+			border: 0;
+			vertical-align: middle
+		}
+		
+		table {
+			border-collapse: collapse;
+			border-spacing: 0
+		}
+		
+		p {
+			word-wrap: break-word
+		}
+		
+		body {
+			background-color: #F9FBF8;
+			color: #000;
+		}
+		
+		.header {
+			height: 44px;
+			line-height: 44px;
+			font-size: 26px;
+			font-weight: bold;
+			text-align: center;
+		}
+		
+		.content {
+			margin-top: 20px;
+			margin-bottom: 50px;
+		}
+		
+		.clearfix {
+			zoom: 1;
+		}
+		
+		.content_ul,
+		.content_li {
+			width: 100%;
+			margin-bottom: 20px;
+		}
+		
+		.clearfix:after {
+			clear: both;
+			content: '.';
+			display: block;
+			width: 0;
+			height: 0;
+			visibility: hidden;
+		}
+		
+		.float_left,
+		.float_right {
+			float: left;
+			text-align: center;
+			font-size: 16px;
+		}
+		
+		.float_left {
+			width: 25%;
+			line-height: 35px;
+		}
+		
+		.float_right {
+			width: 75%;
+			text-align: left;
+		}
+		
+		.float_right>textarea {
+			width: 86%;
+			padding: 2%;
+			background-color: #DBDBDB;
+		}
+		
+		.checkbox {
+			float: left;
+			width: 50%;
+			margin-bottom: 10px;
+		}
+		
+		b {
+			color: red;
+		}
+		
+		.float_right>input {
+			width: 90%;
+			height: 30px;
+			line-height: 30px;
+			background-color: #DBDBDB;
+			font-size: 18px;
+			border: none;
+		}
+		
+		.sub {
+			width: 100%;
+			padding: 10px 0;
+			text-align: center;
+			margin-top: 50px;
+		}
+		
+		.sub>input {
+			font-size: 24px;
+			width: 50%;
+			height: 40px;
+			line-height: 40px;
+			border-radius: 30px;
+			border: none;
+			background-color: #017050;
+			color: #fff;
+		}
+	</style>
+
+	<body>
+		<img style="width:100%;" src="img/yuewo.jpg" />
+		<header class="header">
+			提交信息
+		</header>
+		<div class="content">
+			<ul class="content_ul">
+				<li class="content_li clearfix">
+					<div class="float_left">
+						需求预算
+					</div>
+					<div class="float_right">
+						<textarea name="textarea" id="textarea" rows="5" placeholder="请描述你的需求"></textarea>
+					</div>
+				</li>
+				<li class="content_li clearfix">
+					<div class="float_left">
+						预算区间
+					</div>
+					<div class="float_right clearfix">
+						<div class="checkbox">
+							<input type="radio" name="check" id="checkbox_a" value="1" checked="checked" />
+							<label for="checkbox_a">10-20万</label>
+						</div>
+						<div class="checkbox">
+							<input type="radio" name="check" id="checkbox_b" value="2" />
+							<label for="checkbox_b">20-30万</label>
+						</div>
+						<div class="checkbox">
+							<input type="radio" name="check" id="checkbox_c" value="3" />
+							<label for="checkbox_c">50-1000万</label>
+						</div>
+						<div class="checkbox">
+							<input type="radio" name="check" id="checkbox_d" value="4" />
+							<label for="checkbox_d">100-200万</label>
+						</div>
+						<div class="checkbox">
+							<input type="radio" name="check" id="checkbox_e" value="5" />
+							<label for="checkbox_e">200万以上</label>
+						</div>
+					</div>
+				</li>
+				<li class="content_li clearfix">
+					<div class="float_left">
+						您的称呼
+					</div>
+					<div class="float_right">
+						<input type="text" name="name" id="name" value="" />
+					</div>
+				</li>
+				<li class="content_li clearfix">
+					<div class="float_left">
+						<b>*</b>手机号
+					</div>
+					<div class="float_right">
+						<input type="tel" name="tel" id="tel" value="" />
+					</div>
+				</li>
+			</ul>
+			<div class="sub">
+				<input type="button" name="" id="sub" value="提交" />
+			</div>
+		</div>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript">
+			var sub = document.getElementById("sub");
+			sub.addEventListener("click", function() {
+				var xqys = document.getElementById("textarea").value; //需求预算
+				var ysxq = document.querySelector("input[type=radio]:checked").value; //预算区间，1:10-20万，2:20-30万，3:50-100万，4:100-200万，5:200万以上
+				var name = document.getElementById("name").value; //称呼
+				var tel = document.getElementById("tel").value; //手机
+				if(tel == "") {
+					alert("请填写手机号");
+					return false;
+				}
+				var data = {
+					content: xqys, //需求预算
+					budgetFund: ysxq, //预算区间，1:10-20万，2:20-30万，3:50-100万，4:100-200万，5:200万以上
+					nickname: name, //称呼
+					mobile: tel //手机
+				};
+				$.ajax({
+					type: "post",
+					url: getRootPath_dc() + "/common/createDemandRequest",
+					async: true,
+					dataType: "json",
+					data: data,
+					success: function(result) {
+						console.log(result);
+						alert(result.msg);
+					}
+				});
+			});
+            //获取项目路径
+            function getRootPath_dc() {
+                var pathName = window.location.pathname.substring(1);
+                var webName = pathName == '' ? '' : pathName.substring(0, pathName.indexOf('/'));
+                if (webName == "") {
+                    return window.location.protocol + '//' + window.location.host;
+                }
+                else {
+                    return window.location.protocol + '//' + window.location.host + '/' + webName;
+                }
+            }
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,246 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>获取兑换码</title>
+
+    <style>
+        .div1 {
+            width: 100%;
+            height: 60px;
+            overflow: hidden;
+        }
+
+        .div2 {
+            width: 30%;
+            float: left;
+            overflow: hidden;
+        }
+
+        .div3 {
+            float: left;
+            margin-left: 20px;
+        }
+
+        .div4 {
+            width: 100%;
+            height: 110px;
+            overflow: hidden;
+        }
+
+    </style>
+
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 兑换码 <span
+        class="c-gray en">&gt;</span> 获取兑换码 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+                                               href="javascript:location.replace(location.href);" title="刷新"><i
+        class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container" style="font-size:xx-large;">
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l" id="data-nav">
+	<a class="btn btn-green radius" data-title="兑换码记录" onclick="showRedeemCodeList()" data-id="1"><i class="Hui-iconfont">&#xe6f9;</i> 兑换码记录</a>
+	</span></div>
+    <div style="width: 800px;background-position: center;overflow: hidden;margin: auto">
+
+        <div class="div4" style="text-align: center">
+            <span style="height: 90px; font-size: 80px" id="text">约我商城现金券</span>
+        </div>
+        <div class="div1" style="text-align: center">
+        </div>
+        <div class="div1">
+            <div class="div2">
+                <span style="float: right">手机号码：</span>
+            </div>
+            <div class="div3">
+                <input id="mobile" type="text" class="input-text" style="height: 35px; font-size: 30px">
+            </div>
+        </div>
+
+        <div class="div1">
+            <div class="div2">
+                <span style="float: right" id="couponText">优惠券总金额：</span>
+            </div>
+            <div class="div3">
+                <select style="width: 300px;font-size: 30px" name="couponSplit" id="couponSplit">
+                </select>
+            </div>
+        </div>
+
+        <div class="div1">
+            <div class="div2">
+                <span style="float: right">输入验证码：</span>
+            </div>
+            <div class="div3">
+                <input id="code" type="text" style="width: 150px;height: 35px;font-size: 35px">
+                <img id="redeemPic" alt="无图片" style="width: 210px;height: 48px;">
+                <a id="changeExchangeCode" style="font-size: small;background-color: white;border: 0px;color: #0d5ab1;">看不清，换一张</a>
+            </div>
+        </div>
+
+        <div class="div1">
+            <div class="div2">
+                <span style="float: right">是否发送短信：</span>
+            </div>
+            <div class="div3">
+                <input id="sendMsg" type="checkbox" checked="checked" style="width: 35px;height: 35px;">
+            </div>
+        </div>
+
+        <div class="div1">
+            <div class="div2">
+                <input type="button" class="btn btn-primary radius" value="提交" id="submit"
+                       style="height: 35px;width: 80px;float: right;margin-top: 10px">
+            </div>
+            <div class="div3">
+                <span id="getMsg" style="font-size: medium;color: red"></span>
+            </div>
+        </div>
+
+        <div class="div1">
+            <div class="div2">
+                <span style="float: right">兑换码：</span>
+            </div>
+            <div class="div3">
+                <span id="getRedeem" style="color: #1397ff"></span>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/Validform/5.3.2/Validform.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+
+</body>
+</html>
+<script type="text/javascript">
+    var roleType = $.cookie("roleType");
+    var username = $.cookie("username");
+    var nickName = $.cookie("nickName");
+    $(".namma").html(nickName);
+    var id = $.cookie("userId");
+    var accessToken = $.cookie("accessToken");
+    var type = getQueryString("type");
+    var $text = $("#text");
+    var $couponText = $("#couponText");
+    switch (type) {
+        case 'market' :
+            $text.text("约我商城现金券");
+            $couponText.text("优惠券总金额：");
+            break;
+        case 'film' :
+            $text.text("电影优惠券");
+            $couponText.text("优惠券集：");
+            break;
+    }
+    $.ajax({
+        url: getRootPath_dc() + "/redeemCoupon/queryCouponSplit",
+        type: "post",
+        headers: {tokenUserId: id, accessToken: accessToken},
+        data: {type: type},
+        success: function (data) {
+            var html = "";
+            for (var i = 0, len = data.data.length; i < len; i++) {
+                html += "<option value=" + data.data[i].id + ">" + data.data[i].title + "</option>";
+            }
+            $("#couponSplit").html(html);
+
+        }
+    });
+    getExchangeCode();
+
+    $("#changeExchangeCode").click(function () {
+        getExchangeCode();
+    });
+    $("#mobile").Huitextarealength({
+        maxlength:11
+    });
+
+    $("#submit").click(function () {
+        var $getMsg = $("#getMsg");
+        $getMsg.text("");
+        var id = $.cookie("userId");
+        var accessToken = $.cookie("accessToken");
+
+        var mobile = $("#mobile").val();
+        var couponSplit = $("#couponSplit").val();
+        var captchaCode = $("#code").val();
+        var sendMsg = $("#sendMsg").is(':checked');
+        if (isNaN(mobile) || mobile.length != 11) {
+            $getMsg.text("手机号码格式错误！");
+            return;
+        }
+        if (captchaCode.length <= 0) {
+            $getMsg.text("请输入验证码！");
+            return;
+        }
+        if (couponSplit == "") {
+            $getMsg.text("选项错误！");
+            return;
+        }
+        var hasSendMsg;
+        hasSendMsg = !!sendMsg;
+        $.ajax({
+            url: getRootPath_dc() + "/redeemCoupon/createRedeemCode",
+            type: "post",
+            headers: {tokenUserId: id, accessToken: accessToken},
+            data: {
+                mobile: mobile,
+                split: couponSplit,
+                type: type,
+                userId: id,
+                captchaCode: captchaCode,
+                sendMsg: hasSendMsg
+            },
+            success: function (data) {
+                if (data.errcode == 0) {
+                    $("#getMsg").text("");
+                    $("#getRedeem").text(data.data);
+                }
+                else {
+                    $("#getMsg").text(data.msg);
+                    $("#getRedeem").text("");
+                }
+            }
+        });
+
+    });
+
+    function getExchangeCode() {
+        var id = $.cookie("userId");
+        $("#redeemPic").attr("src", getRootPath_dc() + "/redeemCoupon/captcha?userId=" + id + "&random=" + Math.random());
+    }
+
+    function showRedeemCodeList() {
+        layer_show('兑换码记录','redeem-code-list.html?type=' + type,'1200')
+    }
+
+
+</script>
+

@@ -1,0 +1,65 @@
+
+    <meta charset="utf-8">
+    <link href="css/base.css" type="text/css" rel="stylesheet">
+    <div id="main">
+    <div class="r-top">教师端使用帮助<span id="add-news">修改教师端使用帮助</span></div>
+    <div class="container">
+    <div class="messafe">
+      <dl><dd id="helpPageOrg"></dd></dl>
+    </div>  
+     </div>
+   </div>
+   <div id="bg"></div>
+   <div id="modify-psw">
+     <div class="add-content"><dl><dd><textarea  id="wxPay"></textarea></dd></dl><div><button id="add">修改</button><button id="noAdd">取消</button></div></div>
+   </div>
+    <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript">
+
+    $(function (){
+      jQuery.ajax({
+        url: '/skl/system/querySysParams',
+        type: "post",
+        dataType: "json",
+        success: function (data) {
+          $('#helpPageOrg').html(data.data.helpPageTeacher);
+        }              
+      }); 
+      $('#add-news').click(function(data) {
+        $('#bg,#modify-psw').css({display: 'block'});
+        $('#wxPay').val($('#helpPageOrg').html());
+      });
+      $('#add').click(function(event) {
+        var helpPageTeacher = $('#wxPay').val();
+        if (helpPageTeacher=='') {
+          alert('不能为空');
+        }
+        else{
+          jQuery.ajax({
+            url: '/skl/system/modifySysParams',
+            type: "post",
+            dataType: "json",
+            data:{helpPageTeacher:helpPageTeacher},
+            success: function (data) {
+              if (data.errcode==0) {
+                alert(data.msg);
+                $('#bg,#modify-psw').css({display: 'none'});
+              }
+              else{
+                alert(data.msg);
+              }
+              
+            }              
+          }); 
+        }
+      });
+      $('#noAdd').click(function(event) {
+        $('#bg,#modify-psw').css({display: 'none'});
+      });
+   
+
+    })
+   
+  
+  </script>

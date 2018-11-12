@@ -1,0 +1,488 @@
+﻿<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+    <style>
+        .imgArea {
+            width: 205px;
+            display: inline-block;
+            margin: 5px;
+        }
+
+        .checked {
+            margin-right: 10px;
+        }
+
+        .autocomplete-suggestions {
+            border: 1px solid #999;
+            background: #FFF;
+            overflow: auto;
+        }
+
+        .autocomplete-suggestion {
+            padding: 2px 5px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .autocomplete-selected {
+            background: #F0F0F0;
+        }
+
+        .autocomplete-suggestions strong {
+            font-weight: normal;
+            color: #3399FF;
+        }
+
+        .autocomplete-group {
+            padding: 2px 5px;
+        }
+
+        .autocomplete-group strong {
+            display: block;
+            border-bottom: 1px solid #000;
+        }
+    </style>
+    <title>添加宣传信息</title>
+</head>
+<body>
+<article class="page-container">
+    <form id="adPageForm" name="" enctype="multipart/form-data">
+        <div class="form form-horizontal" id="form-adPage-add">
+            <!--<div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">竞拍介绍：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <textarea name="content" id="content" class="textarea" placeholder="请输入此次竞拍的介绍信息"></textarea>
+                </div>
+            </div>-->
+            <input type="hidden" value="" name="adId" id="adId">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">标题：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" name="title" placeholder="输入标题" id="title">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">内容：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" name="content" placeholder="输入内容" id="content">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">跳转类型：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <select name="location" id="location" class="select-box">
+                        <option value="1">网页</option>
+                        <option value="2">电影</option>
+                        <option value="3">报名活动</option>
+                        <!--<option value="4">附近有约</option>-->
+                        <option value="5">竞拍</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2 value-title"
+                       style="font-weight:bold;color: #cb4b16">跳转链接：</label>
+                <div class="formControls col-xs-8 col-sm-9 value-input">
+                    <input type="text" class="input-text" value="" data-id="" data-pic="" hidden="hidden"
+                           placeholder="输入电影名称"
+                           id="movieQuery">
+                    <input type="text" class="input-text" value="" data-id="" data-pic="" hidden="hidden"
+                           placeholder="输入名"
+                           id="nearbyDatingQuery">
+                    <input type="text" class="input-text" value="" data-id="" data-pic="" hidden="hidden"
+                           placeholder="输入竞拍关键词"
+                           id="auctionQuery">
+                    <input type="text" class="input-text" value="" name="value" placeholder="请输入网址" id="value">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">显示位置：</label>
+                <div class="formControls col-xs-8 col-sm-9 input-check">
+                    <label class="checked">
+                        <input type="checkbox" name="types" value="0"> 首页轮播
+                    </label>
+                    <label class="checked">
+                        <input type="checkbox" name="types" value="1"> 首页弹窗
+                    </label>
+                    <label class="checked">
+                        <input type="checkbox" name="types" value="2"> 竞拍轮播
+                    </label>
+                </div>
+            </div>
+            <div class="row cl image-title-label" hidden="hidden">
+                <label class="form-label col-xs-4 col-sm-2 " style="font-weight:bold">宣传图片：</label>
+                <div class="formControls col-xs-8 col-sm-9" style="display: flex;flex-wrap: wrap;" id="imgList">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">开始时间：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" placeholder="宣传显示开始时间"
+                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'%y-%M-%d',maxDate:'#F{$dp.$D(\'endTime\')}'})"
+                           name="startTime"
+                           id="startTime" class="input-text Wdate" style="width:200px;" value="">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">结束时间：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" placeholder="宣传显示结束时间"
+                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'startTime\') || \'%y-%M-%d\'}'})"
+                           name="endTime"
+                           id="endTime" class="input-text Wdate" style="width:200px;" value="">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <button name="" id="update" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">
+                        &#xe632;</i>
+                        发布
+                    </button>
+                    <button name="" id="" class="btn btn-default radius" onclick="layer_close()"
+                            type="button" title="关闭"><i class="Hui-iconfont"></i> 关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</article>
+<div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif"></div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="lib/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript" src="lib/jquery.form.min.js"></script>
+<!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+
+
+</body>
+</html>
+<script>
+    var id = $.cookie("userId");
+    var accessToken = $.cookie("accessToken");
+    $(function () {
+        var adId = getQueryString("adId");
+        if (!isNull(adId)) {
+            $.ajax({
+                url: getRootPath_dc() + '/system/getAdPage',
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: id, accessToken: accessToken},
+                data: {adId: adId},
+                beforeSend: function () {
+                    $("#load").css("display", "block");
+                },
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        var myObj = data.data;
+                        $("#adId").val(myObj.id);
+                        $("#title").val(myObj.title);
+                        $("#content").val(myObj.content);
+                        $("#value").val(myObj.value);
+                        $("#location option[value='" + myObj.location + "']").prop("selected", "selected");
+                        var placeholder = "当前值为：" + myObj.value + " (修改请输入内容)";
+                        $("#movieQuery").attr("placeholder",placeholder);
+                        $("#nearbyDatingQuery").attr("placeholder",placeholder);
+                        $("#auctionQuery").attr("placeholder",placeholder);
+                        locationInputText($(".value-title"),myObj.location + "");
+                        if (myObj.homeBanner || myObj.auctionBanner) {
+                            appendImageHtml(AdPageImageTypeEnum.BANNER,myObj.image['banner']);
+                            appendImageHtml(AdPageImageTypeEnum.SHARE,myObj.image['share']);
+                            if (myObj.homeBanner) {
+                                $("input[type='checkbox'][value='0']").prop("checked",true);
+                            }
+                            if (myObj.auctionBanner) {
+                                $("input[type='checkbox'][value='2']").prop("checked",true);
+                            }
+                        }
+                        if (myObj.homePop) {
+                            $("input[type='checkbox'][value='1']").prop("checked",true);
+                            appendImageHtml(AdPageImageTypeEnum.POP,myObj.image['pop']);
+                        }
+                        $("#startTime").val(dateFormatUtil(myObj.showStartTime,true));
+                        if (myObj.showEndTime) {
+                            $("#endTime").val(dateFormatUtil(myObj.showEndTime,true));
+                        }
+                    } else {
+                        layer.alert(data.msg);
+                    }
+                },
+                complete: function () {
+                    $("#load").css("display", "none");
+                }
+            })
+        }
+    });
+    $("#location").change(function () {
+        $("#value").val("");
+        $(".value-input input").hide();
+        var valueTitle = $(".value-title");
+        locationInputText(valueTitle, this.value);
+    });
+    function locationInputText(valueTitle, value) {
+        var valueInput = $("#value");
+        switch (value) {
+            case '1' :
+                valueInput.show();
+                valueTitle.text("跳转链接：");
+                break;
+            case '2' :
+                $("#movieQuery").show();
+                valueInput.hide();
+                valueTitle.text("指定电影：");
+                break;
+            case '3' :
+                valueInput.hide();
+                valueTitle.text("");
+                break;
+            case '4' :
+                $("#nearbyDatingQuery").show();
+                valueInput.hide();
+                valueTitle.text("指定附近约：");
+                break;
+            case '5' :
+                $("#auctionQuery").show();
+                valueInput.hide();
+                valueTitle.text("指定竞拍：");
+                break;
+        }
+    }
+    $("input[name='types']").click(function () {
+        var value = this.value;
+        if ((value == 0 || value == 2)) {
+            if (this.checked) {
+                appendImageHtml(AdPageImageTypeEnum.BANNER);
+                appendImageHtml(AdPageImageTypeEnum.SHARE);
+            } else {
+                //如果其中一方还选择都不删除
+                var needRemove = true;
+                $(".input-check :checked").each(function () {
+                    switch (this.value) {
+                        case '0' :
+                        case '2' :
+                            needRemove = false;
+                    }
+                });
+                if (needRemove) {
+                    removeImageHtml(AdPageImageTypeEnum.BANNER);
+                    removeImageHtml(AdPageImageTypeEnum.SHARE);
+                }
+            }
+        } else if (value == 1) {
+            if (this.checked) {
+                appendImageHtml(AdPageImageTypeEnum.POP);
+            } else {
+                removeImageHtml(AdPageImageTypeEnum.POP);
+            }
+        }
+    });
+    var AdPageImageTypeEnum = {
+        BANNER:0,
+        POP:1,
+        SHARE:2,
+        properties:{
+            0: {name: "banner", title: "选择轮播图", color: "green"},
+            1: {name: "pop", title: "选择弹窗图", color: "secondary"},
+            2: {name: "share", title: "选择分享图", color: "grey"}
+        }
+    };
+    function appendImageHtml(imageType,src) {
+        $(".image-title-label").show();
+        //没有才添加
+        var type = AdPageImageTypeEnum.properties[imageType];
+        if ($(".imgArea input[name='" + type.name + "']").length <= 0) {
+            var html = '<div class="imgArea">' +
+                '<img src="' +
+                (isNull(src) ? "" : src) +
+                '" class="img-responsive showImg">' +
+                '<div class="img-btn">' +
+                '<span class="btn-upload form-group" style="float:left">' +
+                '<a href="javascript:" class="btn btn-' + type.color + ' upload-btn"><i class="Hui-iconfont"></i> ' + type.title + '</a>' +
+                '<input '+(isNull(src) ? '' : 'data-disabled=1')+' name="' + type.name + '" class="input-file" onchange="selectImg(this)" type="file">' +
+                '</span>' +
+                '</div>' +
+                '</div>';
+            $("#imgList").append(html);
+        }
+    }
+    function removeImageHtml(imageType) {
+        $(".imgArea").has("input[name=" + AdPageImageTypeEnum.properties[imageType].name + "]").remove();
+        if ($(".imgArea").length <= 0) {
+            $(".image-title-label").hide();
+        }
+    }
+    function selectImg(ele) {
+        $(ele).data("disabled",0);//选择文件后将原来不需要提交的字段设置为需要提交
+        var file = ele.files[0];
+        var imgBtn = $(ele).closest('.img-btn');
+        var target = imgBtn.siblings('.showImg');
+        readFileSrc(file, target.get(0));
+    }
+    $("#adPageForm").validate({
+        rules: {
+            title: {
+                required: true
+            },
+            content: {
+                required: true
+            },
+            types: {
+                required: true
+            }
+        },
+        messages: {
+            title: {
+                required: '不能为空'
+            },
+            content: {
+                required: '不能为空'
+            },
+            types: {
+                required: '必须选一种类型'
+            }
+        }
+    });
+    $("#update").click(function () {
+        var adPageForm = $("#adPageForm");
+        if (adPageForm.valid()) {
+            var images = $('.imgArea img');
+            for (var i = 0;i < images.length;i++){
+                if (isNull($(images[i]).attr("src"))) {
+                    layer.alert("请选择图片！");
+                    return false;
+                }
+            }
+            //提交表单前将不需要提交的字段设置为disabled
+            //拥有data-disabled=1的才不需要提交
+            $(".imgArea input").each(function () {
+                var $2 = $(this);
+                if ($2.data("disabled") == 1) {
+                    $2.attr("disabled",true);
+                }
+            });
+            if ($("#location").val() != 3 && isNull($("#value").val())) {
+                layer.alert("值不能为空！");
+                return false;
+            }
+            adPageForm.ajaxSubmit({
+                type: 'post',
+                url: getRootPath_dc() + '/system/addAdPage',
+                headers: {tokenUserId: id, accessToken: accessToken},
+                contentType: 'multipart/form-data',
+                success: function (data) {
+                    layer.alert(data.msg, function (index) {
+                        if (data.errcode == 0) {
+                            var refresh = parent.$("#refresh");
+                            $(refresh).click();
+                            layer_close();
+                        }
+                        layer.close(index);
+                    });
+                }
+            })
+        }
+    });
+
+    var auctionOptions = {
+        serviceUrl: getRootPath_dc() + '/auction/queryProceedAuction',
+        type: 'POST',
+        dataType: 'json',
+        minChars: 1,
+        ajaxSettings: {headers: {tokenUserId: id, accessToken: accessToken}},
+        paramName: 'keyword',
+        query: '12'
+        ,
+        onSelect: function (value) {
+            //根据返回结果自定义一些操作
+            $("#value").val(value.data.auctionId);
+        },
+        onInvalidateSelection: function () {
+            $("#value").val("");
+        },
+        noCache: false, //是否启用缓存 默认是开启缓存的
+        transformResult: function (data) {
+            return data.data;
+        },
+        beforeRender: function (container, suggestions) {
+            var html = "";
+            if (suggestions.length <= 0) {
+                html += "<div class='autocomplete-no-suggestion'>没有搜索结果</div>";
+            } else {
+                for (var index in suggestions) {
+                    html += "<div class='autocomplete-suggestion' data-index='" + index + "'>" +
+                        suggestions[index].data.nickname +
+                        "<span style='color: #ff5c3a'>" +
+                        " （ " + suggestions[index].data.site + "&nbsp;&nbsp;&nbsp;&nbsp;" +
+                        suggestions[index].data.finalTime + "）" +
+                        "</span>" +
+                        "</div>";
+                }
+            }
+            $(container).html(html);
+        },
+        showNoSuggestionNotice: true,
+        noSuggestionNotice: "没有搜索结果"
+    };
+    $('#auctionQuery').autocomplete(auctionOptions);
+
+    var options = {
+        serviceUrl: getRootPath_dc() + '/cinema/queryKouAllMovie',
+        type: 'POST',
+        dataType: 'json',
+        ajaxSettings: {headers: {tokenUserId: id, accessToken: accessToken}},
+        params: {simple: true},
+        paramName: 'keyword',
+        onSelect: function (value) {
+            //根据返回结果自定义一些操作
+            $("#value").val(value.data.movieId);
+        },
+        onInvalidateSelection: function () {
+            $("#value").val("");
+        },
+        noCache: false, //是否启用缓存 默认是开启缓存的
+        transformResult: function (data) {
+            return data.data;
+        },
+        showNoSuggestionNotice: true,
+        noSuggestionNotice: "没有搜索结果"
+    };
+    $('#movieQuery').autocomplete(options);
+
+</script>

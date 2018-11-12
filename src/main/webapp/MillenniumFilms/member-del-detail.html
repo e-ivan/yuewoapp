@@ -1,0 +1,161 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<script type="text/javascript" src="lib/PIE_IE678.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<!--/meta 作为公共模版分离出去-->
+
+<title>视频详情</title>
+</head>
+<body>
+<div class="layui-layer-title" style="cursor: move;" move="ok">视频详情</div>
+<span class="layui-layer-setwin"><a class="layui-layer-ico layui-layer-close layui-layer-close1" href="javascript:;" onclick="window.history.go(-1)"></a></span>
+<article class="page-container">
+	<form class="form form-horizontal" id="form-article-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>视频名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="请填写视频名称" id="s_name" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>视频简介：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<textarea class="textarea" value="" placeholder="请填写视频简介" id="intro" readonly=""></textarea>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>适合人群：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="请填写适合人群" id="fitPeople" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>视频状态：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="请填写视频价格" id="status" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>视频价格：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="请填写视频价格" id="price" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>机构名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="请填写机构名称" id="orgName" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>机构简介：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<textarea class="textarea" value="" value="" placeholder="请填写机构简介" id="orgIntro" readonly=""></textarea>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>指导教师：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="请填写指导教师" id="teacherName" readonly="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>教师简介：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<textarea class="textarea" value="" placeholder="请填写商品名称" id="teacherIntro" readonly=""></textarea>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">视频截图：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<div id="lunbo"></div>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">添加视频：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<div id="xiangq"></div>
+			</div>
+		</div>
+		
+		<input type="hidden" value="" id="sstatus1">
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2" id="shangxia">
+				<!-- <a  class="btn btn-green radius xjia" type="button" ><i class="Hui-iconfont">&#xe6dc;</i> 上架</a> -->
+				<!-- <a href="javascript:;" class="xjia btn btn-green radius ">上架</a> -->
+			</div>
+		</div>
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script> 
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script> 
+<script type="text/javascript" src="lib/jquery.cookie.js"></script> 
+<script type="text/javascript" src="lib/video.js"></script>
+<script type="text/javascript">
+$(function(){
+	var userId = $.cookie("userId");
+	var roleType = $.cookie("roleType");
+	var username = $.cookie("username");
+	if(userId==""||userId==null){
+		parent.location.href="login.html"
+	}
+});
+$(function(){
+	var id=getQueryString("id");
+	var userId="9559e01b-3872-482c-b4dc-cabb553cf550";
+	$.ajax({
+	   url: '/skl/videoCourse/queryVideoCourseDetail',
+       type: "post",
+       dataType: "json",
+       data:{videoCourseId:id,userId:userId},
+       success:function(data){
+       		$('#s_name').val(data.data.name);
+       		$('#intro').val(data.data.intro);
+       		$('#fitPeople').val(data.data.fitPeople);
+       		$('#price').val(data.data.price);
+       		$('#orgName').val(data.data.orgName);
+       		$('#orgIntro').val(data.data.orgIntro);
+       		$('#teacherName').val(data.data.teacherName);
+       		$('#teacherIntro').val(data.data.teacherIntro);
+       		$("#lunbo").html("<img src='/skl"+data.data.photoUrl+"'>");
+       		$("#xiangq").html("<video src='/skl"+data.data.videoUrl+"' controls='controls'></video>");
+       		if(data.data.status==1){
+       			$('#status').val("免费");
+       		}else{
+       			$('#status').val("付费")
+       		}
+       }
+	})
+})
+</script>
+</body>
+</html>

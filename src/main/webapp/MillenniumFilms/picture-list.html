@@ -1,0 +1,121 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>图片列表</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span
+        class="c-gray en">&gt;</span> 订单列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+                                              href="javascript:location.replace(location.href);" title="刷新"><i
+        class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="text-c"> <span class="select-box inline">
+		<select name="" class="select">
+			<option value="0">全部分类</option>
+			<option value="1">分类一</option>
+			<option value="2">分类二</option>
+		</select>
+		</span> 日期范围：
+        <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'logmax\')||\'%y-%M-%d\'}'})" id="logmin"
+               class="input-text Wdate" style="width:120px;">
+        -
+        <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'logmin\')}',maxDate:'%y-%M-%d'})" id="logmax"
+               class="input-text Wdate" style="width:120px;">
+        <input type="text" name="" id="" placeholder=" 资讯名称" style="width:250px" class="input-text">
+        <button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+		<span class="l">
+			<a href="javascript:;" class="btn btn-danger radius" onclick=""><i
+                    class="Hui-iconfont">&#xe623;</i> 全部订单</a>
+			<a href="javascript:;" class="btn btn-primary radius" onclick=""><i class="Hui-iconfont">&#xe627;</i> 待付款订单</a> 
+			<a href="javascript:;" class="btn btn-green radius" onclick=""><i
+                    class="Hui-iconfont">&#xe687;</i> 待发货订单</a>
+			<a href="javascript:;" class="btn btn-grey radius" onclick=""><i class="Hui-iconfont">&#xe692;</i> 待评价订单</a> 
+			<a href="javascript:;" class="btn btn-black radius" onclick=""><i class="Hui-iconfont">&#xe616;</i> 退货订单</a>
+		</span>
+        <span class="r">共有数据：<strong id="num11">54</strong> 条</span>
+    </div>
+    <div class="mt-20 mma">
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <thead>
+            <tr class="text-c">
+                <th width="80">序号</th>
+                <th width="120">收货人</th>
+                <th width="80">收货电话</th>
+                <th width="120">创建时间</th>
+                <th width="75">支付方式</th>
+                <th width="60">支付金额</th>
+                <th>收货地址</th>
+                <th width="120">操作</th>
+            </tr>
+            </thead>
+            <tbody id="mail-list"></tbody>
+        </table>
+        <div class="page dataTables_paginate"><a class="prepage paginate_button">上一页</a>
+            <div class="pagelist"></div>
+            <a class="nextpage paginate_button">下一页</a></div>
+    </div>
+</div>
+<div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif">
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/order.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var userId = $.cookie("userId");
+        var roleType = $.cookie("roleType");
+        var username = $.cookie("username");
+        if (userId == "" || userId == null) {
+            parent.location.href = "login.html"
+        }
+    })
+    /*图片-添加*/
+    var limit = 10;
+    pubAjax(0);
+    $(".btn-danger").click(function () {
+        pubAjax(0);
+    })
+    $(".btn-primary").click(function () {
+        pubAjax(0, 10);
+    })
+    $(".btn-green").click(function () {
+        pubAjax(0, 20);
+    })
+    $(".btn-grey").click(function () {
+        pubAjax(0, 40);
+    })
+    $(".btn-black").click(function () {
+        pubAjax(0, 1000);
+    })
+</script>
+</body>
+</html>

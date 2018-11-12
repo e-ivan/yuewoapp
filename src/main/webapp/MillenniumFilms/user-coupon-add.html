@@ -1,0 +1,196 @@
+﻿<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+    <style type="text/css">
+        .autocomplete-suggestions {
+            border: 1px solid #999;
+            background: #FFF;
+            overflow: auto;
+        }
+        .autocomplete-suggestion {
+            padding: 2px 5px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .autocomplete-selected {
+            background: #F0F0F0;
+        }
+        .autocomplete-suggestions strong {
+            font-weight: normal;
+            color: #3399FF;
+        }
+        .autocomplete-group {
+            padding: 2px 5px;
+        }
+        .autocomplete-group strong {
+            display: block;
+            border-bottom: 1px solid #000;
+        }
+    </style>
+    <title>添加用户优惠券</title>
+</head>
+<body>
+<article class="page-container">
+        <div class="form form-horizontal" id="form-album-add">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">用户ID：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span style="color: red;font-size: medium" id="userId"></span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">用户昵称：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span style="color: red;font-size: medium" id="nickname"></span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">选择优惠券：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" data-id="" placeholder="输入优惠券" name="query"
+                           id="couponQuery">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2" style="font-weight:bold">添加张数：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span class="select-box inline">
+                         <select name="count" id="count" class="select">
+                         </select>
+             </span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-2"></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <button id="sub" class="btn btn-success radius" type="button">
+                        <i class="Hui-iconfont">&#xe600; </i>添加优惠券
+                    </button>
+                    &nbsp;&nbsp;
+                    <button class="btn btn-default radius" onclick="layer_close()" type="button">
+                        <i class="Hui-iconfont"></i>关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+</article>
+<iframe id="couponListFrame" src="" scrolling="auto" height="400px" width="100%" frameborder="0"></iframe>
+<div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif">
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="lib/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript" src="lib/jquery.form.min.js"></script>
+<!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.js"></script>
+
+</body>
+</html>
+<script>
+    var accessToken = $.cookie("accessToken");
+    var userId = $.cookie("userId");
+    var id = getQueryString("userId");
+    var nickname = getQueryString("nickname");
+    $("#nickname").text(decodeURI(nickname));
+    $("#userId").text(id);
+    $("#couponListFrame").attr("src","coupon-user-list.html?userId=" + id);
+    var html = "";
+    for (var i = 1;i <= 10;i ++){
+        html += "<option value='"+i+"'>"+i+"</option>";
+    }
+    $("#count").html(html);
+    var options = {
+        serviceUrl: getRootPath_dc() + '/coupon/queryCoupons',
+        type: 'POST',
+        dataType: 'json',
+        minChars:0,
+        ajaxSettings: {headers: {tokenUserId: userId, accessToken: accessToken}},
+        params: {simple: true,delFlag:0,page:0,limit:1000},
+        paramName: 'keyword',
+        onSelect: function (value) {
+            //根据返回结果自定义一些操作
+            $("#couponQuery").data("id",value.data);
+        },
+        noCache: false, //是否启用缓存 默认是开启缓存的
+        transformResult: function (data) {
+            return data.data;
+        },
+        onInvalidateSelection:function () {
+            $("#couponQuery").data("id","");
+        },
+        showNoSuggestionNotice: true,
+        noSuggestionNotice: "没有搜索结果"
+    };
+    $('#couponQuery').autocomplete(options);
+    $("#sub").click(function () {
+        var couponQuery = $("#couponQuery");
+        var couponId = couponQuery.data("id");
+        if (isNull(couponId)) {
+            layer.alert("请选择优惠券");
+            return;
+        }
+        var count = $("#count").val();
+        var msg = "确定为用户添加" +
+            "<span style='color: red'>"+ count + "</span>" +
+            "张" +
+            "<span style='color: red'>["+ couponQuery.val() + "]</span>" +
+            "优惠券？";
+        layer.confirm(msg ,function (index) {
+            $.ajax({
+                url: getRootPath_dc() + '/coupon/addUserCoupon',
+                type: "post",
+                dataType: "json",
+                headers: {tokenUserId: userId, accessToken: accessToken},
+                data: {userId:id,couponId:couponId,count:count,password:'ivan'},
+                success: function (data) {
+                    layer.alert(data.msg, function (index) {
+                        if (data.errcode == 0) {
+                            var refresh = parent.$("#refresh");
+                            $(refresh).click();
+                            location.replace(location.href);
+                        }
+                        layer.close(index);
+                    });
+                }
+            });
+            layer.close(index);
+        })
+    });
+</script>

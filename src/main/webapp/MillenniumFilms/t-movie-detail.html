@@ -1,0 +1,207 @@
+﻿<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <LINK rel="Bookmark" href="/favicon.ico">
+    <LINK rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/viewer/css/viewer.min.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+    <style>
+        .showPic {
+            opacity: 0;
+        }
+    </style>
+    <title>电影详情</title>
+</head>
+<body>
+<article class="page-container">
+
+    <form id="albumForm" name="" enctype="multipart/form-data" method="post" action="">
+        <div class="form form-horizontal" id="form-album-add">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">天智创客影片：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span style="color: red;font-size: medium" id="showMovieName"></span>
+                </div>
+            </div>
+
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">关联电影：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" data-id="" placeholder="输入电影名称" id="movieQuery">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">电影评分：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span class="label radius label-warning" id="score"></span>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">海报：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <img id="pathVerticalS" src="" style="height: 120px;" class="img-responsive">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3"></label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <button name="" id="submit" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">
+                        &#xe632;</i>
+                        保存
+                    </button>
+                    <button name="" id="" class="btn btn-default radius" onclick="layer_close()"
+                            type="button" title="关闭"><i class="Hui-iconfont"></i> 关闭
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</article>
+<div id="load" style="display: none;position: fixed;top: 45%;left: 45%"><img src="static/h-ui/images/loading-b.gif"></div>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.min.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/common.js"></script>
+<script type="text/javascript" src="lib/jquery.form.min.js"></script>
+<script type="text/javascript" src="lib/viewer/js/viewer-jquery.min.js"></script>
+<!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/webuploader/0.1.5/webuploader.js"></script>
+
+</body>
+</html>
+<script>
+
+    var userId = $.cookie("userId");
+    var roleType = $.cookie("roleType");
+    var username = $.cookie("username");
+    var accessToken = $.cookie("accessToken");
+    $("#showMovieName").text(decodeURI(getQueryString("movieName")));
+    var movieId = getQueryString("kouMovieId");
+    if (!isNull(movieId)) {
+        queryMovieDetail(movieId);
+    }
+    $("#pathVerticalS").viewer(viewerOption({navbar:false,toolbar:false,title:false}));
+    var options = {
+        serviceUrl: getRootPath_dc() + '/cinema/queryKouAllMovie',
+        type: 'POST',
+        dataType: 'json',
+        ajaxSettings: {headers: {tokenUserId: userId, accessToken: accessToken}},
+        params: {simple: true},
+        paramName: 'keyword',
+        onSelect: function (value) {
+            //根据返回结果自定义一些操作
+            var data = value.data;
+            $("#movieQuery").data("id",data.movieId);
+            $("#score").text(data.score);
+            $("#pathVerticalS").attr("src",data.pathVerticalS);
+        },
+        onInvalidateSelection: function () {
+            $("#movieQuery").data("id","");
+            $("#score").text("");
+            $("#pathVerticalS").attr("src","");
+        },
+        noCache: false, //是否启用缓存 默认是开启缓存的
+        transformResult: function (data) {
+            return data.data;
+        },
+        showNoSuggestionNotice: true,
+        noSuggestionNotice: "没有搜索结果"
+    };
+    $('#movieQuery').autocomplete(options);
+
+    function queryMovieDetail(movieId) {
+        $.ajax({
+            url: getRootPath_dc() + '/cinema/queryKouAllMovie',
+            type: "post",
+            dataType: "json",
+            headers: {tokenUserId: userId, accessToken: accessToken},
+            data: {movieId: movieId, simple: true},
+            beforeSend: function () {
+                $("#load").css("display", "block");
+            },
+            success: function (data) {
+                if (data.errcode == 0) {
+                    try {
+                        var obj = data.data.suggestions[0];
+                        var movieQuery = $("#movieQuery");
+                        var movie = obj.data;
+                        movieQuery.data("id", movie.movieId);
+                        movieQuery.val(obj.value);
+                        $("#score").text(movie.score);
+                        $("#pathVerticalS").attr("src",movie.pathVerticalS);
+                    } catch (e) {
+                        layer.alert("无电影数据");
+                    }
+                } else {
+                    layer.alert(data.msg);
+                }
+            },
+            complete: function () {
+                $("#load").css("display", "none");
+            }
+        })
+    }
+
+    $("#submit").click(function () {
+        var movieQuery = $("#movieQuery");
+        var movieId = movieQuery.data("id");
+        var msg = movieId ? "确认电影关联为[<span style='color: red'>"+movieQuery.val()+"</span>]？"
+            : "确认<span style='color: red'>取消</span>关联数据";
+        layer.confirm(msg,function (index) {
+            $.ajax({
+                type: 'post',
+                url: getRootPath_dc() + '/cinema/relationMovie',
+                headers: {tokenUserId: userId, accessToken: accessToken},
+                data: {cineMovieNum: getQueryString("cineMovieNum"),movieId: movieId},
+                success: function (data) {
+                    if (data.errcode == 0) {
+                        layer.alert(data.msg, function () {
+                            var refresh = parent.$("#refresh");
+                            $(refresh).click();
+                            layer_close();
+                        });
+                    }else {
+                        layer.alert(data.msg);
+                    }
+                }
+            });
+            layer.close(index);
+        });
+    });
+
+</script>
