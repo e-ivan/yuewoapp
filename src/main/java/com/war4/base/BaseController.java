@@ -1,6 +1,6 @@
 package com.war4.base;
 
-import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import com.war4.enums.CommonErrorResult;
 import com.war4.repository.BaseRepository;
 import com.war4.service.*;

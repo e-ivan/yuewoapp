@@ -13,7 +13,6 @@ import com.war4.pojo.MomentFile;
 import com.war4.repository.BaseRepository;
 import com.war4.service.FileService;
 import com.war4.util.FileUploadUtils;
-import com.war4.util.ImageCompressUtil;
 import com.war4.vo.MomentFileVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -199,20 +198,4 @@ public class FileServiceImpl implements FileService {
         //返回数据
         return list;
     }
-
-    //压缩图片
-    private void zipImage(MultipartFile file,String filePurpose,String fileLocation,int fileNum){
-
-        if(filePurpose.equals(FilePurpose.IMAGE_USER_PHOTO_HEAD.getCode())){
-            //上传头像压缩，后缀变成****_small
-            ImageCompressUtil.zipImageFileWithPath(file, 120, 120, 1, "_small",fileLocation);
-        }
-        else if(filePurpose.equals(FilePurpose.MOMENT_PHOTO.getCode())){
-            //上传相册压缩，后缀变成****_small
-            ImageCompressUtil.zipCutMiddleImage(file, (float) 1, "_small",fileLocation,900,fileNum);
-        }
-    }
-
-
-
 }
