@@ -24,7 +24,7 @@
             <mvc:exclude-mapping path="/share/**"/>
             <mvc:exclude-mapping path="/view/**"/>
             <mvc:exclude-mapping path="/classBegin/**"/>
-            <mvc:exclude-mapping path="/MillenniumFilms/**"/>
+            <mvc:exclude-mapping path="/background/**"/>
             <mvc:exclude-mapping path="/tianzhi/**"/>
             <mvc:exclude-mapping path="/dingdan/**"/>
             <mvc:exclude-mapping path="/cash-audit/**"/>
@@ -135,7 +135,7 @@
     <mvc:resources location="/testDIR/" mapping="/testDIR/**"/>
     <mvc:resources location="/share/" mapping="/share/**"/>
     <mvc:resources location="/classBegin/" mapping="/classBegin/**"/>
-    <mvc:resources location="/MillenniumFilms/" mapping="/MillenniumFilms/**"/>
+    <mvc:resources location="/background/" mapping="/background/**"/>
     <mvc:resources location="/view/" mapping="/view/**"/>
     <mvc:resources location="/tianzhi/" mapping="/tianzhi/**"/>
     <mvc:resources location="/dingdan/" mapping="/dingdan/**"/>
