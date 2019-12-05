@@ -40,7 +40,8 @@
         <property name="password" value="${jdbc.password}"/>
 
 
-        <property name="filters" value="stat,log4j,wall" />
+        <property name="filters" value="stat,config,log4j,wall" />
+        <property name="connectionProperties" value="${jdbc.connectionProperties}"/>
 
         <!-- 配置初始化大小、最小、最大 -->
         <property name="initialSize" value="5"/>
